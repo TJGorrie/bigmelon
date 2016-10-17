@@ -1,7 +1,7 @@
 Package: bigmelon
 Type: Package
 Title: Illumina methylation array analysis for large experiments
-Version: 1.0.0
+Version: 1.1.0
 Date: 2016-09-28
 Author: Tyler Gorrie-Stone, Ayden Saffari, Karim Malki, Leonard C
         Schalkwyk
