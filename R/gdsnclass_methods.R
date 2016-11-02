@@ -232,7 +232,9 @@ setMethod(
     f = "QCmethylated",
     signature(object = "gds.class"),
     definition = function(object){
-        read.gdsn(index.gdsn(object, 'QCmethylated'))
+        out <- read.gdsn(index.gdsn(object, 'QCmethylated'))
+        rownames(out) <- QCrownames(object)
+        out
     }
 ) # AS - OK 
 
@@ -243,7 +245,9 @@ setMethod(
     f = "QCunmethylated",
     signature(object = "gds.class"),
     definition = function(object){
-        read.gdsn(index.gdsn(object, 'QCunmethylated'))
+        out <- read.gdsn(index.gdsn(object, 'QCunmethylated'))
+        rownames(out) <- QCrownames(object)
+        out
     }
 ) # AS - OK 
 
@@ -887,10 +891,24 @@ setMethod(
             data(coef)
             coeff <- coef 
         }
-        betas <- as.data.frame(na.omit(betas[names(coeff)[-1], ,
-                                name = TRUE, drop = FALSE]))
+        betas <- betas[names(coeff)[-1], , name = TRUE, drop = FALSE]
+        rownames(betas) <- names(coeff)[-1]
         # (Violently) Produces "small beta matrix".
         agep(betas, coeff, verbose) 
+    }
+)
+
+setMethod(
+    f = "agep",
+    signature(betas = "gdsn.class"),
+    definition = function(betas, coeff = NULL, verbose = FALSE){
+        if(is.null(coeff)){
+            data(coef)
+            coeff <- coef
+        }
+        betas <- betas[names(coeff)[-1], , name = TRUE, drop = FALSE]
+        rownames(betas) <- names(coeff)[-1]
+        agep(betas, coeff, verbose)
     }
 )
 
@@ -1056,6 +1074,7 @@ setMethod(
         object <- bn
         g <- getsnp(rownames(object))
         bn <- betas(object)[g, ,name = TRUE, drop = FALSE]
+        g <- rownames(bn)
         genki(bn, g, se) 
     }
 ) # AS - OK
@@ -1067,6 +1086,7 @@ setMethod(
         object <- bn
         g <- getsnp(rownames(object))
         bn <- object[g, ,name = TRUE, drop = FALSE]
+        g <- rownames(bn) 
         genki(bn, g, se)
     }
 )

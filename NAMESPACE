@@ -4,6 +4,6 @@ exportMethods(naten, betaqn, nanet, nanes, danes, danet, daten1, daten2,
 nasen, dasen, danen, tost, fuks, swan, dmrse, dmrse_row, dmrse_col, genki, 
 seabi, pfilter)
 importFrom('stats', 'approx', 'coef', 'density', 'fivenum', 'lm',
-    'median', 'na.omit', 'sd')
+    'median', 'na.omit', 'sd', 'quantile')
 importFrom('utils', 'data', 'file_test', 'packageVersion')
 import(wateRmelon, gdsfmt, methods, minfi, methylumi, Biobase)
