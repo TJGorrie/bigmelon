@@ -33,6 +33,45 @@ designed for handling SNP data, which through efficient memory use and
 management is able to overcome some of the memory overheads associated 
 with handling big data in \R{}.\\
 
+\section{Quick-Start}
+This section will briefly describe how to quickly import, access and 'analyse'
+data using bigmelon and the gds file format.
+<<code-block, keep.source=TRUE>>=
+library(bigmelon)
+data(melon)
+# Convert methylumiset or methylset objects to .gds
+gfile <- es2gds(melon, 'melon.gds')
+# 'melon.gds' file created in working directory
+dir()
+# Access data with:
+betas(gfile)
+# OR
+index.gdsn(gfile, 'betas')
+# Get betas with '[' notation
+betas(gfile)[1:5,1:5]
+# Or call from gfile
+gfile[1:5, 1:5, node = 'methylated']
+# Preprocess data with pfilter and dasen
+pfilter(gfile)
+dasen(gfile)
+# Note you do not have to store the output 
+# because the functions make changes to disk
+
+# Use apply.gdsn to perform apply-like operations
+meth <- methylated(gfile)
+apply.gdsn(meth, 2, median, as.is='double', na.rm = TRUE)
+
+# Close .gds file
+closefn.gds(gfile)
+# Open a .gds file
+gfile <- openfn.gds('melon.gds')
+@
+
+<<UnseenCodeAndOutput, echo=FALSE>>=
+closefn.gds(gfile)
+unlink('melon.gds', force = TRUE)
+@
+
 \section{Installation}
 \Rpackage{bigmelon} works with existing \Bioconductor{} packages and therefore 
 has a number of dependencies. The install.packages() should install the 
@@ -52,9 +91,6 @@ install.packages('bigmelon_0.99.11.tar.gz', repos = NULL, type = 'source')
 @
 
 \section{Using Bigmelon}
-<<code-block, keep.source=TRUE>>=
-library(bigmelon)
-@
 \subsection{Loading Data}
 
 There are multiple methods that can be used to load in
@@ -62,7 +98,6 @@ data into a gds object. These can either be from GenomeStudio
 final report text files or from raw binary (.IDAT) files.
 
 \subsubsection{IDAT Files}
-\paragraph{}
 IDAT files are the raw intensities obtained from DNA methylation microarrays 
 and are split into two files per sample (one Red Channel and 
 one Green Channel). These are typically read into R using \Rpackage{minfi} or 
@@ -426,7 +461,7 @@ Should you find it necessary to convert your gds object back into memory
 (perhaps for some specialised analyses) you can use the functions 
 \Rfunction{gds2mlumi} and \Rfunction{gds2mset} which will build a 
 \Robject{MethyLumiSet} object and \Robject{MethylSet} object in your 
-enviroment.
+environment.
 <<code-block, keep.source=TRUE>>=
 gds2mlumi(gfile)
 gds2mset(gfile, anno="450k")

@@ -70,7 +70,7 @@ gds2mset <- function(gds,i,j,anno = NULL){
     U <- x[i = i, j = j, "unmethylated", name = TRUE, drop = FALSE]
     pd <- pData(x)[j, , drop = FALSE]
     rownames(pd) <- colnames(x)[j]
-    pd <- annotatedDataFrameFrom(object = as.matrix(pd), byrow = TRUE)
+#    pd <- annotatedDataFrameFrom(object = as.matrix(pd), byrow = TRUE)
     if(!is.null(anno)){
         if(anno == "27k"){
             anno <- c("IlluminaHumanMethylation27k", "ilmn12.hg19")
@@ -95,7 +95,7 @@ gds2mset <- function(gds,i,j,anno = NULL){
         }
     }
     names(anno) <- c("array", "annotation")
-    out <- MethylSet(Meth = M, Unmeth = U, phenoData = pd, annotation = anno)
+    out <- MethylSet(Meth = M, Unmeth = U, colData = pd, annotation = anno)
     out@preprocessMethod <- c(
         rg.norm = "Converted from gdsfmt to MethylSet (bigmelon)",
         minfi = as.character(packageVersion("minfi")),
