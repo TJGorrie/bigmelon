@@ -29,7 +29,7 @@ backup.gdsn <- function(gds = NULL, node){
     dat[i = i, j = j, name = name, drop = drop]
 } # }}}
 
-'[.gdsn.class' <- function(x, i, j, name = TRUE, drop = TRUE){ # {{{
+#'[.gdsn.class' <- function(x, i, j, name = TRUE, drop = TRUE){ # {{{
     # Method of subsetting gdsn.class objects w.o reading in entire object.
     # Wrapper for readex.gdsn
     # arg: "name": Will point towards "fData/Probe_ID" and
@@ -37,92 +37,92 @@ backup.gdsn <- function(gds = NULL, node){
     #              name = F will enable for faster indexing.
     # TODO: [] method? a.k.a vector method.
     # TODO: Warnings, if any.
-    base <- getfolder.gdsn(x)
+#    base <- getfolder.gdsn(x)
     # x[ , ]
-    if(missing(i) & missing(j)){ # {{{
-        mat <- read.gdsn(x)
-        if(name){
-            rownames(mat) <- read.gdsn(index.gdsn(base,
-                                read.gdsn(index.gdsn(base, "paths"))[1]))
-            colnames(mat) <- read.gdsn(index.gdsn(base,
-                                read.gdsn(index.gdsn(base, "paths"))[2]))
-        }
-    } # }}}
+#    if(missing(i) & missing(j)){ # {{{
+#        mat <- read.gdsn(x)
+#        if(name){
+#            rownames(mat) <- read.gdsn(index.gdsn(base,
+#                                read.gdsn(index.gdsn(base, "paths"))[1]))
+#            colnames(mat) <- read.gdsn(index.gdsn(base,
+#                                read.gdsn(index.gdsn(base, "paths"))[2]))
+#        }
+#    } # }}}
     # x[ , j]
-    if(missing(i) & !missing(j)){ # {{{
-        j1 <- j
-        if(is.character(j1)){
-            j <- match(j1, read.gdsn(index.gdsn(base,
-                            read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
-        }
-        if(is.logical(j1)) j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
-        ncol <- j
-        mat <- as.matrix(readex.gdsn(x, sel = list(NULL, ncol)))
-        if(length(j) == 1) mat <- as.matrix(mat)
-        if(name){
-            rownames(mat) <- read.gdsn(index.gdsn(base,
-                                read.gdsn(index.gdsn(base, "paths"))[1]))
-            colnames(mat) <- readex.gdsn(index.gdsn(base,
-                                read.gdsn(index.gdsn(base, "paths"))[2]),
-                                sel = ncol)
-        }
-    } # }}}
-    # x[ i, ]
-    if(!missing(i) & missing(j)){  # {{{
-        i1 <- i
-        if(is.character(i1)){
-            i <- match(i1, read.gdsn(index.gdsn(base,
-                            read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
-        }
-        if(is.logical(i1)) i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
-        nrow <- i
-        if(length(i) == 1){ # Calling a single row makes naming difficult.
-            mat <- as.matrix(t(readex.gdsn(x, sel = list(nrow, NULL))))
-        } else {
-            mat <- as.matrix(readex.gdsn(x, sel = list(nrow, NULL)))
-        }
-        if(name){
-            rownames(mat) <- readex.gdsn(index.gdsn(base,
-                                read.gdsn(index.gdsn(base, "paths"))[1]),
-                                            sel = nrow)
-            colnames(mat) <- read.gdsn(index.gdsn(base,
-                                read.gdsn(index.gdsn(base, "paths"))[2]))
-        }
-    } # }}}
+#    if(missing(i) & !missing(j)){ # {{{
+#        j1 <- j
+#        if(is.character(j1)){
+#            j <- match(j1, read.gdsn(index.gdsn(base,
+#                            read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
+#        }
+#        if(is.logical(j1)) j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
+#        ncol <- j
+#        mat <- as.matrix(readex.gdsn(x, sel = list(NULL, ncol)))
+#        if(length(j) == 1) mat <- as.matrix(mat)
+#        if(name){
+#            rownames(mat) <- read.gdsn(index.gdsn(base,
+#                                read.gdsn(index.gdsn(base, "paths"))[1]))
+#            colnames(mat) <- readex.gdsn(index.gdsn(base,
+#                                read.gdsn(index.gdsn(base, "paths"))[2]),
+#                                sel = ncol)
+#        }
+#    } # }}}
+#    # x[ i, ]
+#    if(!missing(i) & missing(j)){  # {{{
+#        i1 <- i
+#        if(is.character(i1)){
+#            i <- match(i1, read.gdsn(index.gdsn(base,
+#                            read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
+#        }
+#        if(is.logical(i1)) i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
+#        nrow <- i
+#        if(length(i) == 1){ # Calling a single row makes naming difficult.
+#            mat <- as.matrix(t(readex.gdsn(x, sel = list(nrow, NULL))))
+#       } else {
+#            mat <- as.matrix(readex.gdsn(x, sel = list(nrow, NULL)))
+#        }
+#        if(name){
+#            rownames(mat) <- readex.gdsn(index.gdsn(base,
+#                                read.gdsn(index.gdsn(base, "paths"))[1]),
+#                                            sel = nrow)
+#            colnames(mat) <- read.gdsn(index.gdsn(base,
+#                                read.gdsn(index.gdsn(base, "paths"))[2]))
+#        }
+#    } # }}}
     # x[ i, j] 
-    if(!missing(i) & !missing(j)){ # {{{
-        i1 <- i
-        if(is.character(i1)){
-            i <- match(i1, read.gdsn(index.gdsn(base,
-                            read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
-        }
-        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
-        j1 <- j
-        if(is.character(j1)){
-            j <- match(j1, read.gdsn(index.gdsn(base,
-                            read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
-        }
-        if(is.logical(j1)) j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
-        nrow <- i
-        ncol <- j
-        mat <- readex.gdsn(x, sel = list(nrow, ncol))
-        # i=1, j=1
-        if( length(i) == 1 & length(j)  == 1) mat <- matrix(mat)
-        # i>1, j=1
-        if(!length(i) == 1 & length(j)  == 1) mat <- matrix(mat)
-        # i=1, j>1
-        if( length(i) == 1 & !length(j) == 1) mat <- t(matrix(mat)) 
-        if(name){
-            rownames(mat) <- readex.gdsn(index.gdsn(base,
-                                read.gdsn(index.gdsn(base, "paths"))[1]),
-                                        sel = nrow)
-            colnames(mat) <- readex.gdsn(index.gdsn(base,
-                                read.gdsn(index.gdsn(base, "paths"))[2]),
-                                        sel = ncol)   
-        }
-    } # }}}
-    return(mat[ , , drop = drop])
-} # }}}
+#    if(!missing(i) & !missing(j)){ # {{{
+#        i1 <- i
+#        if(is.character(i1)){
+#            i <- match(i1, read.gdsn(index.gdsn(base,
+#                            read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
+#        }
+#        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
+#        j1 <- j
+#        if(is.character(j1)){
+#            j <- match(j1, read.gdsn(index.gdsn(base,
+#                            read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
+#        }
+#        if(is.logical(j1)) j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
+#        nrow <- i
+#        ncol <- j
+#        mat <- readex.gdsn(x, sel = list(nrow, ncol))
+#        # i=1, j=1
+#        if( length(i) == 1 & length(j)  == 1) mat <- matrix(mat)
+#        # i>1, j=1
+#        if(!length(i) == 1 & length(j)  == 1) mat <- matrix(mat)
+#        # i=1, j>1
+#        if( length(i) == 1 & !length(j) == 1) mat <- t(matrix(mat)) 
+#        if(name){
+#            rownames(mat) <- readex.gdsn(index.gdsn(base,
+#                                read.gdsn(index.gdsn(base, "paths"))[1]),
+#                                        sel = nrow)
+#            colnames(mat) <- readex.gdsn(index.gdsn(base,
+#                                read.gdsn(index.gdsn(base, "paths"))[2]),
+#                                        sel = ncol)   
+#        }
+#    } # }}}
+#    return(mat[ , , drop = drop])
+#} # }}}
 
 #colnames <- function (x, do.NULL = TRUE, prefix = "col") 
 setMethod(
@@ -921,16 +921,15 @@ setMethod(
         dimnorm <- objdesp.gdsn(norm)$dim
         dimraw  <- objdesp.gdsn(raw)$dim
         if(!all(dimnorm == dimraw)) stop("Nodes are not the same dimensions")
-        res <- list()
-        for(i in 1:dimnorm[2]){
-            dif  <- norm[, i, name = FALSE] - raw [, i, name = FALSE]
+        res <- t(sapply(1:dimnorm[2], function(x){
+            dif <- norm[,x,name=F] - raw[,x,name=F]
             rmsd <- sqrt(mean(dif^2, na.rm = TRUE))
             sdd  <- sd(dif, na.rm = TRUE)
             sadd <- sd(abs(dif), na.rm = TRUE)
             srms <- rmsd/sdd
-            res[[i]] <- c(rmsd, sdd, sadd, srms)
-        }
-        res <- t(data.frame(res))
+            out <- c(rmsd, sdd, sadd, srms)
+            out
+        } ) )
         rownames(res) <- colnames(norm)
         colnames(res) <- c("rmsd", "sdd", "sadd", "srms")
         res

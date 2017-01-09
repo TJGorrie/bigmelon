@@ -160,7 +160,6 @@ prcomp.gds.class <- function(x, node.name, center = FALSE, scale. = FALSE,
                 scale = if(is.null(sc)) FALSE else sc)
     # There isn't a clever way to perform matrix multiplications yet.
     if (retx) {
-        if(verbose) message('Rotating Data.')
     # Original Statement:   r$x <- x %*% s$v
     # Slow (Memory Intensive) Method:
     r$x <- read.gdsn(x) %*% s$v
