@@ -139,10 +139,8 @@ dasenrank <- function(gds, mns, uns, onetwo, roco, calcbeta = NULL, ...){ # {{{
     dfsfit.gdsn(f, targetnode = uns, roco = NULL, newnode = "unsc",
                 onetwo = onetwo)
     # Get Rank + Quantiles
-    quickquan(gds, index.gdsn(f,'mnsc'), onetwo = onetwo, rank=TRUE, new.node = 'mnsrank', perc=1) 
-    quickquan(gds, index.gdsn(f,'unsc'), onetwo = onetwo, rank=TRUE, new.node = 'unsrank', perc=1)
-    #getrankandquantiles(gds, index.gdsn(f, 'mnsc'), onetwo, 'mnsrank')
-    #getrankandquantiles(gds, index.gdsn(f, 'unsc'), onetwo, 'unsrank')
+    quickquan(gds, index.gdsn(f,'mnsc'), onetwo = onetwo, rank = TRUE, new.node = 'mnsrank', ...)
+    quickquan(gds, index.gdsn(f,'unsc'), onetwo = onetwo, rank = TRUE, new.node = 'unsrank', ...)
     # COMPLETE Return nothing
     if(is.null(calcbeta)){
         message('Run \'computebetas\' to calculate betas!')
@@ -273,8 +271,8 @@ computebetas <- function(gds, new.node, mns, uns, fudge = 100, ...){ # {{{
           acol <- isna[,z]
           re <- rep(NA, length(acol))
           if(design){
-          re[ot=='I'&&!acol] <- approx(inter[ot=='I'], quantiles[ot=='I'], (mat[ot=='I'&&!acol,z]-1)/(sum(ot=='I')-1), ties = "ordered")$y
-          re[ot=='II'&&!acol] <- approx(inter[ot=='II'], quantiles[ot=='II'], (mat[ot=='II'&&!acol,z]-1)/(sum(ot=='II')-1), ties = "ordered")$y
+          re[ot=='I'&(!acol)] <-  approx(inter[ot=='I'] , quantiles[ot=='I'] , (mat[ot=='I' & !acol, z] - 1) /(sum(ot == 'I' )-1), ties = "ordered")$y
+          re[ot=='II'&(!acol)] <- approx(inter[ot=='II'], quantiles[ot=='II'], (mat[ot=='II' & !acol, z] - 1)/(sum(ot == 'II')-1), ties = "ordered")$y
           } else {
           re[!acol] <- approx(inter, quantiles, (mat[!acol,z]-1)/(length(inter)-1), ties='ordered')$y
           }

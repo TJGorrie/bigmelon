@@ -30,8 +30,7 @@ gdsn.class node that contains information relating to probe design
 Sentrix (R0#C0#) position of all samples
 }
 \item{calcbeta}{
-Default = NULL, if supplied with an integer, calcbeta will act as fudge value
-for calculating betas as per Beta = M/(M+U+calcbeta)
+Default = NULL, if supplied with a string, a new gdsn.node will be made with supplied string.
 }
 \item{...}{
 Further Args
