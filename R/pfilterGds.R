@@ -61,15 +61,15 @@ pfilter.gds <- function(mn = NULL, un = NULL, bn = NULL, da = NULL, pn, bc,
                             p = pthresh
                             )
         badp <- which(bap)
-        cat(sum(!goodsamps), "samples having", perc,
+        message(sum(!goodsamps), "samples having", perc,
             "% of sites with a detection p-value greater than",
-            pnthresh, "were removed", "\n")
-        cat("Samples removed:", colnames(bc)[!goodsamps], "\n")
-        cat(length(badbead), "sites were remove as beadcount <3 in",
-            perCount, "% of samples", "\n")
-        cat(length(badp), "sites having", pthresh,
+            pnthresh, "were removed.")
+        message("Samples removed:", colnames(bc)[!goodsamps])
+        message(length(badbead), "sites were remove as beadcount <3 in",
+            perCount, "% of samples.")
+        message(length(badp), "sites having", pthresh,
             "% of samples with a detection p-value greater than",
-            pnthresh, "were removed", "\n")
+            pnthresh, "were removed.")
         # Only does logical return.
         return(list(probes = (!bap & !badbead_log), samples = goodsamps))
     }

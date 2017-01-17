@@ -29,100 +29,109 @@ backup.gdsn <- function(gds = NULL, node){
     dat[i = i, j = j, name = name, drop = drop]
 } # }}}
 
-#'[.gdsn.class' <- function(x, i, j, name = TRUE, drop = TRUE){ # {{{
+# Updated for ranked norm... 
+'[.gdsn.class' <- function(x, i, j, name = TRUE, drop = TRUE){ # {{{
     # Method of subsetting gdsn.class objects w.o reading in entire object.
     # Wrapper for readex.gdsn
-    # arg: "name": Will point towards "fData/Probe_ID" and
-    # "pData/barcode" for row and col names. (by default)
+    # arg: "name": Will point towards "fData/Probe_ID" and "pData/barcode" for row and col names. (by default)
     #              name = F will enable for faster indexing.
     # TODO: [] method? a.k.a vector method.
     # TODO: Warnings, if any.
-#    base <- getfolder.gdsn(x)
+    base <- getfolder.gdsn(x)
+    dim <- objdesp.gdsn(x)$dim
+
     # x[ , ]
-#    if(missing(i) & missing(j)){ # {{{
-#        mat <- read.gdsn(x)
-#        if(name){
-#            rownames(mat) <- read.gdsn(index.gdsn(base,
-#                                read.gdsn(index.gdsn(base, "paths"))[1]))
-#            colnames(mat) <- read.gdsn(index.gdsn(base,
-#                                read.gdsn(index.gdsn(base, "paths"))[2]))
-#        }
-#    } # }}}
+    if(missing(i) & missing(j)){ # {{{
+        mat <- read.gdsn(x)
+        if(name){
+            rownames(mat) <- read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]))
+            colnames(mat) <- read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]))
+        }
+    } # }}}
+
     # x[ , j]
-#    if(missing(i) & !missing(j)){ # {{{
-#        j1 <- j
-#        if(is.character(j1)){
-#            j <- match(j1, read.gdsn(index.gdsn(base,
-#                            read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
-#        }
-#        if(is.logical(j1)) j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
-#        ncol <- j
-#        mat <- as.matrix(readex.gdsn(x, sel = list(NULL, ncol)))
-#        if(length(j) == 1) mat <- as.matrix(mat)
-#        if(name){
-#            rownames(mat) <- read.gdsn(index.gdsn(base,
-#                                read.gdsn(index.gdsn(base, "paths"))[1]))
-#            colnames(mat) <- readex.gdsn(index.gdsn(base,
-#                                read.gdsn(index.gdsn(base, "paths"))[2]),
-#                                sel = ncol)
-#        }
-#    } # }}}
-#    # x[ i, ]
-#    if(!missing(i) & missing(j)){  # {{{
-#        i1 <- i
-#        if(is.character(i1)){
-#            i <- match(i1, read.gdsn(index.gdsn(base,
-#                            read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
-#        }
-#        if(is.logical(i1)) i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
-#        nrow <- i
-#        if(length(i) == 1){ # Calling a single row makes naming difficult.
-#            mat <- as.matrix(t(readex.gdsn(x, sel = list(nrow, NULL))))
-#       } else {
-#            mat <- as.matrix(readex.gdsn(x, sel = list(nrow, NULL)))
-#        }
-#        if(name){
-#            rownames(mat) <- readex.gdsn(index.gdsn(base,
-#                                read.gdsn(index.gdsn(base, "paths"))[1]),
-#                                            sel = nrow)
-#            colnames(mat) <- read.gdsn(index.gdsn(base,
-#                                read.gdsn(index.gdsn(base, "paths"))[2]))
-#        }
-#    } # }}}
+    if(missing(i) & !missing(j)){ # {{{
+        j1 <- j
+        if(is.character(j1)) j <- match(j1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
+        if(is.logical(j1))   j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
+
+        ncol <- j
+        mat <- as.matrix(readex.gdsn(x, sel = list(NULL, ncol)))
+        if(length(j)==1) mat <- as.matrix(mat)
+        if(name){
+            rownames(mat) <- read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]))
+            colnames(mat) <- readex.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]), sel = ncol)
+        }
+    } # }}}
+
+    # x[ i, ]
+    if(!missing(i) & missing(j)){ # {{{
+        i1 <- i
+        if(is.character(i1)) i <- match(i1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
+        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
+        nrow <- i
+        if(length(i)==1){ # Calling a single row makes naming difficult this is a work-around.
+            mat <- as.matrix(t(readex.gdsn(x, sel = list(nrow, NULL))))
+        } else {
+            mat <- as.matrix(readex.gdsn(x, sel = list(nrow, NULL)))
+        }
+
+        if(name){
+            rownames(mat) <- readex.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]), sel = nrow)
+            colnames(mat) <- read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]))
+        }
+    } # }}}
+
     # x[ i, j] 
-#    if(!missing(i) & !missing(j)){ # {{{
-#        i1 <- i
-#        if(is.character(i1)){
-#            i <- match(i1, read.gdsn(index.gdsn(base,
-#                            read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
-#        }
-#        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
-#        j1 <- j
-#        if(is.character(j1)){
-#            j <- match(j1, read.gdsn(index.gdsn(base,
-#                            read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
-#        }
-#        if(is.logical(j1)) j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
-#        nrow <- i
-#        ncol <- j
-#        mat <- readex.gdsn(x, sel = list(nrow, ncol))
-#        # i=1, j=1
-#        if( length(i) == 1 & length(j)  == 1) mat <- matrix(mat)
-#        # i>1, j=1
-#        if(!length(i) == 1 & length(j)  == 1) mat <- matrix(mat)
-#        # i=1, j>1
-#        if( length(i) == 1 & !length(j) == 1) mat <- t(matrix(mat)) 
-#        if(name){
-#            rownames(mat) <- readex.gdsn(index.gdsn(base,
-#                                read.gdsn(index.gdsn(base, "paths"))[1]),
-#                                        sel = nrow)
-#            colnames(mat) <- readex.gdsn(index.gdsn(base,
-#                                read.gdsn(index.gdsn(base, "paths"))[2]),
-#                                        sel = ncol)   
-#        }
-#    } # }}}
-#    return(mat[ , , drop = drop])
-#} # }}}
+    if(!missing(i) & !missing(j)){ # {{{
+        i1 <- i
+        if(is.character(i1)) i <- match(i1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
+        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
+        j1 <- j
+        if(is.character(j1)) j <- match(j1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
+        if(is.logical(j1))   j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
+
+        nrow <- i
+        ncol <- j
+        mat <- readex.gdsn(x, sel = list(nrow, ncol))
+
+        # i=1, j=1
+        if( length(i) == 1 & length(j)  == 1) mat <- matrix(mat)
+        # i>1, j=1
+        if(!length(i) == 1 & length(j)  == 1) mat <- matrix(mat)
+        # i=1, j>1
+        if( length(i) == 1 & !length(j) == 1) mat <- t(matrix(mat)) 
+
+        if(name){
+            rownames(mat) <- readex.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]), sel = nrow)
+            colnames(mat) <- readex.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]), sel = ncol)   
+        }
+    } # }}}
+    # It gets complicated here... ...
+    ranked <- get.attr.gdsn(x)[['ranked']]
+    if(is.null(ranked)) ranked <- FALSE
+    if(ranked){
+        quantiles <- get.attr.gdsn(x)[['quantiles']]
+        inter <- get.attr.gdsn(x)[['inter']]
+        ot <- get.attr.gdsn(x)[['onetwo']]
+        design <- FALSE
+        if(!is.null(ot)) design <- TRUE 
+        isna <- index.gdsn(base, get.attr.gdsn(x)[['is.na']])[i, j, name = TRUE, drop = FALSE]
+        for(z in 1:ncol(isna)){
+            acol <- isna[,z]
+            re <- rep(NA, length(acol))
+            if(design){
+                re[ot == 'I' & (!acol)] <-  approx(inter[ot == 'I'] , quantiles[ot == 'I'] , (mat[ot == 'I' & !acol, z] - 1) /(sum(ot == 'I' )-1), ties = "ordered")$y
+                re[ot == 'II' & (!acol)] <- approx(inter[ot == 'II'], quantiles[ot == 'II'], (mat[ot == 'II' & !acol, z] - 1)/(sum(ot == 'II')-1), ties = "ordered")$y
+            } else {
+                re[!acol] <- approx(inter, quantiles, (mat[!acol, z]-1)/(length(inter)-1), ties = 'ordered')$y
+            }
+            mat[, z] <- re
+        }
+    }
+    # Done.  
+    return(mat)
+}
 
 #colnames <- function (x, do.NULL = TRUE, prefix = "col") 
 setMethod(

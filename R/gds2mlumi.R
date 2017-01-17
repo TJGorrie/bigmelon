@@ -44,6 +44,7 @@ gds2mlumi <- function(gds, i, j){
                     )
         x.lumi@QC <- qc
     }
+    # Forgotton things: 
     #  x.lumi@protocolData <- protocolData(NChannelSet)
     #  x.lumi@annotation <- annotation(NChannelSet)
     #  x.lumi@QC@annotation <- annotation(NChannelSet)
@@ -56,21 +57,22 @@ gds2mlumi <- function(gds, i, j){
                             data.frame( submitted = history.submitted, 
                                         finished = history.finished,
                                         command = history.command))
+    rownames(x.lumi) <- rownames(x)[i]
     return(x.lumi)
 }
 
-gds2mset <- function(gds,i,j,anno = NULL){ 
+gds2mset <- function(gds, i, j, anno = NULL){ 
     x <- gds
     if(!is.null(anno)){ 
-        if(!anno %in% c("27k", "450k", "epic", "unknown")){
-        stop("anno needs to be: \'27k\', \'450k\', \'epic\' or \'unknown\'")
+        if(!anno %in% c("27k", "450k", "epic")){
+        stop("anno needs to be: \'27k\', \'450k\', \'epic\'")
         }
     }
     M <- x[i = i, j = j,   "methylated", name = TRUE, drop = FALSE]
     U <- x[i = i, j = j, "unmethylated", name = TRUE, drop = FALSE]
     pd <- pData(x)[j, , drop = FALSE]
     rownames(pd) <- colnames(x)[j]
-#    pd <- annotatedDataFrameFrom(object = as.matrix(pd), byrow = TRUE)
+    #    pd <- annotatedDataFrameFrom(object = as.matrix(pd), byrow = TRUE)
     if(!is.null(anno)){
         if(anno == "27k"){
             anno <- c("IlluminaHumanMethylation27k", "ilmn12.hg19")

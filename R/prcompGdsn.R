@@ -20,7 +20,7 @@ prcomp.gds.class <- function(x, node.name, center = FALSE, scale. = FALSE,
                             rank. = NULL, retx=FALSE, tol = NULL,
                             perc = 0.01, npcs = NULL, 
                             parallel = NULL, method = c('quick', 'sorted'),
-                             verbose = FALSE, ...){
+                            verbose = FALSE, ...){
     method <- match.arg(method)
     if(method=="quick") parallel <- NULL
     # Parallel only amenable to calculating variance for sorted method.
