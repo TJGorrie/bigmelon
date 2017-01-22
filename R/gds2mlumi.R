@@ -57,7 +57,7 @@ gds2mlumi <- function(gds, i, j){
                             data.frame( submitted = history.submitted, 
                                         finished = history.finished,
                                         command = history.command))
-    rownames(x.lumi) <- rownames(x)[i]
+#    rownames(x.lumi) <- rownames(x)[i]
     return(x.lumi)
 }
 
