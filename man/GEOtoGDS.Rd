@@ -25,6 +25,8 @@ String to indicate what method to download data from GEO off. Default is 'wget'
 }
 \item{keepidat}{Logical, indicates whether or not to keep the raw idat files in the working directory after downloading - if FALSE, removed}
 \item{keeptar}{Logical, indicates whether or not to keep the downloaded tarball in the working directory - if FALSE, removed.}
+\item{...}{Additional Arguments to pass to other functions (if any)}
+
 }
 
 \value{
@@ -39,9 +41,8 @@ Who to contact: <tgorri@essex.ac.uk>
 %\seealso{}
 \examples{
 #load example dataset
-data(melon)
-#convert to gds
-e <- es2gds(melon,'melon.gds')
-closefn.gds(e)
-unlink('melon.gds')
+# gfile <- geotogds("GSE*******", "Nameoffile.gds")
+# Will not work if gds has no idats submitted. May also fail if idats
+# are not deposited in a way readily readable by readEPIC().
+# closefn.gds(gfile)
 }

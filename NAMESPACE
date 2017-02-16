@@ -5,6 +5,6 @@ nasen, dasen, danen, tost, fuks, swan, dmrse, dmrse_row, dmrse_col, genki,
 seabi, pfilter)
 importFrom('stats', 'approx', 'coef', 'density', 'fivenum', 'lm',
     'median', 'na.omit', 'sd', 'quantile')
-importFrom('utils', 'data', 'file_test', 'packageVersion','untar', 'download.file')
+importFrom('utils', 'data', 'file_test', 'packageVersion','untar', 'download.file', 'write.csv')
 importFrom('GEOquery', 'getGEO', 'gunzip')
 import(wateRmelon, gdsfmt, methods, minfi, methylumi, Biobase)
