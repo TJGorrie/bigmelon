@@ -1098,3 +1098,13 @@ setMethod(
         genki(bn, g, se)
     }
 )
+
+setMethod(
+    f='fot',
+    signature(x='gds.class'),
+    definition = function(x){
+        fd <- fData(x)
+        ds <- grep("DESIGN", colnames(fd), ignore.case = TRUE)
+        return(fd[,ds[1]])
+    }
+    )

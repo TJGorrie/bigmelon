@@ -16,12 +16,12 @@ quickquan <- function(gds, node, onetwo = NULL, rank = FALSE, new.node = NULL, p
         if(rank){
             n.t <- add.gdsn(gds, as.character(new.node), storage = 'float64',
                             valdim=c(dim[1],0), val = NULL, replace = TRUE)
-            n.a <- add.gdsn(gds, paste0('isna', new.node), storage = 'int8', 
-                            valdim=c(dim[1],0), val = NULL, replace = TRUE, 
+            n.a <- add.gdsn(gds, paste0('isna', new.node), storage = 'int8',
+                            valdim=c(dim[1],0), val = NULL, replace = TRUE,
                             visible = FALSE)
         }
         for(x in 1:dim[2]){
-            # If Rank = T read data 
+            # If Rank = T read data
             if(rank) val <- readex.gdsn(datnod, sel = list(NULL, x))
             if(x %in% nc){ # If Perc?
                 # If Rank=F but x is in nc, read data! This will save time
@@ -45,13 +45,13 @@ quickquan <- function(gds, node, onetwo = NULL, rank = FALSE, new.node = NULL, p
                 append.gdsn(n.t, ranks)
                 append.gdsn(n.a, as.numeric(is.na(val)))
             }
-        }  
+        }
         # Calculating 'rowMeans'
         rm <- roll/length(nc)
+        inter <- i
         if(rank){
             put.attr.gdsn(n.t, 'ranked', val = TRUE)
             put.attr.gdsn(n.t, 'is.na', val = paste0('isna',new.node))
-            inter <- i
             put.attr.gdsn(n.t, 'inter', val = inter)
             put.attr.gdsn(n.t, 'quantiles', val = rm)
         }
@@ -65,24 +65,24 @@ quickquan <- function(gds, node, onetwo = NULL, rank = FALSE, new.node = NULL, p
         ii.nobs <- rep(iinum, length(nc))
         ii.i    <- (0:(iinum-1))/(iinum-1)
         if(rank){
-            n.t <- add.gdsn(gds, as.character(new.node), storage = 'float64', 
+            n.t <- add.gdsn(gds, as.character(new.node), storage = 'float64',
                             valdim = c(dim[1],0), val = NULL, replace = TRUE)
-            n.a <- add.gdsn(gds, paste0('isna', new.node), storage = 'int8', 
-                            valdim = c(dim[1],0), val = NULL, replace = TRUE, 
+            n.a <- add.gdsn(gds, paste0('isna', new.node), storage = 'int8',
+                            valdim = c(dim[1],0), val = NULL, replace = TRUE,
                             visible = FALSE)
         }
-        # Sorting + Rolling Sum 
+        # Sorting + Rolling Sum
         for(x in 1:dim[2]){
-            if(rank) val   <- readex.gdsn(datnod, sel=list(NULL, x)) 
+            if(rank) val   <- readex.gdsn(datnod, sel=list(NULL, x))
             if(x %in% nc){ # If perc
-                if(!rank) val   <- readex.gdsn(datnod, sel=list(NULL, x)) 
+                if(!rank) val   <- readex.gdsn(datnod, sel=list(NULL, x))
                 # Type I
                 i.S      <- rep(NA, inum)
                 i.si     <- sort(val[onetwo=='I' ], method = "quick", index.return = TRUE)
                 i.nobsj  <- length(i.si$x)
                 if(i.nobsj < inum){
                     i.nobs[x] <- i.nobsj
-                    i.S <- approx((0:(i.nobsj-1))/(i.nobsj-1), 
+                    i.S <- approx((0:(i.nobsj-1))/(i.nobsj-1),
                                     i.si$x, i.i, ties = "ordered")$y
                 } else {
                     i.S <- i.si$x
@@ -95,7 +95,7 @@ quickquan <- function(gds, node, onetwo = NULL, rank = FALSE, new.node = NULL, p
 
                 if(ii.nobsj < iinum){
                     ii.nobs[x] <- ii.nobsj
-                    ii.S <- approx((0:(ii.nobsj-1))/(ii.nobsj-1), 
+                    ii.S <- approx((0:(ii.nobsj-1))/(ii.nobsj-1),
                                     ii.si$x, ii.i, ties = "ordered")$y
                 } else {
                     ii.S <- ii.si$x
@@ -112,19 +112,30 @@ quickquan <- function(gds, node, onetwo = NULL, rank = FALSE, new.node = NULL, p
         }
         # rowmeans (Generate quantiles)
         rm <- roll/length(nc)
+        inter <- rep(NA, dim[1])
+        inter[onetwo=='I'] <- i.i
+        inter[onetwo=='II'] <- ii.i
         if(rank){
             put.attr.gdsn(n.t, 'ranked', val = TRUE)
             put.attr.gdsn(n.t, 'is.na', val = paste0('isna',new.node))
-            inter <- rep(NA, dim[1])
-            inter[onetwo=='I'] <- i.i
-            inter[onetwo=='II'] <- ii.i
             put.attr.gdsn(n.t, 'inter', val = inter)
             put.attr.gdsn(n.t, 'quantiles', val = rm)
             put.attr.gdsn(n.t, 'onetwo', val = onetwo)
         }
     }
     # If not storing ranks return generated quantiles.
-    if(!rank) return(rm) else return(0)
+    if(!rank&!is.null(onetwo)){
+        out <- list(quantiles = rm,
+                    inter = inter,
+                    onetwo = onetwo)
+        return(out)
+    } else if(!rank&is.null(onetwo)){
+        out <- list(quantiles = rm,
+                    inter = inter)
+        return(out)
+    } else {
+        return(0)
+    }
 }
 
 dasenrank <- function(gds, mns, uns, onetwo, roco, calcbeta = NULL, ...){# {{{
@@ -141,14 +152,14 @@ dasenrank <- function(gds, mns, uns, onetwo, roco, calcbeta = NULL, ...){# {{{
     dfsfit.gdsn(f, targetnode = uns, roco = NULL, newnode = "unsc",
                 onetwo = onetwo)
     # Get Rank + Quantiles
-    quickquan(gds, index.gdsn(f, 'mnsc'), onetwo = onetwo, 
+    quickquan(gds, index.gdsn(f, 'mnsc'), onetwo = onetwo,
                 rank = TRUE, new.node = 'mnsrank', ...)
-    quickquan(gds, index.gdsn(f, 'unsc'), onetwo = onetwo, 
+    quickquan(gds, index.gdsn(f, 'unsc'), onetwo = onetwo,
                 rank = TRUE, new.node = 'unsrank', ...)
     # COMPLETE Return nothing
     if(is.null(calcbeta)){
         message('Run \'computebetas\' to calculate betas!')
-    } else { 
+    } else {
         computebetas(gds, calcbeta, 'mnsrank', 'unsrank', fudge = 100)
     }
     closefn.gds(f)
@@ -157,12 +168,12 @@ dasenrank <- function(gds, mns, uns, onetwo, roco, calcbeta = NULL, ...){# {{{
 
 computebetas <- function(gds, new.node, mns, uns, fudge = 100, ...){ # {{{
     if(length(mns) == 1) mns <- index.gdsn(gds, mns)
-    if(length(uns) == 1) uns <- index.gdsn(gds, uns)    
+    if(length(uns) == 1) uns <- index.gdsn(gds, uns)
     dim <- objdesp.gdsn(mns)$dim
-    n.t <- add.gdsn(gds, new.node, storage = 'float64', valdim=c(dim[1],0), 
+    n.t <- add.gdsn(gds, new.node, storage = 'float64', valdim=c(dim[1],0),
                     val = NULL, replace = TRUE)
     for(x in 1:dim[2]){
-        # This is slow, depending on the number of samples. 
+        # This is slow, depending on the number of samples.
         meth <- mns[, x, name = FALSE]
         unmeth <- uns[, x, name = FALSE]
         beta <- meth/(meth + unmeth + fudge)
