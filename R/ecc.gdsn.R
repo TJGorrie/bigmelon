@@ -1,15 +1,40 @@
+normalizeQuantiles2 <- function(A, ties=TRUE) {
+	n <- dim(A)
+	if(is.null(n)) return(A)
+	if(n[2]==1) return(A)
+	O <- S <- array(,n)
+	nobs <- rep(n[1],n[2])
+	i <- (0:(n[1]-1))/(n[1]-1)
+	for (j in 1:n[2]) {
+		Si <- sort(A[,j], method="quick", index.return=TRUE)
+		nobsj <- length(Si$x)
+		if(nobsj < n[1]) {
+			nobs[j] <- nobsj
+			isna <- is.na(A[,j])
+			S[,j] <- approx((0:(nobsj-1))/(nobsj-1), Si$x, i, ties="ordered")$y
+			O[!isna,j] <- ((1:n[1])[!isna])[Si$ix]
+		} else {
+			S[,j] <- Si$x
+			O[,j] <- Si$ix
+		}
+	}
+m <- rowMeans(S)
+output <- list(m, i)
+return(output)
+}
+
 # Get quantiles of (pre/un)normalized node.
-getq <- function(gds, node, perc, onetwo, rank = FALSE, new.node = NULL){
+getquantiles <- function(gds, node, perc, onetwo, rank = FALSE, new.node = NULL){
     x <- index.gdsn(gds, node)
     ranked <- get.attr.gdsn(x)[['ranked']]
-    if(is.null(ranked)) ranked <- FALSE
-    if(ranked){
+    if(!is.null(ranked)){
         out <- list(quantiles = get.attr.gdsn(x)[['quantiles']],
                     inter = get.attr.gdsn(x)[['inter']],
-                    ot = get.attr.gdsn(x)[['onetwo']])
+                    onetwo = get.attr.gdsn(x)[['onetwo']])
         return(out)
     } else {
-       quickquan(gds = gds, node = node, onetwo = onetwo, perc = perc, rank=rank, new.node = new.node)
+       out <- getquantilesandranks(gds = gds, node = node, onetwo = onetwo, perc = perc, rank.node = NULL)
+       return(out)
     }
 }
 
@@ -39,15 +64,16 @@ impose <- function(matrix, quan){
     return(b2)
 }
 
-# EstimateCellCounts.gdsn
-estimateCellCounts.gdsn <- function(
+# EstimateCellCounts.gds
+estimateCellCounts.gds <- function(
     gds,
     gdPlatform = c("450k", "EPIC", "27k"),
     mn = NULL,
     un = NULL,
+    bn = NULL,
     perc = 0.25,
     compositeCellType = "Blood",
-    processMethod = "auto",
+#    processMethod = "auto",
     probeSelect = "auto",
     cellTypes = c("CD8T","CD4T","NK","Bcell","Mono","Gran"),
     referencePlatform = c("IlluminaHumanMethylation450k",
@@ -55,15 +81,14 @@ estimateCellCounts.gdsn <- function(
         "IlluminaHumanMethylation27k"),
     returnAll = FALSE,
     meanPlot = FALSE,
-    verbose=TRUE,
+    verbose = TRUE,
     ...) {
     # My shameless /scopy/s implmentation of minfi::estimateCellCounts
     # For those who do not want use minfi::read.metharray
     referencePlatform <- match.arg(referencePlatform)
-    rgPlatform <- match.arg(gdPlatform) # No method in bigmelon to derive annotation from object, therefore specify.
-    if(!sub("IlluminaHumanMethylation", "", referencePlatform) == rgPlatform){
-        stop("Reference and gdPlatform must match.")
-    }
+    rgPlatform <- match.arg(gdPlatform)
+    if(rgPlatform == 'EPIC') rgPlatform <- '450k'
+    # No method in bigmelon to derive annotation from object, therefore specify.
     # Sanity Checking from minfi...
     if((compositeCellType == "CordBlood") && (!"nRBC" %in% cellTypes)){
         message("[estimateCellCounts] Consider including 'nRBC' in argument 'cellTypes' for cord blood estimation.\n")
@@ -90,10 +115,42 @@ estimateCellCounts.gdsn <- function(
     # First assumption: Data is prenormalized - we will assume dasen is used.
     # Bigmelon has a wrapper that enables the quantification of quantiles for both M and U without having to rerank and re-sort data.
     # Therefore, bigmelon will check if quantiles have been computed already.
-    if(is.null(mn)&!'mnsrank'%in%ls.gdsn(gds)) mn <- 'methylated'
-    if(is.null(mn)&'mnsrank'%in%ls.gdsn(gds)) mn <- 'mnsrank'
-    if(is.null(un)&!'unsrank'%in%ls.gdsn(gds)) un <- 'unmethylated'
-    if(is.null(un)&'unsrank'%in%ls.gdsn(gds)) un <- 'unsrank'
+    if(is.null(mn) & !'mnsrank'%in% ls.gdsn(gds)) mn <- 'methylated'
+    if(is.null(mn) & 'mnsrank' %in% ls.gdsn(gds)) mn <- 'mnsrank'
+    if(is.null(un) & !'unsrank'%in% ls.gdsn(gds)) un <- 'unmethylated'
+    if(is.null(un) & 'unsrank' %in% ls.gdsn(gds)) un <- 'unsrank'
+    if(is.null(bn)) bn <- 'betas'
+    referencePd <- colData(referenceRGset)
+    referenceMset <- preprocessRaw(referenceRGset)
+    if(gdPlatform == 'EPIC'){
+    message('No Reference Set of EPIC, converting array to 450k...')
+    message('This method is NOT memory efficient!')
+    M <- gfile[rownames(referenceMset), , node = mn]
+    U <- gfile[rownames(referenceMset), , node = un]
+    rownames(M) <- rownames(U) <- rownames(referenceMset)
+    ot <- getProbeType(referenceMset)
+    sMI <- normalizeQuantiles2(M[ot=='I',])
+    sMII <- normalizeQuantiles2(M[ot=='II',])
+    sUI <- normalizeQuantiles2(U[ot=='I',])
+    sUII <- normalizeQuantiles2(U[ot=='II',])
+    mquan <- list(quantiles = rep(0, nrow(M)),
+                    inter = rep(0, nrow(M)),
+                    onetwo = ot
+                )
+    mquan[['quantiles']][ot == 'I'] <- sMI[[1]]
+    mquan[['inter']][ot == 'I'] <- sMI[[2]]
+    mquan[['quantiles']][ot == 'II'] <- sMII[[1]]
+    mquan[['inter']][ot == 'II'] <- sMII[[2]]
+    uquan <- list(quantiles = rep(0, nrow(M)),
+                    inter = rep(0, nrow(M)),
+                    onetwo = ot)
+    uquan[['quantiles']][ot == 'I'] <- sUI[[1]]
+    uquan[['inter']][ot == 'I'] <- sUI[[2]]
+    uquan[['quantiles']][ot == 'II'] <- sUII[[1]]
+    uquan[['inter']][ot == 'II'] <- sUII[[2]]
+    mquan[['rn']] <- uquan[['rn']] <- rownames(M)
+
+    } else {
     ot <- fot(gds)
     mquan <- getq(gds = gds, node = mn, onetwo = ot, perc = perc)
     # rownames not working(?)
@@ -103,8 +160,7 @@ estimateCellCounts.gdsn <- function(
     uquan[['rn']] <- read.gdsn(index.gdsn(gds,read.gdsn(index.gdsn(gds, "paths"))[1]))
     # We can skip combining data-sets.
     # Instead preprocessRaw reference to replace data with quantiles.
-    referencePd <- colData(referenceRGset)
-    referenceMset <- preprocessRaw(referenceRGset)
+    }
     nmet <- impose(getMeth(referenceMset), mquan)
     nume <- impose(getUnmeth(referenceMset), uquan)
     rm(referenceRGset)
@@ -117,13 +173,12 @@ estimateCellCounts.gdsn <- function(
     rm(referenceMset)
 
     if(verbose) message("[estimateCellCounts] Estimating composition.\n")
-    counts <- minfi:::projectCellType(betas(gds)[rownames(coefs), ], coefs)
+    counts <- minfi:::projectCellType(gds[rownames(coefs), , node = bn ], coefs)
 
     if (meanPlot) {
         smeans <- compData$sampleMeans
         smeans <- smeans[order(names(smeans))]
-        sampleMeans <- c(colMeans(betas(gds)[rownames(coefs), ]), smeans)
-
+        sampleMeans <- c(colMeans(gds[rownames(coefs),, node = bn]), smeans)
         sampleColors <- c(rep(1, ncol(mSet)), 1 + as.numeric(factor(names(smeans))))
         plot(sampleMeans, pch = 21, bg = sampleColors)
         legend("bottomleft", c("blood", levels(factor(names(smeans)))),

@@ -1,8 +1,8 @@
 Package: bigmelon
 Type: Package
 Title: Illumina methylation array analysis for large experiments
-Version: 1.1.9
-Date: 2017-02-21
+Version: 1.1.12
+Date: 2017-03-15
 Authors@R: c(
     person(c("Tyler", "J."), "Gorrie-Stone", role=c("cre", "aut"), email="tgorri@essex.ac.uk"),
     person("Ayden", "Saffari", role="aut"),
@@ -12,7 +12,7 @@ Description: Methods for working with Illumina arrays using gdsfmt.
 License: GPL-3
 Depends: R (>= 3.3), wateRmelon (>= 1.19.1), gdsfmt (>= 1.0.4),
         methods, methylumi, minfi (>= 1.21.0), Biobase
-Imports: stats, utils, GEOquery
+Imports: stats, utils, GEOquery, graphics
 Suggests: BiocGenerics, BiocStyle, minfiData, parallel
 LazyLoad: yes
 Collate: zzz.R es2gds.R dasenGds.R dbGdsn.R dfsfitGdsn.R gds2mlumi.R

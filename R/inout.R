@@ -5,14 +5,14 @@ newgds <- function(file){
     n <- add.gdsn(bmln, name = "description")
     put.attr.gdsn(n, "FileFormat", "DNA_Methylation")
     bmln
-} # AS - OK 
+} # AS - OK
 
 # function to check if file is already linked to by an existing gds object
 # in the current workspace (global env)
 findgdsobj <- function(gds){
     fhandle <- gds
-    for(obj in ls(envir = .GlobalEnv)){ 
-        if(inherits(get(obj), 'gds.class') && 
+    for(obj in ls(envir = .GlobalEnv)){
+        if(inherits(get(obj), 'gds.class') &&
             get(obj)$filename == normalizePath(gds)){
             temp <- deparse(obj)
             temp <- gsub("[[:blank:]\"]", "", temp)
@@ -28,11 +28,11 @@ findgdsobj <- function(gds){
 handle <- function(gds){
     newfile <- as.logical(0)
     # gds can be a filepath or gds.class object or an object name
-    # gds.class object given -> use as handle 
+    # gds.class object given -> use as handle
     if(inherits(gds, 'gds.class' ) && file_test('-f', gds$filename)){
         handle <- gds
-    } else if(inherits(gds, 'character')){ # Filepath given 
-        #file saved in global env 
+    } else if(inherits(gds, 'character')){ # Filepath given
+        #file saved in global env
         if(exists(gds) && inherits(g <- get(gds), 'gds.class')){
             g <- get(gds)
             handle <- openfn.gds(g$filename, readonly=FALSE)
@@ -46,10 +46,10 @@ handle <- function(gds){
                 }, finally = {
                 })
         } else if(!(file_test('-f', gds))){ # Need to create file
-            #handle <- newgds(gds) 
+            #handle <- newgds(gds)
             handle <- gds
             newfile <- as.logical(1)
-        } 
+        }
     #gds is not a valid gds.class object or filepath
     } else {
         stop(paste(substitute(gds),
@@ -103,7 +103,7 @@ app2gds <- function(m, bmln){
         mpdat <- data.frame(lapply(pData(m), as.character),
                             stringsAsFactors = FALSE)
         for(i in colnames(mpdat)){
-            # iterate through colnames in m 
+            # iterate through colnames in m
             pData_coln <- i
             # select corresponding child node of pData in the gds file
             pData_index_str <- paste("pData/", i, sep = "")
@@ -124,7 +124,7 @@ app2gds <- function(m, bmln){
                             val = unmethylated(QCdata(m)))
             }
         }
-        # add append operation to history 
+        # add append operation to history
         numsamp <- nrow(pData(m))
         history.finished <- as.character(Sys.time())
         history.command <- as.character(paste(numsamp,
@@ -147,7 +147,7 @@ app2gds <- function(m, bmln){
         hist_index_str <- paste("history/",k,sep="")
         hist_child_n <- index.gdsn(bmln,hist_index_str,silent=TRUE)
             append.gdsn(hist_child_n, val=mhist[,hist_coln])
-    }   
+    }
     } else {
     # call es2gds to create new file
     bmln <- es2gds(m,bmln)
@@ -158,6 +158,10 @@ app2gds <- function(m, bmln){
 iadd2 <- function(path, gds, chunksize = NULL, ...){
     gdsfile <- gds
     barcodes <- bfp(path)
+    if(is.null(chunksize) & length(barcodes) > 500){
+    chunksize <- 500
+    message('More than 500 barcodes identified. Switching to batch mode!')
+    }
     if(!is.null(chunksize)){
         if(!is.numeric(chunksize)) stop("chunksize must be numeric!")
         chunks <- seq(1, length(barcodes), chunksize)
@@ -176,9 +180,9 @@ iadd2 <- function(path, gds, chunksize = NULL, ...){
 }
 
 iadd <- function(bar, gds, ...){
-    # bar is a path to an idat file or a barcode  
+    # bar is a path to an idat file or a barcode
     gdsfile <- gds
-    ifile <- basename(bar) 
+    ifile <- basename(bar)
     # extract barcode
     pieces <- unlist(strsplit(ifile, '[_.]'))
     bar <- paste(pieces[1], pieces[2], sep = '_')
@@ -186,11 +190,10 @@ iadd <- function(bar, gds, ...){
     mlu <- methylumIDATepic(barcodes = bar)
     # append to gds.class object or file
     app2gds(mlu, gdsfile)
-} # AS - OK 
+} # AS - OK
 
 finalreport2gds <- function(finalreport, gds, ...){
     mset <- methylumiR(finalreport, ...)
     bmln <- es2gds(mset, gds)
     return(bmln)
 }
-

@@ -1,3 +1,4 @@
 VERSION	NEWS
+1.1.10 Added method to estimate cell counts - handles EPIC array as 450k array until EPIC reference comes out.
 0.99.4  Commit to Github from svn
 0.1.2	app2gds simple data appending function

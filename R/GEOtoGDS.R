@@ -1,5 +1,5 @@
 getpheno <- function(geo){
-    a <- getGEO(geo, destdir = paste0("./",geo), GSEMatrix=T,getGPL=F )
+    a <- GEOquery::getGEO(geo, destdir = paste0("./",geo), GSEMatrix=T,getGPL=F )
     pd <- phenoData(a[[1]])@data
     write.csv(pd, file=paste0('./',geo,'/',geo,'pheno.csv'))
     message('Removing unpacked files!')
@@ -26,7 +26,7 @@ geotogds <- function(geo, gds, method = "wget", keepidat = F, keeptar = F, ...){
     barsgz <- dir(dest, recursive = TRUE)[grepl(".idat.gz", dir(dest, recursive = TRUE))]
     message('Unpacking ', length(barsgz), " .idats!")
     for(z in barsgz){
-        gunzip(filename = paste0(dest, "/", z), destname = paste0(dest, "/", gsub(x = z, pattern = ".gz", replacement='')), remove = TRUE)
+        GEOquery::gunzip(filename = paste0(dest, "/", z), destname = paste0(dest, "/", gsub(x = z, pattern = ".gz", replacement='')), remove = TRUE)
     }
     # if(tidy){
     message('Removing unpacked files!')

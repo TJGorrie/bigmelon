@@ -20,6 +20,7 @@
 \alias{exprs,gds.class-method}
 \alias{'[.gds.class'}
 \alias{'[.gdsn.class'}
+\alias{fot,gds.class-method}
 
 \title{
 Bigmelon accessors
@@ -44,7 +45,7 @@ Functions to access data nodes in gds.class objects.
 \S4method{colnames}{gds.class}(x, do.NULL=TRUE, prefix=NULL)
 \S4method{rownames}{gds.class}(x, do.NULL=TRUE, prefix=NULL)
 \S4method{exprs}{gds.class}(object)
-
+\S4method{fot}{gds.class}(x)
 }
 
 \arguments{
@@ -70,18 +71,20 @@ prefix: for created names.
 }
 
 \details{
-Each function returns the data stored in the corresponding node as either a 
-gdsn.class object or a matrix or data.frame. These are names following the 
+Each function returns the data stored in the corresponding node as either a
+gdsn.class object or a matrix or data.frame. These are names following the
 conventions of the methylumi package and perform similar functions.
 
-Each function which returns a gdsn.class object can be indexed using 
-matrix-like '[' operations. With an optional name argument which optionally 
-allows for row and col names to be automatically appended to returned matrix. 
+Each function which returns a gdsn.class object can be indexed using
+matrix-like '[' operations. With an optional name argument which optionally
+allows for row and col names to be automatically appended to returned matrix.
 
-The QC functions (returns QCdata split into separate matrices for methylated 
+The QC functions (returns QCdata split into separate matrices for methylated
 values, unmethylated values, and probe names)
 
 exprs returns a data.frame of beta values for all probes across all samples.
+
+fot returns a vector corresponding to probe design (either 'I' or 'II') which is used for normalising differences between probe designs.
 
 }
 

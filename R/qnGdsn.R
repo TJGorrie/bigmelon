@@ -1,7 +1,7 @@
 qn.gdsn <- function(gds,
                     target,
                     newnode
-                    ){ # {{{ 
+                    ){ # {{{
     if(!length(newnode) == 1) stop("newnode does not have a length of 1!")
     datnod <- target
     dim <- objdesp.gdsn(datnod)$dim
@@ -23,15 +23,15 @@ qn.gdsn <- function(gds,
             S <- si$x
         }
         roll <- roll + S
-    }  
+    }
     # Calculating 'rowMeans'
     rm <- roll/dim[2]
     # Creating new gdsnode with 'newnode' name
-    n.t <- add.gdsn(gds, newnode, storage = "float64", 
+    n.t <- add.gdsn(gds, newnode, storage = "float64",
                     valdim = c(dim[1], 0), val = NULL, replace = TRUE)
     # Reranking + Replacing Values
     for(x in 1:dim[2]){
-        val <- readex.gdsn(datnod, sel = list(NULL, x)) 
+        val <- readex.gdsn(datnod, sel = list(NULL, x))
         r <- rank(val)
         # If NAs exist - Preserving NAs
         if(nobs[x] < dim[1]) {
@@ -45,4 +45,3 @@ qn.gdsn <- function(gds,
         append.gdsn(n.t, val)
     }
 } # }}}
-
