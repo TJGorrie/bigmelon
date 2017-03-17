@@ -112,9 +112,9 @@ dasenrank <- function(gds, mns, uns, onetwo, roco, calcbeta = NULL, perc = 1){# 
                 onetwo = onetwo)
     # Get Rank + Quantiles
     getquantilesandranks(gds, index.gdsn(f, 'mnsc'), onetwo = onetwo,
-                rank.node = 'mnsrank', perc = perc, ...)
+                rank.node = 'mnsrank', perc = perc)
     getquantilesandranks(gds, index.gdsn(f, 'unsc'), onetwo = onetwo,
-                rank.node = 'unsrank', perc = perc, ...)
+                rank.node = 'unsrank', perc = perc)
     # COMPLETE Return nothing
     if(is.null(calcbeta)){
         message('Run \'computebeta.gds(gds, calcbeta, \'mnsrank\', \'unsrank\', fudge = 100)\' to calculate betas!')

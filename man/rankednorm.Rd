@@ -1,6 +1,7 @@
 \name{dasenrank}
 \alias{dasenrank}
 \alias{computebeta.gds}
+\alias{getquantilesandranks}
 \title{
 Dasen Quantile Normalization by storing ranks
 }
