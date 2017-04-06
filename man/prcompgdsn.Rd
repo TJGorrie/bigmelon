@@ -12,7 +12,7 @@ Performs principal components analysis on the given
 gds object and returns the results as an object of class "prcomp".
 }
 \usage{
-\method{prcomp}{gds.class}(x, node.name, center = FALSE, scale. = FALSE, 
+\method{prcomp}{gds.class}(x, node.name, center = FALSE, scale. = FALSE,
 rank. = NULL, retx = FALSE, tol = NULL, perc = 0.01,
 npcs = NULL, parallel = NULL, method = c('quick', 'sorted'), verbose = FALSE, ...)
 }
@@ -25,11 +25,11 @@ A gds.class object.
 Name of the gdsn.class node to learn principal components from
 }
 \item{center}{
-Logical value indicating whether variables should be shifted to be zero 
+Logical value indicating whether variables should be shifted to be zero
 centered.
 }
 \item{scale.}{
-Logical value indicating whether the variables should be scaled to have unit 
+Logical value indicating whether the variables should be scaled to have unit
 variance
 }
 \item{tol}{
@@ -44,7 +44,7 @@ a logical value indicating whether the rotated variables
 should be returned.
 }
 \item{perc}{
-Percentage of data to be used. 
+Percentage of data to be used.
 }
 \item{npcs}{
 Number of principal components to be returned
@@ -55,7 +55,7 @@ This is only used if method="sorted".
 }
 \item{method}{
 Indicates what method to use out of "quick" and "sorted". "quick" stochastically selects number of rows according to perc. And the supplies them to svd.
-"sorted" determines the interquartile range for each row then selects the top percentage (according to perc) and supplies selected rows to svd.
+"sorted" determines the interquartile range for each row then selects the top percentage (according to perc) of probes with the largest interquartile range and supplies selected rows to svd.
 }
 \item{verbose}{
 A logical value indicating whether message outputs are displayed.
@@ -84,4 +84,3 @@ prcomp(e, node.name="betas", perc=0.01, method='quick')
 closefn.gds(e)
 unlink("melon.gds")
 }
-

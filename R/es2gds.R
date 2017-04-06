@@ -40,11 +40,11 @@ es2gds <- function(m, file, qc = TRUE){
         # deal with empty column names in fData
         nb_col <- which(colnames(fData(m)) == "")
         colnames(fData(m))[nb_col] <- nb_col
-        add.gdsn(bmln, "fData", 
+        add.gdsn(bmln, "fData",
         val = data.frame(lapply(fData(m), as.character),
                 stringsAsFactors = FALSE), check = FALSE)
         message('pData... ' )
-        add.gdsn(bmln, "pData", 
+        add.gdsn(bmln, "pData",
         val = data.frame(lapply(pData(m), as.character),
                 stringsAsFactors = FALSE))
         message('qcdata... ' )
@@ -60,7 +60,7 @@ es2gds <- function(m, file, qc = TRUE){
             }
         }
         message('finished creating gdsfile' )
-        add.gdsn(bmln, "history", 
+        add.gdsn(bmln, "history",
         val = data.frame(lapply(m@history, as.character),
                         stringsAsFactors = FALSE))
         history.command <- "MethylumiSet converted to gds (bigmelon)"
@@ -68,14 +68,14 @@ es2gds <- function(m, file, qc = TRUE){
         h <- data.frame(submitted = history.submitted,
                         finished = history.finished,
                         command = history.command,
-                        stringsAsFactors = FALSE)   
+                        stringsAsFactors = FALSE)
         for(j in colnames(h)){
             h_coln <- j
             h_index_str <- paste("history/", j, sep = "")
             h_child_n <- index.gdsn(bmln, h_index_str, silent = TRUE)
             append.gdsn(h_child_n, val = h[ ,h_coln])
         }
-    } 
+    }
     #BEGIN Minfi Methods
     # BEGIN MethylSet method
     if(inherits(m, 'MethylSet')){
@@ -95,9 +95,9 @@ es2gds <- function(m, file, qc = TRUE){
         add.gdsn(bmln, "fData", val = fd, check = FALSE)
         message('pData... ')
         # Assuming data-less pData(m)
-        pd <- data.frame(lapply(cbind(rownames(pData(m)), pData(m)),
+        pd <- data.frame(lapply(cbind(rownames(colData(m)), colData(m)),
                         as.character), stringsAsFactors = FALSE)
-        colnames(pd) <- c("barcode", colnames(pData(m)))
+        colnames(pd) <- c("barcode", colnames(colData(m)))
         add.gdsn(bmln, "pData", val = pd)
         # QC
         if(qc){
@@ -105,7 +105,7 @@ es2gds <- function(m, file, qc = TRUE){
             message('    ... skipped')
         }
         message('finished creating gdsfile' )
-        add.gdsn(bmln, "history", 
+        add.gdsn(bmln, "history",
         val = data.frame(lapply(data.frame(submitted = "",
                                             finished = "",
                                             command = ""),
@@ -115,7 +115,7 @@ es2gds <- function(m, file, qc = TRUE){
         h <- data.frame(submitted = history.submitted,
                         finished = history.finished,
                         command = history.command,
-                        stringsAsFactors = FALSE)   
+                        stringsAsFactors = FALSE)
         for(j in colnames(h)){
             h_coln <- j
             h_index_str <- paste("history/", j, sep = "")
@@ -144,9 +144,9 @@ es2gds <- function(m, file, qc = TRUE){
                             stringsAsFactors = FALSE)
         add.gdsn(bmln, "fData", val = fd,check = FALSE)
         message('pData... ')
-        pd <- data.frame(lapply(cbind(rownames(pData(m)), pData(m)),
+        pd <- data.frame(lapply(cbind(rownames(colData(m)), colData(m)),
                             as.character), stringsAsFactors = FALSE)
-        colnames(pd) <- c("barcode", colnames(pData(m)))
+        colnames(pd) <- c("barcode", colnames(colData(m)))
         add.gdsn(bmln, "pData", val = pd)
         message('qcdata... ')
         if(qc){
@@ -157,11 +157,11 @@ es2gds <- function(m, file, qc = TRUE){
             add.gdsn(bmln, "QCunmethylated",
                         val = getRed(m)[ctrls$Address, ])
             add.gdsn(bmln, "QCrownames", val = rownames(a))
-        } else { 
+        } else {
             message('     ...skipped')
         }
         message('finished creating gdsfile' )
-        add.gdsn(bmln, "history", 
+        add.gdsn(bmln, "history",
                     val = data.frame(lapply(data.frame(submitted = "",
                                                     finished = "",
                                                     command = ""),
@@ -172,7 +172,7 @@ es2gds <- function(m, file, qc = TRUE){
         h <- data.frame(submitted = history.submitted,
                         finished = history.finished,
                         command = history.command,
-                        stringsAsFactors = FALSE)   
+                        stringsAsFactors = FALSE)
         for(j in colnames(h)){
             h_coln <- j
             h_index_str <- paste("history/", j, sep = "")
@@ -192,7 +192,7 @@ es2gds <- function(m, file, qc = TRUE){
     rowna <- ls.gdsn(index.gdsn(bmln, "fData"))[unlist(rown)[1]]
     coln <- list()
     # Change search terms - in any event!
-    for(i in c("sampleID", "barcode", "name")){ 
+    for(i in c("sampleID", "barcode", "name")){
         coln[[i]] <- grep(i, ls.gdsn(index.gdsn(bmln, "pData")),
                             ignore.case = TRUE)
     }

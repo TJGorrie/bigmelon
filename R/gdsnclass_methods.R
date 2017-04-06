@@ -1099,6 +1099,7 @@ setMethod(
     }
 )
 
+setGeneric("fot", function(x){standardGeneric("fot")})
 setMethod(
     f='fot',
     signature(x='gds.class'),

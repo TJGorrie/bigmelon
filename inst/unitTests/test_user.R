@@ -4,36 +4,43 @@
 # we create a unit test. any function for strictly internal use should be moved
 # to test_internal.R
 
-# these stubs are based on the content of w_gdsfmt.R TODO: inout.R
+# TODO: dasenGds.R dbGdsn.R dfsfitGdsn.R
+#       ecc.gdsn.R es2gds.R gds2mlumi.R gdsnclass_methods.R
+#       GEOtoGDS.R inout.R pfilterGds.R prcompGdsn.R pwodGdsn.R
+#       qnGdsn.R ranknorm.R zzz.R
+#dbgdsn.R
+#dfsfitGdsn.R
+#ecc.gdsn.R
 
-test_es2gds      <- function(m, file, qc=TRUE  ){
+# es2gds.R
+test_es2gds      <- function(m, file, qc = TRUE){
 	data(cantaloupe)
 	#t1 - basic tests to ensure function creates object and linked file
 	d <- es2gds(cantaloupe,'t0.gds')
 	checkTrue(file_test('-f', d$filename))
 	checkTrue(inherits(d,'gds.class'))
-	
+
 	#e1 - error condition 1 - use existing filename
 	checkException(e <- es2gds(cantaloupe,'t0.gds'))
-	
+
 	#e2 - error condition 2 - use non methylumi set object
 	checkException(e <- es2gds(pData(cantaloupe),'t1.gds'))
-	
+
 	closefn.gds(d)
-	rm(d)
-	
+    unlink('t0.gds')
 }
 
+# inout.R
 test_app2gds 	 <- function(m, bmln){
 	data(cantaloupe)
 
 	f <- es2gds(cantaloupe,'t2.gds')
 	numsamp <- length(colnames(f))
-	
+
 	#t1 - append to an existing gds.class object
 	f <- app2gds(cantaloupe,f)
 	checkTrue(length(colnames(f)) == numsamp * 2)
-	
+
 	#close all opened GDS files (for test 3)
 	#rv <- showfile.gds()
 	#nm <- NULL; rd <- NULL
@@ -48,7 +55,7 @@ test_app2gds 	 <- function(m, bmln){
 	#  closefn.gds(rv[[i]])
 	#}
 	#rm(rv,nm,f)
-		
+
 	#t2 - append to existing file (already linked to by another gds object)
 	#test doesn't work: I'm not able to recreate this scenario in test (works for user
 	#though)
@@ -57,16 +64,16 @@ test_app2gds 	 <- function(m, bmln){
 	#checkTrue(file_test('-f', g$filename))
 	#checkTrue(inherits(g,'gds.class'))
 	#checkTrue(length(colnames(g)) == numsamp * 2)
-	
+
 	#t3 - append to existing file not already linked
-	#test doesn't work: I'm not able to recreate this scenario, due to the 
-	#close.fn function not cleaning up properly, which makes the file look as if it's 
+	#test doesn't work: I'm not able to recreate this scenario, due to the
+	#close.fn function not cleaning up properly, which makes the file look as if it's
 	#still open (this wont be the case for the user)
 	#h <- app2gds(cantaloupe,'t2.gds')
 	#checkTrue(file_test('-f', h$filename))
 	#checkTrue(inherits(h,'gds.class'))
 	#checkTrue(length(colnames(h)) == numsamp * 3)
-	
+
 	#t4 - append to new file
 	i <- app2gds(cantaloupe,'t3.gds')
 	checkTrue(file_test('-f', i$filename))
@@ -75,7 +82,7 @@ test_app2gds 	 <- function(m, bmln){
 
 	#e1 - error condition 1 - try to use non gds.class object
 	checkException(j <- app2gds(cantaloupe,cantaloupe))
-	
+
 	unlink("t1.gds", force=TRUE)
 	unlink("t2.gds", force=TRUE)
 	unlink("t3.gds", force=TRUE)

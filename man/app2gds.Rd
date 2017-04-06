@@ -1,11 +1,11 @@
 \name{app2gds}
 \alias{app2gds}
 \title{
-Append a MethyLumiSet object to a CoreArray Genomic Data Structure (GDS) data 
+Append a MethyLumiSet object to a CoreArray Genomic Data Structure (GDS) data
 file
 }
 \description{
-This function will append a MethyLumiSet data object to a CoreArray Genomic 
+This function will append a MethyLumiSet data object to a CoreArray Genomic
 Data Structure(GDS) data file, and return as a gds.class object.
 }
 \usage{
@@ -14,12 +14,12 @@ app2gds(m, bmln)
 
 \arguments{
 \item{m}{
-The MethyLumiSet object to be appended to the CoreArray Genomic Data Structure 
+The MethyLumiSet object to be appended to the CoreArray Genomic Data Structure
 (GDS) data file
 }
 \item{bmln}{
 
-Either: 
+Either:
 A gds.class object
 
 Or:
@@ -28,6 +28,10 @@ A character string specifying the name of an existing .gds file to write to.
 Or:
 A character string specifying the name of a new .gds file to write to
 }
+}
+
+\details{
+Currently, the function only works with MethylumiSet objects and will produce unexpected results if the number of rows of the new objects does not match the existing .gds object. To prevent any errors from occuring it is recommended that raw .idat files are read in with \code{\link[wateRmelon]{readEPIC}} or appended \code{\link{iadd}} to ensure that all rows are the same length and have the same annotation.
 }
 
 \value{

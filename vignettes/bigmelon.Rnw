@@ -1,47 +1,48 @@
-%\VignetteIndexEntry{The \Rpackage{bigmelon} Package} 
-%\VignetteKeywords{Illumina DNA methylation 450k array normalization epic} 
+%\VignetteIndexEntry{The \Rpackage{bigmelon} Package}
+%\VignetteKeywords{Illumina DNA methylation 450k array normalization epic}
 %\VignettePackage{bigmelon}
-% Sweave Vignette Template derived bt Leo Schalkwyk from 
+% Sweave Vignette Template derived bt Leo Schalkwyk from
 %% www.bioconductor.org/help/course-materials/2010/AdvancedR/BuildPackage.pdf
-\documentclass[11pt]{article} 
+\documentclass[11pt]{article}
 \usepackage{Sweave}
 
 <<style-Sweave, eval=TRUE, echo=FALSE, results=tex>>=
 BiocStyle::latex()
 @
 
-%\newcommand{\Rfunction}[1]{{\texttt{#1}}} 
-%\newcommand{\Robject}[1]{{\texttt{#1}}} 
-%\newcommand{\Rpackage}[1]{{\textit{#1}}} 
+%\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+%\newcommand{\Robject}[1]{{\texttt{#1}}}
+%\newcommand{\Rpackage}[1]{{\textit{#1}}}
 %\newcommand{\Rclass}[1]{{\textit{#1}}}
 
-\title{The \Rpackage{bigmelon} Package} 
+\title{The bigmelon Package}
 \author{Tyler Gorrie-Stone, Ayden Saffari, Karim Malki and Leonard C Schalkwyk}
-\begin{document} 
+\begin{document}
 \SweaveOpts{concordance=TRUE}
 \maketitle
-\section{About} 
-The \Rpackage{bigmelon} package for Illumina methylation data provides 
-a fast and convenient way to apply a variety of different normalisation methods 
-to your data, such as those previously described by Pidsley et al. [1] 
-and implemented in the package \Rpackage{wateRmelon}. Bigmelon extends the 
-capability of \Rpackage{wateRmelon} to higher dimensional data, allowing much 
-larger data sets containing many more arrays to be processed, while also 
-providing a convenient way to store this data for future access. This has been 
-achieved by adapting methods from the \Rpackage{gdsfmt} package, originally 
-designed for handling SNP data, which through efficient memory use and 
-management is able to overcome some of the memory overheads associated 
+\section{About}
+The \Rpackage{bigmelon} package for Illumina methylation data provides
+a fast and convenient way to apply a variety of different normalisation methods
+to your data, such as those previously described by Pidsley et al. [1]
+and implemented in the package \Rpackage{wateRmelon}. Bigmelon extends the
+capabilities of the \Rpackage{wateRmelon} to higher dimensional data, allowing
+larger data sets containing many more arrays to be processed simultaneously, while also
+providing convenient storage for data for future access and sharing with peers.
+This has been achieved by adapting methods from the \Rpackage{gdsfmt} package, originally
+designed for handling SNP data, which through efficient memory use and
+management is able to overcome the memory overheads associated
 with handling big data in \R{}.\\
 
 \section{Quick-Start}
-This section will briefly describe how to quickly import, access and 'analyse'
-data using bigmelon and the gds file format.
+This section will briefly describe how to import, access and 'analyse'
+data using bigmelon and the gds file format. All the functions described in this section are described in full in the later portions of this document.
+
 <<code-block, keep.source=TRUE>>=
 library(bigmelon)
 data(melon)
 # Convert methylumiset or methylset objects to .gds
 gfile <- es2gds(melon, 'melon.gds')
-# 'melon.gds' file created in working directory
+# 'melon.gds' file created in current working directory
 dir()
 # Access data with:
 betas(gfile)
@@ -54,10 +55,10 @@ gfile[1:5, 1:5, node = 'methylated']
 # Preprocess data with pfilter and dasen
 pfilter(gfile)
 dasen(gfile)
-# Note you do not have to store the output 
+# Note you do not have to store the output
 # because the functions make changes to disk
 
-# Use apply.gdsn to perform apply-like operations
+# Use apply.gdsn (or clusterApply.gdsn) to perform apply-like operations
 meth <- methylated(gfile)
 apply.gdsn(meth, 2, median, as.is='double', na.rm = TRUE)
 
@@ -73,61 +74,61 @@ unlink('melon.gds', force = TRUE)
 @
 
 \section{Installation}
-\Rpackage{bigmelon} works with existing \Bioconductor{} packages and therefore 
-has a number of dependencies. The install.packages() should install the 
-required packages automatically, but should this not succeed for any reason, 
+\Rpackage{bigmelon} works with existing \Bioconductor{} packages and therefore
+has a number of dependencies. The install.packages() should install the
+required packages automatically, but should this not succeed for any reason,
 the following commands can be used to install these manually:
 
-<<UnevaluatedCode, eval=FALSE>>= 
+<<UnevaluatedCode, eval=FALSE>>=
 source('http://bioconductor.org/biocLite.R')
 biocLite('wateRmelon', 'gdsfmt')
 @
 
-Install the latest package from a local copy (located in the current working 
+Install the latest package from a local copy (located in the current working
 directory of your R session):
 
-<<UnevaluatedCode, eval=FALSE>>= 
+<<UnevaluatedCode, eval=FALSE>>=
 install.packages('bigmelon_0.99.11.tar.gz', repos = NULL, type = 'source')
 @
 
 \section{Using Bigmelon}
-\subsection{Loading Data}
+\subsection{Loading Data to gds format}
 
 There are multiple methods that can be used to load in
 data into a gds object. These can either be from GenomeStudio
-final report text files or from raw binary (.IDAT) files.
+final report text files or from raw binary (.IDAT) files (preferred method).
 
 \subsubsection{IDAT Files}
-IDAT files are the raw intensities obtained from DNA methylation microarrays 
-and are split into two files per sample (one Red Channel and 
-one Green Channel). These are typically read into R using \Rpackage{minfi} or 
-\Rpackage{methylumi}. In \Rpackage{bigmelon} IDAT files can be read in using 
-the \Rfunction{iadd} or \Rfunction{iadd2} functions. These functions pass to 
-\Rfunction{methylumIDATepic} (\Rpackage{wateRmelon}) to read in the data - 
-although it should be noted that the full annotation of features are not
-included when reading from idats.
+IDAT files are the raw intensities obtained from DNA methylation microarrays
+and are split into two files per sample (one Red Channel and
+one Green Channel). These are read into R using \Rpackage{minfi} or
+\Rpackage{methylumi}. In \Rpackage{bigmelon} IDAT files can be read in using
+the \Rfunction{iadd} or \Rfunction{iadd2} functions. These functions pass to
+\Rfunction{methylumIDATepic} (from \Rpackage{wateRmelon}) to read in the data -
+although it should be noted that the full annotation of the features are not
+included when reading from idats. And can be added to the
 
-\Rfunction{iadd} and \Rfunction{iadd2} function differently. \Rfunction{iadd} 
-will take a vector of barcodes, \Rfunction{iadd2} will accept a directory 
+\Rfunction{iadd} and \Rfunction{iadd2} function differently. \Rfunction{iadd}
+will take a vector of barcodes, \Rfunction{iadd2} will accept a directory
 pathway and extract all IDAT files within the specified path.
 
-\Rfunction{iadd2} also has the functionality to read IDAT files in 
-chunks. This is useful if you are attempting to read in a lot of data at 
-once and do not have sufficient memory on your workstation to support this. 
-\textbf{This method is recommended if you are using a workstation 
+\Rfunction{iadd2} also has the functionality to read IDAT files in
+chunks. This is useful if you are attempting to read in a lot of data at
+once and do not have sufficient memory on your workstation to support this.
+\textbf{This method is recommended if you are using a workstation
 bounded by memory limitations.}
-<<UnevaluatedCode, eval=FALSE>>= 
+<<UnevaluatedCode, eval=FALSE>>=
 # read in an IDAT file with barcode 'sentrixid_rnncnn'
 gfile <- iadd('sentrixid_rnncnn', gds = 'melon.gds')
 gfile <- iadd2('Data/IDATLocations/dataset', gds = 'melon.gds', chunksize = 100)
 @
 
 \subsubsection{ExpressionSet Objects}
-You may have been given a \Rclass{MethylumiSet}, \Rclass{RGChannelSet} 
-or \Rclass{MethylSet} instead of idats. These can be passed to 
-\Rfunction{es2gds} to convert the data into a \Rclass{gds.class}
+You may have been given a \Rclass{MethylumiSet}, \Rclass{RGChannelSet}
+or \Rclass{MethylSet} instead of idats. These can be passed to
+\Rfunction{es2gds} to convert the data into a \Rclass{gds.class}. Such circumstance can arise when one wants to use a particular normalisation methodology only available to specific packages.
 
-Henceforth we will convert the ExpressionSet data object 'melon' packaged 
+Henceforth we will convert the ExpressionSet data object 'melon' packaged
 within \Rpackage{wateRmelon} to demonstrate further down stream analysis.
 
 <<code-block, keep.source=TRUE>>=
@@ -135,18 +136,18 @@ data(melon)
 gfile <- es2gds(melon, 'melon.gds')
 @
 
-\subsubsection{Text Files} 
-To read in text files, the \Rfunction{methyLumiR} function from 
+\subsubsection{Text Files}
+To read in text files, the \Rfunction{methyLumiR} function from
 \Rpackage{methylumi} can be used.
-If using this method, we suggest saving the 
-unnormalised, uncorrected version of the data. We also 
-recommend keeping the barcode names 
+If using this method, we suggest saving the
+unnormalised, uncorrected version of the data. We also
+recommend keeping the barcode names
 (SentrixID\_RnnCnn) as the column headers or in a separate
 dataframe.
 Alternatively you can use the function \Rfunction{finalreport2gds} that will
 output a .gds object.
 
-<<UnevaluatedCode, eval=FALSE>>= 
+<<UnevaluatedCode, eval=FALSE>>=
 library(methylumi)
 # read Illumina methylation data into a MethyLumiSet object
 melon <- methyLumiR('finalreport.txt')
@@ -154,25 +155,24 @@ melon <- methyLumiR('finalreport.txt')
 gfile <- finalreport2gds('finalreport.txt', gds='melon.gds')
 @
 
-\paragraph{}
 Assuming you have used \Rfunction{methyLumiR} you would then need to
 convert the resultant object to a Genomic Data Structure (GDS) data file.
 This can also be achieved using the function \Rfunction{es2gds} which can
-convert \Rclass{MethyLumiSet} objects (from \Rpackage{methylumi}, 
+convert \Rclass{MethyLumiSet} objects (from \Rpackage{methylumi},
 \Rclass{RGChannelSet} and \Rclass{MethylSet} objects (from \Rpackage{minfi})
-as described above. 
+as described above.
 
-<<UnevaluatedCode, eval=FALSE>>= 
+<<UnevaluatedCode, eval=FALSE>>=
 # convert a MethyLumiSet object to a gds.class object
 gfile <- es2gds(melon, 'melon.gds')
 @
 
-\subsection{Opening and Closing gds files}
+\section{Opening and Closing gds files}
 Now that you have created a .gds file you can continue working on it within
 the same R session. Or close the file for later use, or to share with others.
 
 The functions \Rfunction{openfn.gds} and \Rfunction{closefn.gds} are used.
-<<UnevaluatedCode, eval=FALSE>>= 
+<<UnevaluatedCode, eval=FALSE>>=
 # Closing File
 closefn.gds(gfile)
 
@@ -180,46 +180,46 @@ closefn.gds(gfile)
 gfile <- openfn.gds('melon.gds')
 @
 Recommended: See \Rfunction{?openfn.gds}
+Generally only one instance of a gds can be opened per R session, this can be disabled by setting allow.fork and allow.duplicate arguments in \Rfunction{openfn.gds} to TRUE.
 
-
-\subsection{Exploring the \Rclass{gds.class}}
+\section{Exploring the \Rclass{gds.class}}
 The resulting \Rclass{gds.class} may be different to any other data-structure
 you have previously used. Simply, it resembles an S4 object but instead of slots
-there are nodes with a \Rclass{gdsn.class} class. To access these, 
-specialized functions need to be used as common R functionality ({@} and {\$}) 
+there are nodes with a \Rclass{gdsn.class} class. To access these,
+specialized functions need to be used as common R functionality ({@} and {\$})
 are not yet existent for these objects.
 
-When printing the \Rclass{gds.object} we are given an almost directory-like 
-output. 
+When printing the \Rclass{gds.object} we are given an almost directory-like
+output.
 
 <<code-block, keep.source=TRUE>>=
 print(gfile)
-@ 
+@
 
-From this output we can see some useful information about our object such as 
+From this output we can see some useful information about our object such as
 the file name, total object size and the name, size and type of each node
 within the gds object.
 
-Typically a \Rpackage{bigmelon} gds file is comprised of some common nodes 
-these being: betas, methylated, unmethylated, pvals, fData, pData, and History. 
-If you are familiar with the \Robject{MethyLumiSet} this will be immediately 
+Typically a \Rpackage{bigmelon} gds file is comprised of some common nodes
+these being: betas, methylated, unmethylated, pvals, fData, pData, and History.
+If you are familiar with the \Robject{MethyLumiSet} this will be immediately
 familiar to you.
 If not a brief description is as follows
 \begin{itemize}
-\item{ betas: The ratio between Methylated and Unmethylated intensities - 
+\item{ betas: The ratio between Methylated and Unmethylated intensities -
 most commonly used for analysis}
 \item{ methylated: The methylated intensities}
 \item{ unmethylated: The unmethylated intensities}
 \item{ pvals: The detection P values of the array }
 \item{ NBeads(not shown): The total beadcount (per feature) on the array.}
-\item{ fData: The feature data, which contains all relavent biological 
+\item{ fData: The feature data, which contains all relavent biological
 information to CpG probes within the micro-array (rows).}
-\item{ pData: The pheno data, which contains information relevant to 
+\item{ pData: The pheno data, which contains information relevant to
 biological samples (columns).}
 \item{ history: Brief description of operations applied to the file.}
 \end{itemize}
 
-To access the data represented in the object we need to use the function 
+To access the data represented in the object we need to use the function
 \Rfunction{index.gdsn}
 <<code-block, keep.source=TRUE>>=
 index.gdsn(gfile, 'betas')
@@ -228,9 +228,9 @@ class(index.gdsn(gfile, 'betas'))
 index.gdsn(gfile, 'fData/TargetID')
 @
 
-Alternatively, there are some accessors written for the common object names 
+Alternatively, there are some accessors written for the common object names
 see \Rfunction{?'bigmelon-accessors'}.
-Majority of these accessors will pass to \Rfunction{index.gdsn} but if 
+Majority of these accessors will pass to \Rfunction{index.gdsn} but if
 the object is small enough the accessor may
 read the object into memory without further indexing.
 <<code-block, keep.source=TRUE>>=
@@ -238,7 +238,7 @@ betas(gfile)
 class(betas(gfile))
 @
 
-If the directory-tree output is hard to interpret or you wish to list all 
+If the directory-tree output is hard to interpret or you wish to list all
 available nodes the function \Rfunction{ls.gdsn}
 allows you to view the contents of a gds file in a vector.
 <<code-block, keep.source=TRUE>>=
@@ -248,11 +248,11 @@ ls.gdsn(index.gdsn(gfile, 'fData'))
 @
 
 \subsection{Exploring the \Rclass{gdsn.class}}
-You may ask the question - 'How do I access \textbf{that} juicy data?'. 
+You may ask the question - 'How do I access \textbf{that} juicy data?'.
 To do this, the functions \Rfunction{read.gdsn} and
-\Rfunction{readex.gdsn} are used. \Rfunction{read.gdsn} will load the entire 
-object represented in a gdsn.class object into memory. 
-While \Rfunction{readex.gdsn} allows you to specify a subset to 
+\Rfunction{readex.gdsn} are used. \Rfunction{read.gdsn} will load the entire
+object represented in a gdsn.class object into memory.
+While \Rfunction{readex.gdsn} allows you to specify a subset to
 load into memory.
 
 <<code-block, keep.source=TRUE>>=
@@ -270,13 +270,13 @@ dim(datsub)
 datsub
 @
 
-You may immediately notice that the rownames and column names of the matrix 
+You may immediately notice that the rownames and column names of the matrix
 are missing.
-This is an unfortunate side-effect of using \Rfunction{read.gdsn} because such 
+This is an unfortunate side-effect of using \Rfunction{read.gdsn} because such
 information is not stored within the specified gds node.
-However within \Rpackage{bigmelon} we have written a wrapper-function for 
+However within \Rpackage{bigmelon} we have written a wrapper-function for
 \Rfunction{read.gdsn} (and \Rfunction{readex.gdsn})
-to load data into R. This is achieved using \Rfunction{'['}. The purpose of 
+to load data into R. This is achieved using \Rfunction{'['}. The purpose of
 this is to enable similar indexing operations that most
 will be familiar with.
 <<code-block, keep.source=TRUE>>=
@@ -285,11 +285,11 @@ anode
 datsub <- anode[1:5,1:3]
 dim(datsub)
 datsub
-# Additionally, the row and col names can be turned off
+# Additionally, the row and col names can be disabled
 anode[1:5, 1:3, name = FALSE]
 @
-There are a few more tricks that are possible in \Rpackage{bigmelon} that we 
-will briefly explore here.
+There are a few more tricks that are possible in \Rpackage{bigmelon} that we
+will briefly explore here. Most of the indexing tricks that can be implements on matrices can be performed on gdsn.nodes.
 <<code-block, keep.source=TRUE>>=
 # Logical Indexing
 anode[1:5,c(TRUE,FALSE,FALSE)]
@@ -298,22 +298,22 @@ anode[c(5,9,1,500,345), c(8,4,1,3)]
 # Indexing by characters (and drop functionality)
 anode[c('cg00000029', 'cg00000236'), '6057825008_R02C01', drop = FALSE]
 # Loading entire data (no indexing)
-dat <- anode[ , ]
+dat <- anode[ , ] # Not recommended for large data.
 dim(dat)
 @
 
-Additionally it is possible to call a gds node from a gds.class within the 
-\Rfunction{'['} indexing.
+Additionally it is possible to call a gds node from a gds.class within the
+\Rfunction{'['} indexing. This is particularly useful if you have a foreign matrix in your gds object with the name "foobar", it will be possible to implement the below structures to retrieve specific data.
 <<code-block, keep.source=TRUE>>=
 gfile[1:5, 1:3, node = 'betas', name = TRUE]
 gfile[1:5, 1:3, node = 'methylated', name = TRUE]
 @
 
-As a brief side note, the row and column names are still stored within the 
+As a brief side note, the row and column names are still stored within the
 gds data file. Located at the bottom of each gds data file will be a node
-labelled as "paths". This contains a string to where the row and column names 
-are stored. These are determined by default upon the creation of the gds 
-data file but in events where they are incorrect they can be corrected 
+labelled as "paths". This contains a string to where the row and column names
+are stored. These are determined by default upon the creation of the gds
+data file but in events where they are incorrect they can be corrected
 with the \Rfunction{redirect.gds}.
 
 <<code-block, keep.source=TRUE>>=
@@ -324,8 +324,8 @@ head(read.gdsn(index.gdsn(gfile, "pData/sampleID")))
 
 \section{Preprocessing}
 \subsection{Quality Control}
-Prior to data analysis, you may find it is necessary to perform some 
-quality control and normalization. Within bigmelon, we have some functions 
+Prior to data analysis, you may find it is necessary to perform some
+quality control and normalization. Within bigmelon, we have some functions
 can assist with the QC but you can use whatever functions you like.
 
 Typical workflows involve visualizing raw intensities:
@@ -353,47 +353,46 @@ rawbet <- betas(gfile)[,]
 outlyx(rawbet, plot = TRUE)
 @
 
-If the data is too large to load into memory, one can use the 
-\Rpackage{bigmelon} method which determines outliers with a 
+If the data is too large to load into memory, one can use the
+\Rpackage{bigmelon} method which determines outliers with a
 small subset of data.
 
 <<IncludeGraphic3, fig=TRUE>>=
 outlyx(gfile, plot = TRUE, perc = 0.01)
 @
 
-Filtering probes/features by detection p-values also provides another 
-straightforward approach for removing both failed samples and probes. 
-The \Rfunction{pfilter} function discards samples with more than 1 \% of 
-probes above .05 detection p-value threshold, and probes with any samples 
+Filtering probes/features by detection p-values also provides another
+straightforward approach for removing both failed samples and probes.
+The \Rfunction{pfilter} function discards samples with more than 1 \% of
+probes above .05 detection p-value threshold, and probes with any samples
 with beadcount under 3 or more than 1\% above the p-value threshold.
 
-\textbf{n.b.} This will perform irreversible subsetting procedures onto 
-the gds file and will \textbf{not} work if the gds gfile is in read mode.
+\textbf{n.b.} This will perform irreversible subsetting procedures onto
+the gds file and will \textbf{not} work if the gds is in read mode.
+
 <<code-block, keep.source=TRUE>>=
 pfilter(gfile)
 @
-
-It is at this point worth mentioning that we do not need to assign our
-results from these functions since the data is not stored with memory. 
+Alternatively if you do not wish to perform subsetting at this time one can use pfilter.gds to get the list of failed probes and use those for subsetting at a later time.
 
 \subsection{Backing Up/Storing Raw data}
-Before performing any function that will noticeably change the data, you may 
-want to create a physical back-up of the gds file so you do not have to 
-retrace your steps incase you lose progress. The \Rfunction{backup.gdsn} 
-function serves as an easy way to copy a node you may be interested in to 
+Before performing any function that will noticeably change the data, you may
+want to create a physical back-up of the gds file so you do not have to
+retrace your steps incase you lose progress. The \Rfunction{backup.gdsn}
+function serves as an easy way to copy a node you may be interested in to
 your gds file incase you need it for later.
 <<code-block, keep.source=TRUE>>=
 backup.gdsn(gds = NULL, node = index.gdsn(gfile, 'betas'))
 ls.gdsn(index.gdsn(gfile, 'backup'))
 @
-Alternatively you can create a new gdsfile to store the copy or use 
-the \Rfunction{copyto.gdsn}. 
+Alternatively you can create a new gdsfile to store the copy or use
+the \Rfunction{copyto.gdsn}.
 
 <<code-block, keep.source=TRUE>>=
 f <- createfn.gds('melon2.gds')
 backup.gdsn(gds = f, node = index.gdsn(gfile, 'betas'))
 f
-copyto.gdsn(node = f, source = index.gdsn(gfile, 'betas'), name = 'betacopy') 
+copyto.gdsn(node = f, source = index.gdsn(gfile, 'betas'), name = 'betacopy')
 f
 copyto.gdsn(node = gfile, source = index.gdsn(gfile, 'betas'), name='betacopy')
 # Close File
@@ -404,10 +403,10 @@ unlink('melon2.gds')
 @
 
 \subsection{Normalization}
-Within \Rpackage{bigmelon} there are numerous normalisation methods that can 
+Within \Rpackage{bigmelon} there are numerous normalisation methods that can
 be used. The method \Rfunction{dasen} will work well for most data sets.
-\textbf{n.b.} This will perform irreversible procedures on the data. And will 
-replace raw intensities with the normalised ones. This will not work if gds 
+\textbf{n.b.} This will perform irreversible procedures on the data. And will
+replace raw intensities with the normalised ones. This will not work if gds
 file is in read mode.
 <<code-block, keep.source=TRUE>>=
 dasen(gfile)
@@ -417,24 +416,24 @@ dasen(gfile, node="normbeta")
 index.gdsn(gfile, "normbeta")
 @
 
-Due to how the normalisation process is broken down within \Rpackage{bigmelon} 
+Due to how the normalisation process is broken down within \Rpackage{bigmelon}
 there is only ever a small
-amount of memory required throughout data analysis. 
-For example when attempting to process ~4000 EPIC array samples (>850,000 
-features), totalling around 28Gb of data. Simple quantile normalisation 
-procedures quickly use up all available memory to attempt such feat. 
-Whereas within bigmelon, the same analyses uses considerably less 
+amount of memory required throughout data analysis.
+For example when attempting to process ~4000 EPIC array samples (>850,000
+features), totalling around 28Gb of data. Simple quantile normalisation
+procedures quickly use up all available memory to attempt such feat.
+Whereas within bigmelon, the same analyses uses considerably less
 memory and (in this circumstance) provide a 1000 fold decrease in memory use.
 \includegraphics{logmemuse.pdf}
 
 \section{Analysis}
-While we cannot recommend any advice about how to perform your statistical 
+While we cannot recommend any advice about how to perform your statistical
 analysis we will demonstrate how to
 make the most out of the \Rpackage{bigmelon} package.
-Within \Rpackage{gdsfmt} there are many functions written that are specialized 
+Within \Rpackage{gdsfmt} there are many functions written that are specialized
 for gds files.
-Notably the \Rfunction{apply.gdsn} function is particularly useful as it will 
-perform functions upon specified margins efficiently instead of loading the 
+Notably the \Rfunction{apply.gdsn} function is particularly useful as it will
+perform functions upon specified margins efficiently instead of loading the
 entire object into R to perform analysis.
 
 <<code-block, keep.source=TRUE>>=
@@ -444,37 +443,40 @@ mean(x, na.rm=y)
 }, y = TRUE)
 @
 
-You can define your own functions to supply as an argument to FUN. Please do 
-explore \Rfunction{apply.gdsn} as it is extremely versatile and it can 
+You can define your own functions to supply as an argument to FUN. Please do
+explore \Rfunction{apply.gdsn} as it is extremely versatile and it can
 additionally store outputs straight the a gds node if needed.
 
-There will ofcourse be some analyses that may not be amenable to high 
-dimensional data but if analysis can be broken down into column/row wise 
+There will ofcourse be some analyses that may not be amenable to high
+dimensional data but if analysis can be broken down into column/row wise
 operations then it is possible.
 
-Currently, all available methods within \Rpackage{wateRmelon} with the 
-exception of \Rfunction{seabi}, \Rfunction{swan}, \Rfunction{tost}, 
+Currently, all available methods within \Rpackage{wateRmelon} with the
+exception of \Rfunction{seabi}, \Rfunction{swan}, \Rfunction{tost},
 \Rfunction{fuks} and \Rfunction{BMIQ} have been optimised for memory usage.
 
 \section{Back-Porting}
-Should you find it necessary to convert your gds object back into memory 
-(perhaps for some specialised analyses) you can use the functions 
-\Rfunction{gds2mlumi} and \Rfunction{gds2mset} which will build a 
-\Robject{MethyLumiSet} object and \Robject{MethylSet} object in your 
+Should you find it necessary to convert your gds object back into memory
+(perhaps for some specialised analyses) you can use the functions
+\Rfunction{gds2mlumi} and \Rfunction{gds2mset} which will build a
+\Robject{MethyLumiSet} object and \Robject{MethylSet} object in your
 environment.
 <<code-block, keep.source=TRUE>>=
 gds2mlumi(gfile)
 gds2mset(gfile, anno="450k")
 @
 
+\section{Adding additional objects to gds objects}
+Often, it will be necessary to make use of a transformation while additionally preserving the original betas. This can be done using the add.gdsn which is described in the gdsfmt vignette in great detail.
+
 \section{Finishing an R session}
-As this workflow is in its infancy there are some issues that have yet to 
-be ironed out. 
-Notably there have been observed instances of data-loss when connection 
+As this workflow is in its infancy there are some issues that have yet to
+be ironed out.
+Notably there have been observed instances of data-loss when connection
 to a gds file
-has been interrupted without proper closure using \Rfunction{closefn.gds}. 
-As such it is \textbf{imperative} 
-that once you are ready to exit R, you must close the connection to the 
+has been interrupted without proper closure using \Rfunction{closefn.gds}.
+As such it is \textbf{imperative}
+that once you are ready to exit R, you must close the connection to the
 gds file
 and then exit R.
 
@@ -493,11 +495,11 @@ sessionInfo()
 @
 
 \section{References}
-[1] Pidsley R, Wong CCY, Volta M, Lunnon K, Mill J, Schalkwyk LC (2013)  
-A data-driven approach to preprocessing Illumina 450K methylation 
+[1] Pidsley R, Wong CCY, Volta M, Lunnon K, Mill J, Schalkwyk LC (2013)
+A data-driven approach to preprocessing Illumina 450K methylation
 array data. BMC genomics, 14(1), 293.
 
-[2] Zheng X, Levine D, Shen J, Gogarten SM, Laurie C, Weir BS (2012) 
+[2] Zheng X, Levine D, Shen J, Gogarten SM, Laurie C, Weir BS (2012)
 A high-performance computing toolset for relatedness and principal component
 analysis of SNP data. Bioinformatics, 28, 3326-3328.
 \end{document}

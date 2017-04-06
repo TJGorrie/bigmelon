@@ -47,20 +47,20 @@ dfsfit.gdsn(gds, targetnode, newnode, roco, onetwo)
 }
 \item{node}{ "name" of desired output \code{\link[gdsfmt]{gdsn.class}} node
 }
-\item{mns}{ \code{gdsn.class} node that corresponds to "methylated" 
+\item{mns}{ \code{gdsn.class} node that corresponds to "methylated"
 intensities.
 }
-\item{uns}{ \code{gdsn.class} node that corresponds to "unmethylated" 
+\item{uns}{ \code{gdsn.class} node that corresponds to "unmethylated"
 intensities.
 }
-\item{onetwo}{ \code{gdsn.class} node that corresponds to probe designs 
-(in reference to 450k and EPIC arrays) 
+\item{onetwo}{ \code{gdsn.class} node that corresponds to probe designs
+(in reference to 450k and EPIC arrays)
 OR
-character string pointing to location of \code{gdsn.class} node. e.g. 
+character string pointing to location of \code{gdsn.class} node. e.g.
 "fData/DESIGN"
 OR
 vector containing probe design types of length > 1.
-} 
+}
 \item{roco}{ This allows a background gradient model to be fit.
 This is split from data column names by default.  roco=NULL
 disables model fitting (and speeds up processing), otherwise
@@ -70,37 +70,37 @@ roco can be supplied as a character vector of strings like
 \item{fudge}{ value added to total intensity to prevent denominactors close
 to zero when calculation betas. default = 100
 }
-\item{ret2}{ if TRUE, appends the newly calculated methylated and 
-unmethylated intensities to original gds (as specified in gds arguement). 
+\item{ret2}{ if TRUE, appends the newly calculated methylated and
+unmethylated intensities to original gds (as specified in gds arguement).
 Will overwrite raw intensities.
 }
-\item{target}{ Target \code{gdsn.class} node to perform normalization on. 
+\item{target}{ Target \code{gdsn.class} node to perform normalization on.
 If using "*****.gds" method you do not need to specify this.
 }
-\item{targetnode}{ Target \code{gdsn.class} node to perform normalization 
+\item{targetnode}{ Target \code{gdsn.class} node to perform normalization
 on. If using "*****.gds" method you do not need to specify this.
 }
-\item{newnode}{ "name" of desired output \code{gdsn.class} node. 
+\item{newnode}{ "name" of desired output \code{gdsn.class} node.
 If using "*****.gds" method you do not need to specify this.
 }
 \item{...}{Additional args such as roco or onetwo.}
 }
 
 \details{
-Each function performs a normalization method described within the wateRmelon 
+Each function performs a normalization method described within the wateRmelon
 package. Functions: \code{qn.gdsn}, \code{design.qn.gdsn}, \code{db.gdsn} and
 \code{dfsfit.gdsn} are described to allow users to create their own custom
-normalization methods. Otherwise calling \code{dasen} or \code{dasen.gds} 
+normalization methods. Otherwise calling \code{dasen} or \code{dasen.gds}
 e.t.c will perform the necessary operations for quantile normalization.
 
-Each 'named' normalization method will write a temporary gds object 
-("temp.gds") in the current working directory and is remove it 
+Each 'named' normalization method will write a temporary gds object
+("temp.gds") in the current working directory and is remove it
 when normalization is complete. Current methods supplied by default arguments
-will replace the raw intensities with normalized intensities. 
+will replace the raw betas with normalized betas, but leave the methylated and unmethylated intensities unprocessed.
 }
 
 \value{
-Normalization methods return nothing but will affect the gds file and 
+Normalization methods return nothing but will affect the gds file and
 replace/add nodes if specified to.
 }
 
@@ -113,30 +113,7 @@ Tyler J Gorrie-Stone <tgorri@essex.ac.uk>
 \examples{
 data(melon)
 e <- es2gds(melon,'wat_melon.gds')
-dasen(e) 
+dasen(e)
 closefn.gds(e) # Close gds object
 unlink('wat_melon.gds') # Delete Temp file
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

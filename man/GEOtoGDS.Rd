@@ -6,7 +6,7 @@ Download GEO data and pipe into a gdsfmt object
 }
 \description{
 Uses GEOquery to download a GSE Accession into the current working directory,
-only working for GSE's with raw idat files.
+only works for GSE's with raw idat files.
 }
 \usage{
 geotogds(geo, gds, method = "wget", keepidat = F, keeptar = F, ...)

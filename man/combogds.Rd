@@ -6,7 +6,7 @@ Combine two different gds objects.
 }
 
 \description{
-Combines the shared gdsn.class nodes between two gds objects depending on 
+Combines the shared gdsn.class nodes between two gds objects depending on
 primary gds.object dimensions.
 }
 
@@ -27,17 +27,18 @@ A gds.class object.
 }
 
 \details{
-Will crudely combine shared nodes between primary and secondary based on the 
-dimensions / rownames of the primary node. NAs will be coerced where probes 
+--EXPERIMENTAL--
+Will crudely combine shared nodes between primary and secondary based on the
+dimensions / rownames of the primary node. NAs will be coerced where probes
 are missing from secondary gds.
 
-Will only look for nodes with the names "betas", "methylated", "unmethylated", 
+Will only look for nodes with the names "betas", "methylated", "unmethylated",
 "pvals" and "NBeads".
 }
 
 \note{
-Will lose information relating to "pData". Therefore we recommend compiling 
-separate pData object manually.
+Will lose information relating to "pData". Therefore we recommend compiling
+separate pData object manually and adding combined pData post-function
 }
 
 \author{

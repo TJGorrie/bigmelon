@@ -24,11 +24,11 @@ removed.
 }
 \details{
 Detects outlying probes across arrays in methylumi and minfi
-objects. Outliers are probable low MAF/SNP heterozygotes. 
+objects. Outliers are probable low MAF/SNP heterozygotes.
 }
 \value{
 Nothing returned. Supplied gds object will have new node with outlier
-probes coerced to NAs
+probes coerced to NAs.
 }
 
 \author{
@@ -45,4 +45,3 @@ pwod(e)
 closefn.gds(e)
 unlink("melon.gds")
 }
-

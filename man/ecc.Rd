@@ -61,7 +61,7 @@ Estimates relative proprotion of pure cell types within a sample, identical to \
 \item{...}{Other arguments, i.e arguments passed to plots}
 }
 \details{
-See \code{\link[minfi]{estimateCellCounts}} for more information regarding the exact details. estimateCellCounts.gds differs slightly, as it will impose the quantiles of type I and II probes onto the reference Dataset rather than normalising the two together. This is 1) More memory efficient and 2) Faster - due to not having to waste time normalising out a very small effect the other 60 samples from the reference set will have on the remaining quantiles.
+See \code{\link[minfi]{estimateCellCounts}} for more information regarding the exact details. estimateCellCounts.gds differs slightly, as it will impose the quantiles of type I and II probes onto the reference Dataset rather than normalising the two together. This is 1) More memory efficient and 2) Faster - due to not having to normalise out a very small effect the other 60 samples from the reference set will have on the remaining quantiles.
 
 Optionally, a proportion of samples can be used to derive quantiles when there are more than 1000 samples in a dataset, this will further increase performance of the code at a cost of precision.
 }

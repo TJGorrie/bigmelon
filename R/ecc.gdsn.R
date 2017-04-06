@@ -1,4 +1,6 @@
 normalizeQuantiles2 <- function(A, ties=TRUE) {
+    # Abridged function of limma::normalizeQuantiles, cuts function
+    # before sort - will be removed when EPIC reference set is introduced.
 	n <- dim(A)
 	if(is.null(n)) return(A)
 	if(n[2]==1) return(A)
@@ -100,7 +102,6 @@ estimateCellCounts.gds <- function(
     }
     data(list = referencePkg)
     referenceRGset <- get(referencePkg)
-    # MORE SANITY
     if(! "CellType" %in% names(colData(referenceRGset)))
         stop(sprintf("the reference sorted dataset (in this case '%s') needs to have a phenoData column called 'CellType'"),
              names(referencePkg))
@@ -125,8 +126,8 @@ estimateCellCounts.gds <- function(
     if(gdPlatform == 'EPIC'){
     message('No Reference Set of EPIC, converting array to 450k...')
     message('This method is NOT memory efficient!')
-    M <- gfile[rownames(referenceMset), , node = mn]
-    U <- gfile[rownames(referenceMset), , node = un]
+    M <- gds[rownames(referenceMset), , node = mn]
+    U <- gds[rownames(referenceMset), , node = un]
     rownames(M) <- rownames(U) <- rownames(referenceMset)
     ot <- getProbeType(referenceMset)
     sMI <- normalizeQuantiles2(M[ot=='I',])
@@ -152,10 +153,10 @@ estimateCellCounts.gds <- function(
 
     } else {
     ot <- fot(gds)
-    mquan <- getq(gds = gds, node = mn, onetwo = ot, perc = perc)
+    mquan <- getquantiles(gds = gds, node = mn, onetwo = ot, perc = perc)
     # rownames not working(?)
     mquan[['rn']] <- read.gdsn(index.gdsn(gds,read.gdsn(index.gdsn(gds, "paths"))[1]))
-    uquan <- getq(gds = gds, node = un, onetwo = ot, perc = perc)
+    uquan <- getquantiles(gds = gds, node = un, onetwo = ot, perc = perc)
     # rownames not working(?)
     uquan[['rn']] <- read.gdsn(index.gdsn(gds,read.gdsn(index.gdsn(gds, "paths"))[1]))
     # We can skip combining data-sets.
@@ -165,6 +166,7 @@ estimateCellCounts.gds <- function(
     nume <- impose(getUnmeth(referenceMset), uquan)
     rm(referenceRGset)
 
+    # Everything else continues as normal.
     referenceMset <- minfi::MethylSet(Meth=na.omit(nmet), Unmeth=na.omit(nume), colData=referencePd, annotation(referenceMset))
 
     if(verbose) message("[estimateCellCounts] Picking probes for composition estimation.\n")
@@ -173,13 +175,15 @@ estimateCellCounts.gds <- function(
     rm(referenceMset)
 
     if(verbose) message("[estimateCellCounts] Estimating composition.\n")
-    counts <- minfi:::projectCellType(gds[rownames(coefs), , node = bn ], coefs)
-
+    coefdat <- gds[rownames(coefs),,node=bn]
+    rownames(coefdat) <- rownames(coefs)
+    counts <- minfi:::projectCellType(coefdat, coefs)
+    # counts <- minfi:::projectCellType(gds[rownames(coefs), , node = bn ], coefs)
     if (meanPlot) {
         smeans <- compData$sampleMeans
         smeans <- smeans[order(names(smeans))]
         sampleMeans <- c(colMeans(gds[rownames(coefs),, node = bn]), smeans)
-        sampleColors <- c(rep(1, ncol(mSet)), 1 + as.numeric(factor(names(smeans))))
+        sampleColors <- c(rep(1, ncol(coefdat)), 1 + as.numeric(factor(names(smeans))))
         plot(sampleMeans, pch = 21, bg = sampleColors)
         legend("bottomleft", c("blood", levels(factor(names(smeans)))),
                col = 1:7, pch = 15)

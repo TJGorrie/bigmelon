@@ -21,6 +21,7 @@
 \alias{'[.gds.class'}
 \alias{'[.gdsn.class'}
 \alias{fot,gds.class-method}
+\alias{fot}
 
 \title{
 Bigmelon accessors

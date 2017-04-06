@@ -1,7 +1,6 @@
 \name{dasenrank}
 \alias{dasenrank}
 \alias{computebeta.gds}
-\alias{getquantilesandranks}
 \title{
 Dasen Quantile Normalization by storing ranks
 }
@@ -43,7 +42,7 @@ Character string depicting name of new betas node in given gds object.
 \item{fudge}{ Arbitrary value to offset low intensities}
 }
 \details{
-calcbeta is a known bottle-neck for this code!
+calcbeta is a known bottle-neck for this code! Also function is highly experimental.
 }
 \value{
 Nothing is returned to the R environment, however the supplied gds will have 4 or 5 gdsn.nodes added. These are: 'mnsrank', 'unsrank', 'isnamnsrank' (hidden), 'isnaunsrank'(hidden) and calcbeta if supplied. 'mnsrank' and 'unsrank' have been given some attributes - which contain the calculated quantiles from \code{getquatilesandranks}.
