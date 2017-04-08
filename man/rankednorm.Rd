@@ -45,7 +45,7 @@ Character string depicting name of new betas node in given gds object.
 calcbeta is a known bottle-neck for this code! Also function is highly experimental.
 }
 \value{
-Nothing is returned to the R environment, however the supplied gds will have 4 or 5 gdsn.nodes added. These are: 'mnsrank', 'unsrank', 'isnamnsrank' (hidden), 'isnaunsrank'(hidden) and calcbeta if supplied. 'mnsrank' and 'unsrank' have been given some attributes - which contain the calculated quantiles from \code{getquatilesandranks}.
+Nothing is returned to the R environment, however the supplied gds will have 4 or 5 gdsn.nodes added. These are: 'mnsrank', 'unsrank', 'isnamnsrank' (hidden), 'isnaunsrank'(hidden) and calcbeta if supplied. 'mnsrank' and 'unsrank' have been given some attributes - which contain the calculated quantiles from \code{getquantilesandranks}.
 }
 
 \author{
