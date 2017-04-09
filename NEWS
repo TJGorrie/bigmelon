@@ -1,4 +1,4 @@
 VERSION	NEWS
-1.1.10 Added method to estimate cell counts - handles EPIC array as 450k array until EPIC reference comes out.
+1.1.14 Added gdsfmt method for estimating Cell Counts, added an experimental normalisation methodology, which involves storing raw intensities as ranks and performing re-ranking steps down-stream with computed quantiles. 
 0.99.4  Commit to Github from svn
 0.1.2	app2gds simple data appending function
