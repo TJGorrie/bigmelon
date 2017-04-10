@@ -851,7 +851,7 @@ setMethod(
             append.gdsn(h_child_n, val=h[,h_coln])
         }
         closefn.gds(f)
-        unlink("subsettemp.gds")
+        unlink("temp.gds")
     }
 ) # AS - OK # TGS OKish
 
