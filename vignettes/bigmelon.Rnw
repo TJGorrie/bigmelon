@@ -4,7 +4,6 @@
 % Sweave Vignette Template derived bt Leo Schalkwyk from
 %% www.bioconductor.org/help/course-materials/2010/AdvancedR/BuildPackage.pdf
 \documentclass[11pt]{article}
-\usepackage{Sweave}
 
 <<style-Sweave, eval=TRUE, echo=FALSE, results=tex>>=
 BiocStyle::latex()
