@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{The \Rpackage{bigmelon} Package}
+%\VignetteIndexEntry{The bigmelon Package}
 %\VignetteKeywords{Illumina DNA methylation 450k array normalization epic}
 %\VignettePackage{bigmelon}
 % Sweave Vignette Template derived bt Leo Schalkwyk from
