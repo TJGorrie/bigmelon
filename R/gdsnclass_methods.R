@@ -129,8 +129,8 @@ backup.gdsn <- function(gds = NULL, node){
             mat[, z] <- re
         }
     }
-    # Done.
-    return(mat)
+    # Enable dropping on 1 row or 1 column indicies
+    if(any(dim(mat) == 1)) return(mat[,,drop=drop]) else return(mat)
 }
 
 #colnames <- function (x, do.NULL = TRUE, prefix = "col")
@@ -873,8 +873,8 @@ setMethod(
     definition = function(x, iqr = TRUE, iqrP = 2, pc=1, mv = TRUE,
                             mvP = 0.15, plot = TRUE, perc = 0.01, ...){
         dimx <- objdesp.gdsn(x)$dim
-        outlyx(x[sample(1:dimx[1], dimx[1]*perc, replace = FALSE), ],
-                iqr, iqrP, pc, mv, mvP, plot)
+        samp <- sample(1:dimx[1], dimx[1]*perc, replace=FALSE)
+        outlyx(x[samp, ], iqr, iqrP, pc, mv, mvP, plot,...)
     }
 )
 
@@ -883,10 +883,7 @@ setMethod( # Automatically select betas
     signature(x = "gds.class"),
     definition = function(x, iqr = TRUE, iqrP = 2, pc = 1, mv = TRUE,
                             mvP = 0.15, plot = TRUE, perc = 0.01, ...){
-        x <- betas(x)
-        dimx <- objdesp.gdsn(x)$dim
-        outlyx(x[sample(1:dimx[1], dimx[1]*perc, replace=FALSE), ],
-                iqr, iqrP, pc, mv, mvP, plot)
+        outlyx(betas(x), iqr, iqrP, pc, mv, mvP, plot, perc,...)
     }
 )
 
@@ -895,15 +892,16 @@ setMethod(
     f = "agep",
     signature(betas = "gds.class"),
     definition = function(betas, coeff = NULL, verbose = FALSE){
-        betas <- index.gdsn(betas, "betas")
-        if(is.null(coeff)){
-            data(coef)
-            coeff <- coef
-        }
-        betas <- betas[(names(coeff)[-1]), , name = TRUE, drop = FALSE]
-        rownames(betas) <- (names(coeff)[-1])
+        agep(betas(betas), coeff=coeff, verbose=verbose)
+        #betas <- index.gdsn(betas, "betas")
+        #if(is.null(coeff)){
+        #    data(coef)
+        #    coeff <- coef
+        #}
+        #rn <- which(rownames(betas)%in%names(coeff)[-1])
+        #betas <- betas[rn, , name = TRUE,]
         # (Violently) Produces "small beta matrix".
-        agep(betas, coeff, verbose)
+        #agep(betas, coeff, verbose)
     }
 )
 
@@ -915,8 +913,8 @@ setMethod(
             data(coef)
             coeff <- coef
         }
-        betas <- betas[(names(coeff)[-1]), , name = TRUE, drop = FALSE]
-        rownames(betas) <- (names(coeff)[-1])
+        rn <- which(rownames(betas)%in%names(coeff)[-1])
+        betas <- betas[rn, , name = TRUE, drop = FALSE]
         agep(betas, coeff, verbose)
     }
 )
@@ -1004,10 +1002,11 @@ setMethod(
 setMethod(
     f = "dmrse",
     signature(betas = "gds.class"),
-    definition = function(betas, idmr = iDMR()){
-        object <- betas
-        betas <- betas(object)[idmr, , name = TRUE]
-        dmrse(betas, idmr)
+    definition = function(betas, idmr = iDMR()){ 
+        dmrse(betas(betas))
+        #object <- betas
+        #betas <- betas(object)[idmr, , name = TRUE]
+        #dmrse(betas, idmr)
     }
 ) #OK
 
@@ -1026,9 +1025,10 @@ setMethod(
     f = "dmrse_row",
     signature(betas = "gds.class"),
     definition = function(betas, idmr=iDMR()){
-        object <- betas
-        betas <- betas(object)[idmr, ,name = TRUE]
-        dmrse_row(betas, idmr)
+        dmrse_row(betas(betas))
+#        object <- betas
+#        betas <- betas(object)[idmr, ,name = TRUE]
+#        dmrse_row(betas, idmr)
     }
 ) # AS - OK
 
@@ -1046,9 +1046,10 @@ setMethod(
     f = "dmrse_col",
     signature(betas = "gds.class"),
     definition = function(betas, idmr = iDMR()){
-        object <- betas
-        betas <- betas(object)[idmr, ,name = TRUE]
-        dmrse_col(betas, idmr)
+        dmrse_col(betas(betas))
+        #object <- betas
+        #betas <- betas(object)[idmr, ,name = TRUE]
+        #dmrse_col(betas, idmr)
     }
 ) # AS - OK
 
@@ -1079,11 +1080,11 @@ setMethod(
     f = "genki",
     signature(bn = "gds.class"),
     definition = function(bn, se = TRUE){
-        object <- bn
-        g <- getsnp(rownames(object))
-        bn <- betas(object)[g, ,name = TRUE, drop = FALSE]
-        g <- rownames(bn)
-        genki(bn, g, se)
+        genki(betas(bn))
+#        g <- getsnp(rownames(object))
+#        bn <- betas(object)[g, ,name = TRUE, drop = FALSE]
+#        g <- 1:length(g)
+#        genki(bn, g, se)
     }
 ) # AS - OK
 
@@ -1094,7 +1095,7 @@ setMethod(
         object <- bn
         g <- getsnp(rownames(object))
         bn <- object[g, ,name = TRUE, drop = FALSE]
-        g <- rownames(bn)
+        g <- 1:length(g)
         genki(bn, g, se)
     }
 )
@@ -1106,6 +1107,7 @@ setMethod(
     definition = function(x){
         fd <- fData(x)
         ds <- grep("DESIGN", colnames(fd), ignore.case = TRUE)
+        if(length(ds) == 0) stop('Cannot find \"DESIGN\" column in fData\(x\)')
         return(fd[,ds[1]])
     }
     )
