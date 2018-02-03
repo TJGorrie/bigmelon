@@ -1107,7 +1107,7 @@ setMethod(
     definition = function(x){
         fd <- fData(x)
         ds <- grep("DESIGN", colnames(fd), ignore.case = TRUE)
-        if(length(ds) == 0) stop('Cannot find \"DESIGN\" column in fData\(x\)')
+#        if(length(ds) == 0) stop('Cannot find \"DESIGN\" column in fData\(x\)')
         return(fd[,ds[1]])
     }
     )
