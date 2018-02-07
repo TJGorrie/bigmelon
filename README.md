@@ -1,6 +1,18 @@
 # bigmelon
 Memory Efficient Methods for DNA Methylation Analysis
 
+## Installation
+Currently there is a bug in the release version of wateRmelon that has yet to be pushed to bioConductor. This bug prevents bigmelon from parsing in EPIC idat files. As a result we recommend installing wateRmelon (an important dependency straight from github.
+
+```
+library(devtools)
+source('http://bioconductor.org/biocLite.R')
+biocLite('IlluminaHumanMethylation450kanno.ilmn12.hg19') # Optional
+devtools::install_git('https://github.com/schalkwyk/wateRmelon')
+biocLite('bigmelon')
+```
+
+
 ## Authors
 
 Tyler J. Gorrie-Stone and Leonard C. Schalkwyk

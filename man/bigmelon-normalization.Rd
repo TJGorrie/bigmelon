@@ -20,7 +20,6 @@
 \alias{danes.gds}
 \alias{danes,gds.class-method}
 \alias{qn.gdsn}
-\alias{design.qn.gdsn}
 \alias{db.gdsn}
 \alias{dfsfit.gdsn}
 \alias{betaqn,gds.class-method}
