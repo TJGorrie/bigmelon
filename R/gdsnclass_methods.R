@@ -856,7 +856,7 @@ setMethod(
     }
 ) # AS - OK # TGS OKish
 
-#prcomp prcompGdsn contains S3 method!
+#prcomp R/prcompGdsn.R contains S3 method!
 #setMethod(
 #  f = "prcomp",
 #  signature(x = "gdsn.class"),
@@ -888,42 +888,35 @@ setMethod( # Automatically select betas
     }
 )
 
-# agep # Extract coeff names. #Acts odd on marmalaid?
 setMethod(
     f = "agep",
     signature(betas = "gds.class"),
-    definition = function(betas, coeff = NULL, verbose = FALSE){
-        agep(betas(betas), coeff=coeff, verbose=verbose)
-        #betas <- index.gdsn(betas, "betas")
-        #if(is.null(coeff)){
-        #    data(coef)
-        #    coeff <- coef
-        #}
-        #rn <- which(rownames(betas)%in%names(coeff)[-1])
-        #betas <- betas[rn, , name = TRUE,]
-        # (Violently) Produces "small beta matrix".
-        #agep(betas, coeff, verbose)
+    definition = function(betas, coeff, verbose = FALSE){
+        agep(betas(betas), coeff = coeff, verbose=verbose)
     }
 )
 
 setMethod(
     f = "agep",
     signature(betas = "gdsn.class"),
-    definition = function(betas, coeff = NULL, verbose = FALSE){
+    definition = function(betas, coeff, verbose = FALSE){
         if(is.null(coeff)){
-            data(coef)
+            utils::data(coef)
             coeff <- coef
         }
-        rownames <- rownames(betas)
-        ids <- colnames(betas)
-        # '[' methods support integer indicies better than logical, it's complicated...
-        rn <- which(rownames%in%names(coeff)[-1])
-        betas <- betas[rn, , name = FALSE, drop = FALSE]
-        rownames(betas) <- rownames[rn]
-        colnames(betas) <- ids
-        agep(betas, coeff, verbose)
+        print(head(coeff))
+        # Rownames method not working correctly? Kludge
+        ro <- read.gdsn(index.gdsn(getfolder.gdsn(betas),
+            read.gdsn(index.gdsn(getfolder.gdsn(betas), "paths"))[1]))
+        rn <- match(names(coeff)[-1], ro)
+        rn <- rn[!is.na(rn)]
+        # rn <- which(rownames%in%names(coeff)[-1]) 
+        betas <- betas[rn,, name = T, drop = FALSE]
+        agep(betas, coeff = coeff, verbose)
     }
 )
+
+
 
 setGeneric(name= "qual")
 # qual (?) # Do col by col computation of metrics. Collapse output.

@@ -61,6 +61,10 @@ dasen(gfile)
 meth <- methylated(gfile)
 apply.gdsn(meth, 2, median, as.is='double', na.rm = TRUE)
 
+# Calculating Horvath's epigenetic ages with agep
+data(coef)
+agep(gfile, coeff=coef)
+
 # Close .gds file
 closefn.gds(gfile)
 # Open a .gds file
@@ -109,7 +113,7 @@ included when reading from idats. And can be added to the
 
 \Rfunction{iadd} and \Rfunction{iadd2} function differently. \Rfunction{iadd}
 will take a vector of barcodes, \Rfunction{iadd2} will accept a directory
-pathway and extract all IDAT files within the specified path.
+pathway and extract all IDAT files within the specified path. You will need to be in the same directory as the idat files for this to work.
 
 \Rfunction{iadd2} also has the functionality to read IDAT files in
 chunks. This is useful if you are attempting to read in a lot of data at
@@ -368,6 +372,16 @@ with beadcount under 3 or more than 1\% above the p-value threshold.
 
 \textbf{n.b.} This will perform irreversible subsetting procedures onto
 the gds file and will \textbf{not} work if the gds is in read mode.
+
+Another analsis that people like to perform is age prediction, where we provide a method
+to quickly predict the ages of extremely large data-sets!
+
+<<code-block, keep.source=TRUE>>=
+data(coef) # Load up a set of coefficient (horvaths)
+agep(gfile, coef) 
+# Alternatively
+agep(betas(gfile), coef) # or index.gdsn(gfile, 'foobar') for a different matrix
+@
 
 <<code-block, keep.source=TRUE>>=
 pfilter(gfile)
