@@ -37,6 +37,7 @@ backup.gdsn <- function(gds = NULL, node){
     #              name = F will enable for faster indexing.
     # TODO: [] method? a.k.a vector method.
     # TODO: Warnings, if any.
+    # TODO: Look into why logical vectors are a bit funky - hard convert into integer...
     base <- getfolder.gdsn(x)
     dim <- objdesp.gdsn(x)$dim
 
@@ -53,7 +54,7 @@ backup.gdsn <- function(gds = NULL, node){
     if(missing(i) & !missing(j)){ # {{{
         j1 <- j
         if(is.character(j1)) j <- match(j1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
-        if(is.logical(j1))   j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
+        if(is.logical(j1))   j <- (1:objdesp.gdsn(x)$dim[2])[j1] # Potential error here?
 
         ncol <- j
         mat <- as.matrix(readex.gdsn(x, sel = list(NULL, ncol)))
@@ -68,7 +69,7 @@ backup.gdsn <- function(gds = NULL, node){
     if(!missing(i) & missing(j)){ # {{{
         i1 <- i
         if(is.character(i1)) i <- match(i1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
-        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
+        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # Potential error here?
         nrow <- i
         if(length(i)==1){ # Calling a single row makes naming difficult this is a work-around.
             mat <- as.matrix(t(readex.gdsn(x, sel = list(nrow, NULL))))
@@ -86,10 +87,10 @@ backup.gdsn <- function(gds = NULL, node){
     if(!missing(i) & !missing(j)){ # {{{
         i1 <- i
         if(is.character(i1)) i <- match(i1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
-        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # ok
+        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # Potential error here?
         j1 <- j
         if(is.character(j1)) j <- match(j1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
-        if(is.logical(j1))   j <- (1:objdesp.gdsn(x)$dim[2])[j1] # ok
+        if(is.logical(j1))   j <- (1:objdesp.gdsn(x)$dim[2])[j1] # Potential error here?
 
         nrow <- i
         ncol <- j
@@ -913,8 +914,13 @@ setMethod(
             data(coef)
             coeff <- coef
         }
-        rn <- which(rownames(betas)%in%names(coeff)[-1])
-        betas <- betas[rn, , name = TRUE, drop = FALSE]
+        rownames <- rownames(betas)
+        ids <- colnames(betas)
+        # '[' methods support integer indicies better than logical, it's complicated...
+        rn <- which(rownames%in%names(coeff)[-1])
+        betas <- betas[rn, , name = FALSE, drop = FALSE]
+        rownames(betas) <- rownames[rn]
+        colnames(betas) <- ids
         agep(betas, coeff, verbose)
     }
 )
