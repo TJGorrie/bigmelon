@@ -868,6 +868,7 @@ setMethod(
 
 # outlyx - instead of utilizing prcomp.gdsn (since pcout isn't bigmelon
 # friendly - we opt for generic use of prcomp)
+setGeneric(name='outlyx')
 setMethod(
     f = "outlyx",
     signature(x = "gdsn.class"),
@@ -887,7 +888,7 @@ setMethod( # Automatically select betas
         outlyx(betas(x), iqr, iqrP, pc, mv, mvP, plot, perc,...)
     }
 )
-
+setGeneric(name='agep')
 setMethod(
     f = "agep",
     signature(betas = "gds.class"),
@@ -942,6 +943,7 @@ setMethod(
 )
 
 # bscon see bscon_methy.R
+setGeneric(name='bscon')
 setMethod(
     f= "bscon",
     signature(x = "gds.class"),
@@ -971,7 +973,7 @@ setMethod(
         apply(rbind(BSI.betas, BSII.betas), 2, median)*100
     }
 )
-
+setGeneric(name='pwod')
 setMethod(
     f = "pwod",
     signature(object = "gds.class"),

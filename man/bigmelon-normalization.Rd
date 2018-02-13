@@ -36,7 +36,6 @@ Functions used to perform quantile normalization on gds.class objects
 \S4method{dasen}{gds.class}(mns, fudge = 100, ret2 = FALSE, node="betas",...)
 dasen.gds(gds, node, mns, uns, onetwo, roco, fudge, ret2)
 qn.gdsn(gds, target, newnode)
-design.qn.gdsn(gds, target, newnode, onetwo)
 db.gdsn(gds, mns, uns)
 dfsfit.gdsn(gds, targetnode, newnode, roco, onetwo)
 }
