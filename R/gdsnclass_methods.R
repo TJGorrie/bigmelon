@@ -904,7 +904,6 @@ setMethod(
             utils::data(coef)
             coeff <- coef
         }
-        print(head(coeff))
         # Rownames method not working correctly? Kludge
         ro <- read.gdsn(index.gdsn(getfolder.gdsn(betas),
             read.gdsn(index.gdsn(getfolder.gdsn(betas), "paths"))[1]))
