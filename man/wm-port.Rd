@@ -9,12 +9,6 @@
 \alias{genki,gds.class-method}
 \alias{genki,gdsn.class-method}
 \alias{seabi,gds.class-method}
-\alias{agep, gds.class,ANY,ANY-method}
-\alias{agep, gdsn.class,ANY,ANY-method}
-\alias{outlyx, gds.class-method}
-\alias{outlyx, gdsn.class-method}
-\alias{bscon, gds.class-method}
-\alias{bscon, gdsn.class-method}
 \alias{qual,gdsn.class,gdsn.class-method}
 
 \title{

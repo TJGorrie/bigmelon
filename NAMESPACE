@@ -3,7 +3,7 @@ exportPattern("^[^\\.]")
 exportMethods(naten, betaqn, nanet, nanes, danes, danet, daten1, daten2,
 nasen, dasen, danen, tost, fuks, swan, dmrse, dmrse_row, dmrse_col, genki,
 seabi, pfilter, rownames, colnames, betas, methylated, unmethylated, pvals, fData, 
-pData, getHistory, QCmethylated, QCunmethylated, QCrownames, subSet, bscon, pwod, fot, agep, outlyx, qual)
+pData, getHistory, QCmethylated, QCunmethylated, QCrownames, subSet, fot, qual)
 importFrom('stats', 'approx', 'coef', 'density', 'fivenum', 'lm',
     'median', 'na.omit', 'sd', 'quantile')
 importFrom('utils', 'data', 'file_test', 'packageVersion','untar', 'download.file', 'write.csv')

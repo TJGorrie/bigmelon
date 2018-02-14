@@ -373,16 +373,6 @@ with beadcount under 3 or more than 1\% above the p-value threshold.
 \textbf{n.b.} This will perform irreversible subsetting procedures onto
 the gds file and will \textbf{not} work if the gds is in read mode.
 
-Another analsis that people like to perform is age prediction, where we provide a method
-to quickly predict the ages of extremely large data-sets!
-
-<<code-block, keep.source=TRUE>>=
-data(coef) # Load up a set of coefficient (horvaths)
-agep(gfile, coef) 
-# Alternatively
-agep(betas(gfile), coef) # or index.gdsn(gfile, 'foobar') for a different matrix
-@
-
 <<code-block, keep.source=TRUE>>=
 pfilter(gfile)
 @
@@ -455,6 +445,20 @@ apply.gdsn(betas(gfile), margin = 2, as.is='double', FUN = function(x,y){
 mean(x, na.rm=y)
 }, y = TRUE)
 @
+
+Additional analyses that could be useful to an EWAS in particular are age 
+prediction and estimating cell types, these can be done with \Rfunction{agep} 
+and \Rfunction{estimateCellCounts.gds}
+
+<<code-block, keep.source=TRUE>>=
+# Age Prediction
+data(coef) # Load up a set of coefficient (horvaths)
+agep(gfile, coef) 
+# Alternatively
+agep(betas(gfile), coef) # or index.gdsn(gfile, 'foobar') for a different matrix
+@
+
+
 
 You can define your own functions to supply as an argument to FUN. Please do
 explore \Rfunction{apply.gdsn} as it is extremely versatile and it can
