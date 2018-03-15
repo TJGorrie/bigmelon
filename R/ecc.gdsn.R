@@ -1,30 +1,3 @@
-normalizeQuantiles2 <- function(A, ties=TRUE) {
-    # Abridged function of limma::normalizeQuantiles, cuts function
-    # before sort - will be removed when EPIC reference set is introduced.
-	n <- dim(A)
-	if(is.null(n)) return(A)
-	if(n[2]==1) return(A)
-	O <- S <- array(,n)
-	nobs <- rep(n[1],n[2])
-	i <- (0:(n[1]-1))/(n[1]-1)
-	for (j in 1:n[2]) {
-		Si <- sort(A[,j], method="quick", index.return=TRUE)
-		nobsj <- length(Si$x)
-		if(nobsj < n[1]) {
-			nobs[j] <- nobsj
-			isna <- is.na(A[,j])
-			S[,j] <- approx((0:(nobsj-1))/(nobsj-1), Si$x, i, ties="ordered")$y
-			O[!isna,j] <- ((1:n[1])[!isna])[Si$ix]
-		} else {
-			S[,j] <- Si$x
-			O[,j] <- Si$ix
-		}
-	}
-m <- rowMeans(S)
-output <- list(m, i)
-return(output)
-}
-
 # Get quantiles of (pre/un)normalized node.
 getquantiles <- function(gds, node, perc, onetwo, rank = FALSE, new.node = NULL){
     x <- index.gdsn(gds, node)
@@ -40,32 +13,6 @@ getquantiles <- function(gds, node, perc, onetwo, rank = FALSE, new.node = NULL)
     }
 }
 
-impose <- function(matrix, quan){
-    ot <- quan[['onetwo']]
-    quantiles <- quan[['quantiles']]
-    names(ot) <- quan[['rn']]
-    inter <- quan[['inter']]
-    blank <- matrix(NA, length(ot), ncol(matrix))
-    rownames(blank) <- names(ot)
-    blank[rownames(matrix), ] <- matrix
-    for(z in 1:ncol(matrix)){
-        isna <- is.na(blank[,z])
-        r <- rep(0, length(ot))
-        r[ot=='I'] <- rank(blank[ot=='I', z])
-        r[ot=='II'] <- rank(blank[ot=='II', z])
-        blank[ot == 'I' & (!isna), z] <-  approx(inter[ot == 'I'],
-            quantiles[ot == 'I'],
-            (r[ot=='I'&(!isna)] - 1) /(sum(ot == 'I')-1), ties = "ordered")$y
-
-        blank[ot == 'II' & (!isna),z] <- approx(inter[ot == 'II'],
-            quantiles[ot == 'II'],
-            (r[ot=='II'&(!isna)] - 1)/(sum(ot == 'II')-1), ties = "ordered")$y
-    }
-    b2 <- na.omit(blank)
-    b2<- b2[rownames(matrix),]
-    return(b2)
-}
-
 # EstimateCellCounts.gds
 estimateCellCounts.gds <- function(
     gds,
@@ -73,7 +20,7 @@ estimateCellCounts.gds <- function(
     mn = NULL,
     un = NULL,
     bn = NULL,
-    perc = 0.25,
+    perc = 1,
     compositeCellType = "Blood",
 #    processMethod = "auto",
     probeSelect = "auto",
@@ -130,10 +77,10 @@ estimateCellCounts.gds <- function(
     U <- gds[rownames(referenceMset), , node = un]
     rownames(M) <- rownames(U) <- rownames(referenceMset)
     ot <- getProbeType(referenceMset)
-    sMI <- normalizeQuantiles2(M[ot=='I',])
-    sMII <- normalizeQuantiles2(M[ot=='II',])
-    sUI <- normalizeQuantiles2(U[ot=='I',])
-    sUII <- normalizeQuantiles2(U[ot=='II',])
+    sMI <- wateRmelon:::.normalizeQuantiles2(M[ot=='I',])
+    sMII <- wateRmelon:::.normalizeQuantiles2(M[ot=='II',])
+    sUI <- wateRmelon:::.normalizeQuantiles2(U[ot=='I',])
+    sUII <- wateRmelon:::.normalizeQuantiles2(U[ot=='II',])
     mquan <- list(quantiles = rep(0, nrow(M)),
                     inter = rep(0, nrow(M)),
                     onetwo = ot
@@ -162,8 +109,8 @@ estimateCellCounts.gds <- function(
     # We can skip combining data-sets.
     # Instead preprocessRaw reference to replace data with quantiles.
     }
-    nmet <- impose(getMeth(referenceMset), mquan)
-    nume <- impose(getUnmeth(referenceMset), uquan)
+    nmet <- wateRmelon:::.impose(getMeth(referenceMset), mquan)
+    nume <- wateRmelon:::.impose(getUnmeth(referenceMset), uquan)
     rm(referenceRGset)
 
     # Everything else continues as normal.

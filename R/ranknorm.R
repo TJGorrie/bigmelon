@@ -132,11 +132,16 @@ computebeta.gds <- function(gds, new.node, mns, uns, fudge = 100){ # {{{
     dim <- objdesp.gdsn(mns)$dim
     n.t <- add.gdsn(gds, new.node, storage = 'float64',
                 valdim=c(dim[1],0), val = NULL, replace = TRUE)
+    message('Calculating Betas')
+    pb <- txtProgressBar(min=1, max=dim[2], style=3)
     for(x in 1:dim[2]){
         # This may be slow, depending on the number of samples - but memory efficient.
         meth <- mns[, x, name = FALSE]
         unmeth <- uns[, x, name = FALSE]
         beta <- meth/(meth + unmeth + fudge)
         append.gdsn(n.t, beta)
+        setTxtProgressBar(pb, x)
     }
+    close(pb)
+    message('Done!')
 } # }}}

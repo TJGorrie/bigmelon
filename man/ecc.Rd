@@ -1,8 +1,6 @@
 \name{estimateCellCounts}
 \alias{estimateCellCounts.gds}
 \alias{getquantiles}
-\alias{impose}
-\alias{normalizeQuantiles2}
 \title{
 Cell Proportion Estimation using bigmelon
 }
@@ -16,7 +14,7 @@ Estimates relative proprotion of pure cell types within a sample, identical to \
         mn = NULL,
         un = NULL,
         bn = NULL,
-        perc = 0.25,
+        perc = 1,
         compositeCellType = "Blood",
         probeSelect = "auto",
         cellTypes = c("CD8T","CD4T","NK","Bcell","Mono","Gran"),
