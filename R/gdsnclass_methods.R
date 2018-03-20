@@ -1094,7 +1094,7 @@ setMethod(
     definition=function(bn, se = TRUE){
         object <- bn
         g <- getsnp(rownames(object))
-        bn <- object[g, , name = TRUE, drop = sFALSE]
+        bn <- object[g, , name = TRUE, drop = FALSE]
         g <- 1:length(g)
         genki(bn, g, se)
     }
