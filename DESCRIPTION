@@ -12,7 +12,7 @@ Description: Methods for working with Illumina arrays using gdsfmt.
 License: GPL-3
 Depends: R (>= 3.3), wateRmelon (>= 1.19.1), gdsfmt (>= 1.0.4),
         methods, minfi (>= 1.21.0), Biobase, methylumi 
-Imports: stats, utils, GEOquery, graphics
+Imports: stats, utils, GEOquery, graphics, BiocGenerics
 Suggests: BiocGenerics, BiocStyle, minfiData, parallel, IlluminaHumanMethylation450kanno.ilmn12.hg19, IlluminaHumanMethylationEPICanno.ilm10b2.hg19
 LazyLoad: yes
 Collate: zzz.R es2gds.R dasenGds.R dbGdsn.R dfsfitGdsn.R gds2mlumi.R

@@ -148,7 +148,7 @@ setMethod(
     signature(x = "gdsn.class"),
     definition = function(x, do.NULL = TRUE, prefix = NULL){
         read.gdsn(index.gdsn(getfolder.gdsn(x),
-            read.gdsn(index.gdsn(getfolder.gdsn(x), "paths"))[2]))
+           read.gdsn(index.gdsn(getfolder.gdsn(x), "paths"))[2]))
     }
 )
 
@@ -169,6 +169,7 @@ setMethod(
             read.gdsn(index.gdsn(getfolder.gdsn(x), "paths"))[1]))
     }
 )
+
 
 # Standard eset functions to grab matrices, including indexing:
 # Calling gdsn node but will allow direct subsetting with '['
@@ -903,12 +904,12 @@ setMethod(
     signature(betas = "gdsn.class"),
     definition = function(betas, coeff, verbose = FALSE){
         if(is.null(coeff)){
-            utils::data(coef)
-            coeff <- coef
+            stop('coef is NULL, run \'data(coef)\' and supply this to agep')
+            #data(coef, package='wateRmelon')
+            #coeff <- coef
         }
         # Rownames method not working correctly? Kludge
-        ro <- read.gdsn(index.gdsn(getfolder.gdsn(betas),
-            read.gdsn(index.gdsn(getfolder.gdsn(betas), "paths"))[1]))
+        ro <- rownames(betas)
         rn <- match(names(coeff)[-1], ro)
         rn <- rn[!is.na(rn)]
         # rn <- which(rownames%in%names(coeff)[-1]) 
@@ -1080,7 +1081,7 @@ setMethod(
     signature(bn = "gds.class"),
     definition = function(bn, se = TRUE){
         genki(betas(bn))
-#        g <- getsnp(rownames(object))
+#        g <- wateRmelon::getsnp(rownames(object))
 #        bn <- betas(object)[g, ,name = TRUE, drop = FALSE]
 #        g <- 1:length(g)
 #        genki(bn, g, se)
@@ -1093,7 +1094,7 @@ setMethod(
     definition=function(bn, se = TRUE){
         object <- bn
         g <- getsnp(rownames(object))
-        bn <- object[g, ,name = TRUE, drop = FALSE]
+        bn <- object[g, , name = TRUE, drop = sFALSE]
         g <- 1:length(g)
         genki(bn, g, se)
     }
