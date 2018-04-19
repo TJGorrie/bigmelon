@@ -8,7 +8,8 @@ getpheno <- function(geo){
     return(pd)
 }
 
-geotogds <- function(geo, gds, method = "wget", keepidat = F, keeptar = F, ...){
+geotogds <- function(geo, gds=NULL, method = "wget", keepidat = F, keeptar = F, ...){
+    if(is.null(gds)) gds <- paste0(geo, '.gds')
     if(!(grepl(x = geo, pattern='.tar.gz'))){
         url <- paste0("https://www.ncbi.nlm.nih.gov/geo/download/?acc=", geo, "&format=file")
         tarfile <- paste0("./", geo,".tar.gz")
