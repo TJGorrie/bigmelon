@@ -894,15 +894,15 @@ setMethod( # Automatically select betas
 setMethod(
     f = "agep",
     signature(betas = "gds.class"),
-    definition = function(betas, coeff, verbose = FALSE){
-        agep(betas(betas), coeff = coeff, verbose=verbose)
+    definition = function(betas, coeff, method='horvath'){
+        agep(betas(betas), coeff = coeff, method=method)
     }
 )
 
 setMethod(
     f = "agep",
     signature(betas = "gdsn.class"),
-    definition = function(betas, coeff, verbose = FALSE){
+    definition = function(betas, coeff, method='horvath'){
         if(is.null(coeff)){
             stop('coef is NULL, run \'data(coef)\' and supply this to agep')
             #data(coef, package='wateRmelon')
@@ -914,11 +914,9 @@ setMethod(
         rn <- rn[!is.na(rn)]
         # rn <- which(rownames%in%names(coeff)[-1]) 
         betas <- betas[rn,, name = T, drop = FALSE]
-        agep(betas, coeff = coeff, verbose)
+        agep(betas, coeff = coeff, method=method)
     }
 )
-
-
 
 setGeneric(name= "qual")
 # qual (?) # Do col by col computation of metrics. Collapse output.

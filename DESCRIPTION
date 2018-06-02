@@ -1,7 +1,7 @@
 Package: bigmelon
 Type: Package
 Title: Illumina methylation array analysis for large experiments
-Version: 1.7.0
+Version: 1.7.1
 Authors@R: c(
     person(c("Tyler", "J."), "Gorrie-Stone", role=c("cre", "aut"), email="tgorri@essex.ac.uk"),
     person("Ayden", "Saffari", role="aut"),
@@ -9,14 +9,15 @@ Authors@R: c(
     person(c("Leonard", "C."), "Schalkwyk", role="aut"))
 Description: Methods for working with Illumina arrays using gdsfmt.
 License: GPL-3
-Depends: R (>= 3.3), wateRmelon (>= 1.19.1), gdsfmt (>= 1.0.4),
+Depends: R (>= 3.3), wateRmelon (>= 1.25.0), gdsfmt (>= 1.0.4),
         methods, minfi (>= 1.21.0), Biobase, methylumi 
 Imports: stats, utils, GEOquery, graphics, BiocGenerics
-Suggests: BiocGenerics, BiocStyle, minfiData, parallel, IlluminaHumanMethylation450kanno.ilmn12.hg19, IlluminaHumanMethylationEPICanno.ilm10b2.hg19
+Suggests: BiocGenerics, BiocStyle, minfiData, parallel, IlluminaHumanMethylation450kanno.ilmn12.hg19, IlluminaHumanMethylationEPICanno.ilm10b2.hg19, bumphunter
 LazyLoad: yes
 Collate: zzz.R es2gds.R dasenGds.R dbGdsn.R dfsfitGdsn.R gds2mlumi.R
         gdsnclass_methods.R inout.R pfilterGds.R prcompGdsn.R
         pwodGdsn.R qnGdsn.R comboGds.R ranknorm.R GEOtoGDS.R ecc.gdsn.R
+        bumphunterGdsn.R
 biocViews: DNAMethylation, Microarray, TwoChannel, Preprocessing,
         QualityControl, MethylationArray, DataImport, CpGIsland
 NeedsCompilation: no
