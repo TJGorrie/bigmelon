@@ -910,7 +910,7 @@ setMethod(
         }
         # Rownames method not working correctly? Kludge
         ro <- rownames(betas)
-        rn <- match(names(coeff)[-1], ro)
+        rn <- match(names(coeff), ro)
         rn <- rn[!is.na(rn)]
         # rn <- which(rownames%in%names(coeff)[-1]) 
         betas <- betas[rn,, name = T, drop = FALSE]
@@ -1109,3 +1109,23 @@ setMethod(
         return(fd[,ds[1]])
     }
     )
+
+setGeneric('predictSex', function(x, x.probes, pc, plot, irlba, center, scale.){standardGeneric('predictSex')})
+setMethod(
+    f = 'predictSex',
+    signature(x = 'gds.class'),
+    definition = function(x, x.probes, pc=2, plot=FALSE, irlba=TRUE, center=FALSE, scale. = FALSE){
+    predictSex(x = betas(x), x.probes=x.probes, pc, plot, irlba, center, scale.)
+}
+)
+
+setMethod(
+    f = 'predictSex',
+    signature(x = 'gdsn.class'),
+    definition = function(x, x.probes, pc=2, plot=FALSE, irlba=TRUE, center=FALSE, scale. = FALSE){
+    if(is.logical(x.probes)) x.probes <- which(x.probes)
+    xdat <- x[x.probes,]
+    predictSex(x=xdat, x.probes=1:nrow(xdat), pc, plot, irlba, center, scale.)
+}
+)
+
