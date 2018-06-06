@@ -22,8 +22,8 @@ methods for extraenous functions from wateRmelon see respective manual pages.
 }
 \usage{
 \S4method{qual}{gdsn.class,gdsn.class}(norm, raw)
-\S4method{predictSex}{gds.class}(x, x.probes, pc=2, plot=FALSE, irlba=TRUE, center=FALSE, scale.=FALSE)
-\S4method{predictSex}{gdsn.class}(x, x.probes, pc=2, plot=FALSE, irlba=TRUE, center=FALSE, scale.=FALSE)
+\S4method{predictSex}{gds.class}(x, x.probes=NULL, pc=2, plot=TRUE, irlba=TRUE, center=FALSE, scale.=FALSE)
+\S4method{predictSex}{gdsn.class}(x, x.probes=NULL, pc=2, plot=TRUE, irlba=TRUE, center=FALSE, scale.=FALSE)
 }
 \arguments{
 \item{norm}{
@@ -33,7 +33,7 @@ normalized node (gdsn.class)
 raw node (gdsn.class)
 }
 \item{x}{gdsclass object or node corresponding to betas}
-\item{x.probes}{logical or numeric vector containing indicies of X chromosome probes}
+\item{x.probes}{Default is NULL, is required to be supplied in bigmelon. logical or numeric vector containing indicies of X chromosome probes}
 \item{pc}{The principal component to guess sex across (usually the 2nd one in most cases)}
 \item{plot}{Logical, indicated whether or not to plot the prediction}
 \item{irlba}{Logical, indicate whether or not to use the faster method to generate principal components}

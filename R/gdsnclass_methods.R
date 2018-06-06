@@ -1110,22 +1110,24 @@ setMethod(
     }
     )
 
-setGeneric('predictSex', function(x, x.probes, pc, plot, irlba, center, scale.){standardGeneric('predictSex')})
+setGeneric('predictSex', function(x, x.probes=NULL, pc=2, plot=T, irlba=T, center=F, scale.=F){standardGeneric('predictSex')})
 setMethod(
     f = 'predictSex',
     signature(x = 'gds.class'),
-    definition = function(x, x.probes, pc=2, plot=FALSE, irlba=TRUE, center=FALSE, scale. = FALSE){
-    predictSex(x = betas(x), x.probes=x.probes, pc, plot, irlba, center, scale.)
+    definition = function(x, x.probes, pc=2, plot=TRUE, irlba=TRUE, center=FALSE, scale. = FALSE){
+    if(is.null(x.probes)) stop('Please provide an index for x chromosomes probes')
+    predictSex(x = bigmelon::betas(x), x.probes=x.probes, pc, plot, irlba, center, scale.)
 }
 )
 
 setMethod(
     f = 'predictSex',
     signature(x = 'gdsn.class'),
-    definition = function(x, x.probes, pc=2, plot=FALSE, irlba=TRUE, center=FALSE, scale. = FALSE){
+    definition = function(x, x.probes, pc=2, plot=TRUE, irlba=TRUE, center=FALSE, scale. = FALSE){
+    if(is.null(x.probes)) stop('Please provide an index for x chromosomes probes')
     if(is.logical(x.probes)) x.probes <- which(x.probes)
-    xdat <- x[x.probes,]
-    predictSex(x=xdat, x.probes=1:nrow(xdat), pc, plot, irlba, center, scale.)
+    xdat <- na.omit(x[x.probes,])
+    predictSex(x=xdat, x.probes = NULL, pc, plot, irlba, center, scale.)
 }
 )
 
