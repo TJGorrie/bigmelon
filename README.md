@@ -6,10 +6,11 @@ Currently there is a bug in the release version of wateRmelon that has yet to be
 
 ```
 library(devtools)
-source('http://bioconductor.org/biocLite.R')
-biocLite('IlluminaHumanMethylation450kanno.ilmn12.hg19') # Optional
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install('IlluminaHumanMethylation450kanno.ilmn12.hg19') # Optional
 devtools::install_git('https://github.com/schalkwyk/wateRmelon')
-biocLite('bigmelon')
+BiocManager::install('bigmelon')
 ```
 
 
