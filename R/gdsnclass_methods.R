@@ -959,15 +959,18 @@ setMethod(
             stop("Red channel QC data could not be found")
         }
         QCrows <- QCrownames(x)
-        bisulfite.green <- green.Channel[grep("^B.*C.*I", QCrows),]
-        bisulfite.red <- red.Channel[grep("^B.*C.*I", QCrows),]
-        bsI.green <- bisulfite.green[1:12,]
-        bsI.red <- bisulfite.red[1:12,]
-        bsII.green <- green.Channel[grep( '^B.*C.*II', QCrows),]
-        bsII.red <- red.Channel[grep( '^B.*C.*II', QCrows),]
-        BSI.betas <- rbind( bsI.green[1:3,], bsI.red[7:9,])/((rbind(
-                            bsI.green[1:3,], bsI.red[7:9,])) + rbind(
-                            bsI.green[4:6,], bsI.red[10:12,]))
+        bisulfite.green <- green.Channel[grep("(^B.*C.*)\\bI\\b.*", rownames(green.Channel)),] 
+        bisulfite.red <- red.Channel[grep("(^B.*C.*)\\bI\\b.*", rownames(red.Channel)),]
+        bsI.green <- bisulfite.green
+        bsI.red <- bisulfite.red
+
+        bsII.green <- green.Channel[grep("(^B.*C.*)\\bII\\b.*", rownames(green.Channel)),]    #  as above with II (subset of above)
+        bsII.red <- red.Channel[grep("(^B.*C.*)\\bII\\b.*", rownames(red.Channel)),]
+        if(nrow(bsI.green) > 11){ # 450K
+          BSI.betas <- rbind(bsI.green[1:3,], bsI.red[7:9,])/((rbind(bsI.green[1:3,], bsI.red[7:9,])) + rbind(bsI.green[4:6,], bsI.red[10:12,]))
+        } else { # EPIC (Skip the missing probe pair...)
+          BSI.betas <- rbind(bsI.green[1:2,], bsI.red[6:7,])/((rbind(bsI.green[1:2,], bsI.red[6:7,])) + rbind(bsI.green[3:4,], bsI.red[ 8:9 ,]))
+        }
         BSII.betas <- bsII.red/(bsII.red + bsII.green)
         apply(rbind(BSI.betas, BSII.betas), 2, median)*100
     }
