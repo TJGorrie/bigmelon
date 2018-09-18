@@ -1,3 +1,74 @@
+.getEstimate2 <- function(mat, design, coef, B = NULL, permutations = NULL, full = FALSE){
+  # mat = node (i.e betas)
+  p <- objdesp.gdsn(mat)$dim[2]
+  n <- objdesp.gdsn(mat)$dim[1]
+  v <- design[, coef]
+  A <- design[, -coef, drop = FALSE]
+  qa <- qr(A)
+  S <- diag(nrow(A)) - tcrossprod(qr.Q(qa)) # ncol * ncol matrix, "small"
+  vv <- if(is.null(B)){
+    matrix(v, ncol = 1)
+  } else {
+    if (is.null(permutations)) {
+      replicate(B, sample(v))
+    } else {
+      apply(permutations, 2, function(i) v[i])
+    }
+  }
+  sv <- S %*% vv
+  vsv <- diag(crossprod(vv, sv))
+  #### Code Changes here!
+  if(full){
+    df.residual <- p - qa$rank - 1
+    if(is.null(B)){
+      o <- apply.gdsn(node = mat, margin = 1, as.is = 'list',
+      #target.node = list(n.b, n.r),
+          FUN = function(x, S, vv, vsv, sv, df.residual){
+            sy <- x %*% S
+            b <- (x %*% crossprod(S, vv))/vsv
+            tcross <- tcrossprod(b, sv)
+            sigma <- sum((sy - tcross)^2)/df.residual
+            list('B'=b, 'sigma'= sigma)
+          }, 
+          S = S, vv = vv, vsv = vsv, sv = sv, 
+          df.residual = df.residual
+      )
+    } else {
+      o <- apply.gdsn(node=mat, margin=1, as.is = 'list', 
+      #target.node = list(n.b, n.r),
+         FUN = function(x, S, vv, vsv, sv, B, df.residual){
+           tmp <- sy <- x %*% S
+           sigma <- b <- (x %*% crossprod(S, vv))/vsv
+           for(j in seq_len(B)){
+             tmp <- tcrossprod(b[,j], sv[,j])
+             sigma[j] <- sum((sy-tmp)^2)
+           }
+           sigma <- sqrt(sigma/df.residual)
+           list('B'= b, 'sigma'=sigma)
+         }, S = S, vv = vv, vsv = vsv, sv = sv, 
+         df.residual = df.residual, B = B
+      )
+    }
+    coef <- if(is.null(B)) sapply(o, '[[', 'B') else t(sapply(o, '[[', 'B'))
+    sigma <- if(is.null(B)) sapply(o, '[[', 'sigma') else t(sapply(o, '[[', 'sigma'))
+    out <- list(coef = coef, # n * B big
+        sigma = sigma, # n * B big
+        stdev.unscaled = sqrt(1/vsv), 
+        df.residual = df.residual)
+    if(is.null(B)) out$stdev <- as.numeric(out$stdev)
+  } else {
+    out <- apply.gdsn(node=mat, margin = 1, as.is = 'list',
+       FUN = function(x, S, vv, vsv){
+          b <- (x %*% crossprod(S, vv))/vsv
+        },
+        S = S, vv = vv, vsv = vsv
+    )
+    out <- do.call(rbind, out)
+  }
+  return(out)
+}
+
+
 bumphunterEngine.gdsn <-function(mat, design, chr = NULL, pos,
    cluster = NULL, coef = 2,
    cutoff = NULL, pickCutoff = FALSE,
