@@ -83,8 +83,9 @@ required packages automatically, but should this not succeed for any reason,
 the following commands can be used to install these manually:
 
 <<UnevaluatedCode, eval=FALSE>>=
-source('http://bioconductor.org/biocLite.R')
-biocLite('wateRmelon', 'gdsfmt')
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install('wateRmelon', 'gdsfmt')
 @
 
 Install the latest package from a local copy (located in the current working

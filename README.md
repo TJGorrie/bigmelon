@@ -12,7 +12,6 @@ devtools::install_git('https://github.com/schalkwyk/wateRmelon')
 devtools::install_git('https://github.com/tjgorrie/bigmelon')
 ```
 
-
 ## Authors
 
 Tyler J. Gorrie-Stone and Leonard C. Schalkwyk
