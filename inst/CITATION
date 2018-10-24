@@ -1,0 +1,19 @@
+bibentry(bibtype="Article",
+         key = 'bigmelon',
+	 title = "{Bigmelon: tools for analysing large DNA methylation datasets}",
+	author = c(
+            person(c('Tyler', 'J.'), 'Gorrie-Stone'),
+            person(c('Melissa', 'C.'), 'Smart'),
+            person(c('Ayden'), 'Saffari'),
+            person(c('Karim'), 'Malki'),
+            person(c('Eilis'), 'Hannon'),
+            person(c('Joe'), 'Burrage'),
+            person(c('Jonathan'), 'Mill'),
+            person(c('Meena'), 'Kumari'),
+            person(c('Leonard', 'C.'), 'Schalkwyk')
+         ),
+	year = "2018",
+	journal = "Bioinformatics",
+	doi = "10.1093/bioinformatics/bty713",
+)
+

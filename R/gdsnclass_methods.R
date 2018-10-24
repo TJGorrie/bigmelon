@@ -385,9 +385,7 @@ setMethod(
                     node,
                     mns = index.gdsn(object, "methylated"),
                     uns = index.gdsn(object, "unmethylated"),
-                    onetwo = fData(object)[, grep('DESIGN',
-                                                colnames(fData(object)),
-                                                ignore.case = TRUE)[1]],
+                    onetwo = fot(object),
                     fudge,
                     ret2
                     )
@@ -418,9 +416,7 @@ setMethod(
                     node,
                     mns = index.gdsn(object, "methylated"),
                     uns = index.gdsn(object, "unmethylated"),
-                    onetwo = fData(object)[, grep('DESIGN',
-                                                colnames(fData(object)),
-                                                ignore.case = TRUE)[1]],
+                    onetwo = fot(object),
                     fudge,
                     ret2
                     )
@@ -451,12 +447,8 @@ setMethod(
                     node,
                     mns = index.gdsn(object, "methylated"),
                     uns = index.gdsn(object, "unmethylated"),
-                    onetwo = fData(object)[,grep('DESIGN',
-                                                colnames(fData(object)),
-                                                ignore.case = TRUE)[1]],
-                    roco = unlist(data.frame(
-                            strsplit(colnames(object), '_'),
-                            stringsAsFactors = FALSE)[2,]),
+                    onetwo = fot(object),
+                    roco = substring(colnames(object), regexpr("R0[1-9]C0[1-9]", colnames(object))),
                     fudge,
                     ret2
                     )
@@ -487,12 +479,8 @@ setMethod(
                     node,
                     mns = index.gdsn(object, "methylated"),
                     uns = index.gdsn(object, "unmethylated"),
-                    onetwo = fData(object)[,grep('DESIGN',
-                                                colnames(fData(object)),
-                                                ignore.case = TRUE)[1]],
-                    roco = unlist(data.frame(
-                                strsplit(colnames(object), '_'),
-                                stringsAsFactors = FALSE)[2,]),
+                    onetwo = fot(object),
+                    roco = substring(colnames(object), regexpr("R0[1-9]C0[1-9]", colnames(object))),
                     fudge,
                     ret2
                     )
@@ -523,12 +511,8 @@ setMethod(
                     node,
                     mns = index.gdsn(object, "methylated"),
                     uns = index.gdsn(object, "unmethylated"),
-                    onetwo =  fData(object)[,grep('DESIGN',
-                                            colnames(fData(object)),
-                                            ignore.case = TRUE)[1]],
-                    roco = unlist(data.frame(
-                                strsplit(colnames(object), '_'),
-                                stringsAsFactors = FALSE)[2,]),
+                    onetwo = fot(object),
+                    roco = substring(colnames(object), regexpr("R0[1-9]C0[1-9]", colnames(object))),
                     fudge,
                     ret2
                     )
@@ -559,9 +543,7 @@ setMethod(
                     node,
                     mns = index.gdsn(object, "methylated"),
                     uns = index.gdsn(object, "unmethylated"),
-                    onetwo =  fData(object)[,grep('DESIGN',
-                                            colnames(fData(object)),
-                                            ignore.case = TRUE)[1]],
+                    onetwo = fot(object),
                     fudge,
                     ret2
                     )
@@ -592,12 +574,8 @@ setMethod(
                     node,
                     mns = index.gdsn(object, "methylated"),
                     uns = index.gdsn(object, "unmethylated"),
-                    onetwo =  fData(object)[,grep('DESIGN',
-                                                colnames(fData(object)),
-                                                ignore.case = TRUE)[1]],
-                    roco = unlist(data.frame(
-                                strsplit(colnames(object), '_'),
-                                stringsAsFactors = FALSE)[2,]),
+                    onetwo = fot(object),
+                    roco = substring(colnames(object), regexpr("R0[1-9]C0[1-9]", colnames(object))),
                     fudge,
                     ret2
                     )
@@ -628,12 +606,10 @@ setMethod(
                     node,
                     mns = index.gdsn(object, "methylated"),
                     uns = index.gdsn(object, "unmethylated"),
-                    onetwo =  fData(object)[,grep('DESIGN',
-                                            colnames(fData(object)),
-                                            ignore.case = TRUE)[1]],
-                    roco = unlist(data.frame(
-                                strsplit(colnames(object), '_'),
-                                stringsAsFactors=FALSE)[2,]),
+                    onetwo =  fot(object), #fData(object)[,grep('DESIGN',
+                                          #  colnames(fData(object)),
+                                          #  ignore.case = TRUE)[1]],
+                    roco = substring(colnames(object), regexpr("R0[1-9]C0[1-9]", colnames(object))),
                     fudge,
                     ret2
                     )
@@ -1107,8 +1083,8 @@ setMethod(
     signature(x='gds.class'),
     definition = function(x){
         fd <- fData(x)
-        ds <- grep("DESIGN", colnames(fd), ignore.case = TRUE)
-#        if(length(ds) == 0) stop('Cannot find \"DESIGN\" column in fData\(x\)')
+        # Create ambiguous search for Design or Type in fData - to fix minfi normalisation...
+        ds <- grep("(DESIGN|TYPE)", colnames(fd), ignore.case = TRUE)
         return(fd[,ds[1]])
     }
     )

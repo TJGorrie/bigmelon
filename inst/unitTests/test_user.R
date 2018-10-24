@@ -1,3 +1,4 @@
+
 #TODO - unit tests for non-numeric accessors, & all normalisation methods
 
 # unit test stubs, the  idea is that whenever we work on a function
@@ -89,13 +90,28 @@ test_app2gds 	 <- function(m, bmln){
 
 }
 
-#test_iadd 		 <- function( bar, ipath=NULL, gds ){
-#
-#	#commented out as need to have idat files to test
-#	#m <- methylumIDAT("barcode1")
-#	#n <- es2gds(m,"midat.gds")
-#	#o <- iadd("barcode2",n)
-#	#unlink("midat.gds", force=TRUE)
+#test_iadd  <- function( bar, ipath=NULL, gds ){
+  # Will test mset and minfi methods and will test fot!
+#  if(require('minfiData')){
+#    bd <- system.file('extdata', package='minfiData')
+#    setwd(file.path(bd, '5723646052'))
+#    gfile <- iadd2('./', gds = 'mi.gds')
+#    gfile <- iadd(bfp('./')[1], gds = 'mi.gds')
+#    rg <- read.metharray(bfp('./'))
+#    gf <- eset2gds(rg, 'mi2.gds')
+# 
+#    checkTrue(length(fot(gfile)) > 1)
+#    checkTrue(length(fot(gf)) > 1)
+#    closefn.gds(gf)
+#    closefn.gds(gfile)
+#    unlink('mi2.gds')
+#    unlink('mi.gds')
+	#commented out as need to have idat files to test
+	#m <- methylumIDAT("barcode1")
+	#n <- es2gds(m,"midat.gds")
+	#o <- iadd("barcode2",n)
+	#unlink("midat.gds", force=TRUE)
+#   }
 #}
 
 test_beta        <- function(object            ){
