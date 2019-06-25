@@ -179,18 +179,16 @@ iadd2 <- function(path, gds, chunksize = NULL, ...){
     gdsfile
 }
 
-iadd <- function(bar, gds, ...){
-    # bar is a path to an idat file or a barcode
-    gdsfile <- gds
+iadd <- function (bar, gds, n = TRUE, ...){
+    # TODO add check to ensure the arguments match to wacky dimension problems.
     ifile <- basename(bar)
-    # extract barcode
-    pieces <- unlist(strsplit(ifile, '[_.]'))
-    bar <- paste(pieces[1], pieces[2], sep = '_')
-    # convert to methylumi set
-    mlu <- methylumIDATepic(barcodes = bar)
-    # append to gds.class object or file
-    app2gds(mlu, gdsfile)
-} # AS - OK
+    pieces <- strsplit(ifile, "[_.]")
+    slide <- sapply(pieces, '[', 1)
+    pos <- sapply(pieces, '[', 2)
+    bar <- paste(slide, pos, sep = "_")
+    mlu <- methylumIDATepic(barcodes = bar, n=n, ...)
+    app2gds(mlu, gds)
+}
 
 finalreport2gds <- function(finalreport, gds, ...){
     mset <- methylumiR(finalreport, ...)
