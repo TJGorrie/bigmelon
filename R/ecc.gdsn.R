@@ -35,7 +35,7 @@ estimateCellCounts.gds <- function(
     # My shameless /scopy/s implmentation of minfi::estimateCellCounts
     # For those who do not want use minfi::read.metharray
     referencePlatform <- match.arg(referencePlatform)
-    rgPlatform <- match.arg(gdPlatform)
+    rgPlatform <- gdPlatform <- match.arg(gdPlatform)
     if(rgPlatform == 'EPIC') rgPlatform <- '450k'
     # No method in bigmelon to derive annotation from object, therefore specify.
     # Sanity Checking from minfi...

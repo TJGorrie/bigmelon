@@ -8,27 +8,27 @@ Add data from IDAT files for a single barcode to a gds file
 }
 \description{
 Add data from IDAT files for a single barcode to a gds file.
-or 
+or
 Add data from many IDAT files from a single directory to a gds file.
 }
 \usage{
-iadd(bar, gds,...)
+iadd(bar, gds, n = TRUE, ...)
 iadd2(path, gds, chunksize = NULL, ...)
 }
 
 \arguments{
 \item{bar}{
-The barcode for an IDAT file Or the file path of the file containing red or 
-green channel intensities for that barcode (this will automatically 
+The barcode for an IDAT file Or the file path of the file containing red or
+green channel intensities for that barcode (this will automatically
 locate and import both files regardless of which one you provide)
 }
 \item{path}{
-The file path where (multiple) IDAT files exist. Iadd2 will process every idat 
+The file path where (multiple) IDAT files exist. Iadd2 will process every idat
 within the specified directory.
 }
 \item{gds}{
 
-Either: 
+Either:
 A gds.class object
 
 Or:
@@ -39,9 +39,14 @@ A character string specifying the name of a new .gds file to write to
 
 }
 \item{chunksize}{
-If NULL, iadd2 will read in all barcodes in one go. Or if supplied with 
+If NULL, iadd2 will read in all barcodes in one go. Or if supplied with
 a numeric value, iadd2 will read in that number of idat files in batches
 }
+
+\item{n}{
+Logical, whether or not bead-counts are extracted from idat files.
+}
+
 \item{...}{
 Additional Arguments passed to \code{\link[wateRmelon]{methylumIDATepic}}.
 }

@@ -66,11 +66,18 @@ app2gds <- function(m, bmln){
     if(!(inherits(m, 'MethyLumiSet'))){
         stop(paste(deparse(substitute(m)), "is not a MethyLumiSet object"))
     }
+
     # call handle to deal with file checks
     rehandle <- handle(bmln)
     bmln <- rehandle[[1]]
     newfile <- rehandle[[2]]
+
     if(!(newfile)){
+        if(! length(rownames(bmln)) == length(rownames(m))){
+            stop(paste(deparse(substitute(m)), "has a different length to bmln"))
+        }
+        m <- m[rownames(bmln),]
+
         message(paste('appending to', bmln$filename))
         if(exists("betas", assayData(m))){
             message('betas... ' )
