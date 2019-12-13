@@ -12,7 +12,7 @@ geotogds <- function(geo, gds=NULL, method = "wget", keepidat = F, keeptar = F, 
     if(is.null(gds)) gds <- sprintf('%s.gds', geo)
     if(!(grepl(x = geo, pattern='.tar.gz'))){
         url <- sprintf("https://www.ncbi.nlm.nih.gov/geo/download/?acc=%s&format=file", geo)
-        tarfile <- sprintf(("./%s.tar.gz", geo)
+        tarfile <- sprintf("./%s.tar.gz", geo)
         message('Downloading %s to %s', geo, tarfile)
         download.file(url, destfile = tarfile, method = method, quiet = FALSE)
     } else {
