@@ -6,6 +6,7 @@
 pfilter.gds <- function(mn = NULL, un = NULL, bn = NULL, da = NULL, pn, bc,
                         perCount = NULL, pnthresh = NULL, perc = NULL,
                         pthresh = NULL){
+    # TODO: Get rid of this mess
     if(!is.null(list(pn, bc))){
         if(is.null(perCount)){
             perCount = 5
@@ -32,7 +33,7 @@ pfilter.gds <- function(mn = NULL, un = NULL, bn = NULL, da = NULL, pn, bc,
         goodsamps <- apply.gdsn(node = pn,
                                 margin = 2,
                                 FUN = function(x, y, z){
-                                    (sum(x)>y) < ((length(x)*z)/100)
+                                    (sum(x>y)) < ((length(x)*z)/100)
                                 },
                                 as.is = "logical",
                                 y = pnthresh,
