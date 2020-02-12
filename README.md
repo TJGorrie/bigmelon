@@ -1,6 +1,13 @@
 # bigmelon
 Memory Efficient Methods for DNA Methylation Analysis
 
+## Software status
+
+| Resource:     | Bioconductor        | Travis CI     |
+| ------------- | ------------------- | ------------- |
+| _Platforms:_  | _Multiple_          | _Linux_       |
+| R CMD check   | <a href="http://bioconductor.org/checkResults/release/bioc-LATEST/bigmelon/"><img border="0" src="http://bioconductor.org/shields/build/release/bioc/bigmelon.svg" alt="Build status"></a> (release)</br><a href="http://bioconductor.org/checkResults/devel/bioc-LATEST/bigmelon/"><img border="0" src="http://bioconductor.org/shields/build/devel/bioc/bigmelon.svg" alt="Build status"></a> (devel) | <a href="https://travis-ci.org/tjgorrie/bigmelon"><img src="https://travis-ci.org/tjgorrie/bigmelon.svg" alt="Build status"></a> |
+
 ## Installation
 We are constantly updating both bigmelon and wateRmelon and will try to keep the github inline with the bioconductor mirror as much as possible. However if you want the latest features before they are committed to bioconductor you can install both wateRmelon and bigmelon using the code below. 
 
