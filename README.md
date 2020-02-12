@@ -27,6 +27,11 @@ School of Biological Sciences
 University of Essex
 Colchester, UK
 
+## Citation
+If you use bigmelon for your analyses, please use citation() within R or cite [our paper](10.1093/bioinformatics/bty713) as:
+
+Tyler J Gorrie-Stone, Melissa C Smart, Ayden Saffari, Karim Malki, Eilis Hannon, Joe Burrage, Jonathan Mill, Meena Kumari, Leonard C Schalkwyk, Bigmelon: tools for analysing large DNA methylation datasets, Bioinformatics, Volume 35, Issue 6, 15 March 2019, Pages 981–986, https://doi.org/10.1093/bioinformatics/bty713 
+
 ## Abstract
 DNA methylation analyses are getting ever bigger.With the release of the HumanMethylationEpic microarray by Illumina and datasets reaching into the thousands, analysis of these large datasets using popular R packages is becoming impractical due to memory requirements and even the time required to read the data from disk. As such there is an increasing need for computationally efficient methods to perform meaningful analysis on high dimension data.
 
