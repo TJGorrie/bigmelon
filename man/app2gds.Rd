@@ -28,7 +28,7 @@ A character string specifying the file path of a new .gds file to write to
 }
 
 \details{
-Currently this function only takes a MethyLumiSet object as the only type of eligible input. This function will also produce unexpected results if the number of rows of the new object does not match the existing .gds file. Hopefully the function will noisily fail if this is the case however to prevent any errors from occuring it is recommended that raw idat files are read in using \code{\link[wateRmelon{readEPIC}} or appended with \code{\link{iadd}} or \code{\link{iadd2} to ensure that all rows are of the same length and have the same annotation.
+Currently this function only takes a MethyLumiSet object as the only type of eligible input. This function will also produce unexpected results if the number of rows of the new object does not match the existing .gds file. Hopefully the function will noisily fail if this is the case however to prevent any errors from occuring it is recommended that raw idat files are read in using \code{\link[wateRmelon{readEPIC}} or appended with \code{\link{iadd}} or \code{\link{iadd2}} to ensure that all rows are of the same length and have the same annotation.
 }
 
 \value{
@@ -43,6 +43,7 @@ Who to contact: <t.gorrie-stone@qmul.ac.uk>
 \seealso{
 \code{\link{es2gds}}, \code{\link{iadd}, \code{\link{iadd2}}.
 }
+
 \examples{
 #load example dataset
 data(melon)
