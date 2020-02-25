@@ -18,7 +18,7 @@ A gds.class object
 A gdsn.class object, or a character string that refers to a node within supplied gds.
 }
 \item{onetwo}{
-gdsn.class object OR character string that refers to location in gds that contains information relating to probe design OR vector of length equal to the number of rows in the array that contains 'I' and 'II' in accordance to Illumina HumanMethylation micro-array design. Can be obtained with fot(gds)
+gdsn.class object OR character string that refers to location in gds that contains information relating to probe design OR vector of length equal to the number of rows in the array that contains 'I' and 'II' in accordance to Illumina HumanMethylation micro-array design. This can be obtained with fot(gds)
 }
 \item{rank.node}{Default = NULL. If supplied with character string, function will calculate the ranks of given node and store them in gds. Additionally, the computed quantiles will now instead be attributed to rank.node which can be accessed with \code{\link{get.attr.gdsn}}
 }
@@ -35,8 +35,8 @@ If rank.node was supplied, nothing will be returned. Instead a new node will be 
 }
 
 \author{
-Tyler J. Gorrie-Stone
-Who to contact: <tgorri@essex.ac.uk>
+Tyler Gorrie-Stone
+Who to contact: <t.gorrie-stone@qmul.ac.uk>
 }
 %\seealso{
 %}
@@ -44,9 +44,8 @@ Who to contact: <tgorri@essex.ac.uk>
 data(melon)
 e <- es2gds(melon, "melon.gds")
 output <- getquantilesandranks(gds = e, 'methylated', onetwo = fot(e), perc = 1, rank.node = NULL)
-str(output)
 # with-out put.
-getquantilesandranks(gds = e, 'methylated', onetwo = fot(e), perc = 1, rank.node = 'mnsrank')
+#getquantilesandranks(gds = e, 'methylated', onetwo = fot(e), perc = 1, rank.node = 'mnsrank')
 closefn.gds(e)
 unlink("melon.gds")
 }

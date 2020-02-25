@@ -6,8 +6,7 @@ Copy gds node to a backup folder within gds object
 }
 
 \description{
-Quick function that will copy designated gdsn.class node within a gds object
-to a 'backup'folder. If 'backup' folder does not exist, this is created. This is a wrapper to \code{\link[gdsfmt]{copyto.gdsn}} which should be used if one wishes to copy a gds node to a seperate gds file.
+This function will copy a designated gdsn.class object stored inside a gds object to a backup folder (aptly named backup). If the backup folder does not exist, this will be created. This is a wrapper to \code{\link[gdsfmt]{copyto.gdsn}} which should be used if one wishes to copy a gds node to a seperate gds file.
 }
 
 \usage{
@@ -22,17 +21,16 @@ the specified node to.
 }
 
 \item{node}{
-gdsn.class object (a gds node)
+gdsn.class object (a gds node) which can be specified using \code{\link[gdsfmt]{index.gdsn}}
 }
 }
 
 \value{
-gds object is modified to have a new folder 'backup' with supplied node
-copied inside
+A gdsobject with an additional folder called backup with supplied node within.
 }
 
 \author{
-Tyler Gorrie-Stone <tgorri@essex.ac.uk>
+Tyler Gorrie-Stone <t.gorrie-stone@qmul.ac.uk>
 }
 
 \seealso{\code{\link[gdsfmt]{copyto.gdsn}}}
@@ -42,7 +40,6 @@ data(melon)
 e <- es2gds(melon, "melon.gds")
 nod <- index.gdsn(e, "betas")
 backup.gdsn(gds = NULL, node = nod)
-
 closefn.gds(e)
 unlink("melon.gds")
 }

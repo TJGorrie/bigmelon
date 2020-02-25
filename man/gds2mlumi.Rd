@@ -35,6 +35,7 @@ A methylumi object
 
 \author{
 Tyler Gorrie-Stone
+Who to contact: <t.gorrie-stone@qmul.ac.uk>
 }
 \examples{
 data(melon)

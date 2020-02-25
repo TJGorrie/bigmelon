@@ -33,7 +33,7 @@ A gds.class object, which points to the newly created .gds file.
 
 \author{
 Leonard C Schalkwyk, Ayden Saffari, Tyler Gorrie-Stone
-Who to contact: <tgorri@essex.ac.uk>
+Who to contact: <t.gorrie-stone@qmul.ac.uk>
 }
 
 \seealso{

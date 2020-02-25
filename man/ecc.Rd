@@ -5,7 +5,7 @@
 Cell Proportion Estimation using bigmelon
 }
 \description{
-Estimates relative proprotion of pure cell types within a sample, identical to \code{\link[minfi]{estimateCellCounts}}. Currently, only a reference data-set exists for 450k arrays. As a result, if performed on EPIC data, function will convert gds to 450k array dimensions (this will not be memory efficient).
+Estimates the relative proprotion of pure cell types within a sample, identical to \code{\link[minfi]{estimateCellCounts}}. Currently, only a reference data-set exists for 450k arrays. As a result, if performed on EPIC data, function will convert gds to 450k array dimensions (this will not be memory efficient).
 }
 \usage{
     estimateCellCounts.gds(

@@ -5,10 +5,10 @@
 Dasen Quantile Normalization by storing ranks
 }
 \description{
-Performs 'dasen' normalization for .gds format objects while storing
-the ranked methylated/unmethylated intensities until they are needed down stream.
+This performs an experimental variant of dasen normalisation for .gds format objects which stores the ranks of the methylated
+and unmethylated intensities inside of the normalised values and interpolates the quantiles when they are needed.
 
-This will eliminate the secondary re-sorting required by quantile normalisation as it is perfomed down-stream - either by using \code{computebeta.gds} or manually with '['
+Notably this eliminates a secondary re-sorting pass which is required by quantile normalisatoin as it will be performed downstream using \code{computebeta.gds} which will produce normalise betas or manually with '[' which will access the ranks and interpolate the specific quantiles as needed.
 }
 \usage{
 dasenrank(gds, mns, uns, onetwo, roco, calcbeta = NULL, perc = 1)
@@ -16,7 +16,7 @@ computebeta.gds(gds, new.node, mns, uns, fudge)
 }
 \arguments{
 \item{gds}{
-gds.class object which contains methylated and unmethylated intensities. The function will write two(four) nodes to this object called 'mnsrank' and 'unsrank' which contain the ranks of the given nodes.
+gds.class object which contains methylated and unmethylated intensities. The function will write two (four) nodes to this object called 'mnsrank' and 'unsrank' which contain the ranks of the given nodes.
 }
 \item{mns}{
 gdsn.class object OR character string that refers to location in gds that relates to the (raw) methylated intensities.
@@ -49,7 +49,8 @@ Nothing is returned to the R environment, however the supplied gds will have 4 o
 }
 
 \author{
-Tyler J. Gorrie-Stone - tgorri at essex.ac.uk
+Tyler Gorrie-Stone
+Who to contact: <t.gorrie-stone@qmul.ac.uk>
 }
 %\seealso{
 %}

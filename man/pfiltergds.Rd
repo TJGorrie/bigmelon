@@ -19,7 +19,7 @@ perc = NULL, pthresh = NULL)
 a gds object OR node corresponding to methylated intensities
 }
 \item{perCount}{
-remove sites having this percentage of samples with a beadcount <3, default = 5
+Threshold specifying which sites should be removed if they have a given percentage of samples with a beadcount <3, default = 5
 }
 \item{pnthresh}{
 cut off for detection p-value, default= 0.05
@@ -29,15 +29,16 @@ remove sample having this percentage of sites with a detection p-value
 greater than pnthresh, default = 1
 }
 \item{pthresh}{
-remove sites having this percentage of sample with a detection p-value greater
+Threshold specifying which sites should be removed if they have a given percentage of samples with a detection p-value greater
 than pnthresh, default = 1
 }
 }
 %\details{}
 \value{ See \code{\link[wateRmelon]{pfilter}}. If using pfilter.gds, function
-will return a list of two elements. Both logical vectors with length(nrow) and length(ncol), which can be used for subsetting. Otherwise will be used to subset data directly.
+If using pfilter.gds function will return a list of containing two locical vectors of length(nrow) and lneght(ncol) which can be used to subset data. Otherwise if called using pfilter data will be subsetted automatically.
 }
-\author{Tyler Gorrie-Stone, Original (wateRmelon) Function by Ruth Pidsley}
+\author{Tyler Gorrie-Stone, Original (wateRmelon) Function by Ruth Pidsley
+Who to Contact: <t.gorrie-stone@qmul.ac.uk}
 \seealso{\code{\link[wateRmelon]{pfilter}}}
 \examples{
 data(melon)

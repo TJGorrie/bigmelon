@@ -75,6 +75,7 @@ This function is a direct replication of the \code{\link[bumphunter]{bumphunter}
 }
 \author{
 Original Function by Rafael A. Irizarry, Martin J. Aryee, Kasper D. Hansen, and Shan Andrews.
-Bigmelon implementation by Tyler J. Gorrie-Stone
+Bigmelon implementation by Tyler Gorrie-Stone
+Who to contact if this all goes horribly wrong: <t.gorrie-stone@qmul.ac.uk>
 }
 

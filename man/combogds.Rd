@@ -2,12 +2,12 @@
 \alias{combo.gds}
 
 \title{
-Combine two different gds objects.
+Combine two different gds objects together
 }
 
 \description{
-Combines the shared gdsn.class nodes between two gds objects depending on
-primary gds.object dimensions.
+Function will attempt to combine together the shared gdsn.class nodes between two gds object 
+depending on the dimensions of the primary gds.class object.
 }
 
 \usage{
@@ -32,7 +32,7 @@ Will crudely combine shared nodes between primary and secondary based on the
 dimensions / rownames of the primary node. NAs will be coerced where probes
 are missing from secondary gds.
 
-Will only look for nodes with the names "betas", "methylated", "unmethylated",
+Currently will only look for nodes with the names "betas", "methylated", "unmethylated",
 "pvals" and "NBeads".
 }
 
@@ -42,11 +42,12 @@ separate pData object manually and adding combined pData post-function
 }
 
 \author{
-Tyler Gorrie-Stone <tgorri@essex.ac.uk>
+Tyler Gorrie-Stone <t.gorrie-stone@qmul.ac.uk>
 }
 
 \value{
-a new gds object that has both files within it
+Returns (and creates) as new gds file in the specified location with the combination
+of two gds objects together.
 }
 
 \examples{

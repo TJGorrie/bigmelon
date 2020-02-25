@@ -21,7 +21,7 @@ Internal bigmelon functions
 
 }
 \description{
-Internal bigmelon functions, not intended for end user.
+Internal bigmelon functions, not intended for end user. What are you doing here!?
 }
 \usage{
 
@@ -77,12 +77,10 @@ Nothing.
 
 \author{
 Leonard C Schalkwyk, Ayden Saffari, Tyler Gorrie-Stone
-Who to contact: <tgorri@essex.ac.uk>
+Who to contact: <t.gorrie-stone@qmul.ac.uk>
 }
 
-\seealso{
-\code{\link{bigmelon}}
-}
+%\seealso{}
 
 \examples{
 data(melon)

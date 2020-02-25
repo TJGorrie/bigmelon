@@ -72,21 +72,18 @@ prefix: for created names.
 }
 
 \details{
-Each function returns the data stored in the corresponding node as either a
-gdsn.class object or a matrix or data.frame. These are names following the
-conventions of the methylumi package and perform similar functions.
+Each function will return the data stored in the corresponding node as either a gdsn.class 
+object, matrix, or data.frame. These are names following the conventions of the 
+methylumi package and perform similar functions.
 
-Each function which returns a gdsn.class object can be indexed using
-matrix-like '[' operations. With an optional name argument which optionally
-allows for row and col names to be automatically appended to returned matrix.
+Each function which returns a gdsn.class object can be further index using the '[' 
+operators. This includes an additional name argument which optionally returns the named
+attributes to the data as these are not stored inside the gdsn.node.
 
-The QC functions (returns QCdata split into separate matrices for methylated
-values, unmethylated values, and probe names)
+The QC functions will return the QC data as a matrix, these are seperated for methylation and 
+unmethylated values and the rownames.
 
-exprs returns a data.frame of beta values for all probes across all samples.
-
-fot returns a vector corresponding to probe design (either 'I' or 'II') which is used for normalising differences between probe designs.
-
+exprs will return a data.frame from beta values for all probes and all samples.
 }
 
 \value{
@@ -95,26 +92,23 @@ Returns specified node representing the called accessor
 
 \author{
 Leonard C Schalkwyk, Ayden Saffari, Tyler Gorrie-Stone
-Who to contact: <tgorri@essex.ac.uk>
+Who to contact: <t.gorrie-stone@qmul.ac.uk>
 }
 
-\seealso{
-\code{\link{bigmelon}}, \code{\link[methylumi]{methylumi}}
-}
+%\seealso{}
 
 \examples{
 data(melon)
 e <- es2gds(melon,'wat_melon.gds')
 betas(e)
-betas(e)[,]
-methylated(e)[1:5, ]
-unmethylated(e)[ ,1:5]
+head(betas(e)[,])
+methylated(e)[1:5, 1:3]
+unmethylated(e)[1:3 ,1:5]
 pvals(e)[1:5, 1:5]
-fData(e)
-pData(e)
-colnames(e)
-rownames(e)
-exprs(e)
+head(fData(e))
+head(pData(e))
+head(colnames(e))
+head(rownames(e))
 
 closefn.gds(e)
 unlink("wat_melon.gds")

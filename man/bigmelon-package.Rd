@@ -15,27 +15,29 @@ applying array normalization methods from the wateRmelon package.
 \tabular{ll}{
 Package: \tab bigmelon\cr
 Type: \tab Package\cr
-Version: \tab 1.1.13\cr
-Date: \tab 2017-04-06\cr
+Version: \tab 1.13.8\cr
+Date: \tab 2020-02-24\cr
 License: \tab GPL3\cr
 }
 }
 \author{
 Tyler Gorrie-Stone Leonard C Schalkwyk, Ayden Saffari, Karim Malki.
-Who to contact: <tgorri@essex.ac.uk>, <leonard.schalkwyk@kcl.ac.uk>
+Who to contact: <t.gorrie-stone@qmul.ac.uk>, <lschal@essex.ac.uk>
 
 }
 \references{
-[1]Pidsley R, Wong CCY, Volta M, Lunnon K, Mill J, Schalkwyk LC:
+[1]Tyler J Gorrie-Stone, Melissa C Smart, Ayden Saffari, Karim Malki, Eilis Hannon, Joe Burrage, Jonathan Mill, Meena Kumari, Leonard C Schalkwyk: 
+Bigmelon: tools for analysing large DNA methylation datasets, Bioinformatics, Volume 35, Issue 6, 15 March 2019, Pages 981–986.
+https://doi.org/10.1093/bioinformatics/bty713
+
+[2]Pidsley R, Wong CCY, Volta M, Lunnon K, Mill J, Schalkwyk LC:
 A data-driven approach to preprocessing Illumina 450K methylation array data.
 BMC genomics, 14(1), 293.
 }
 
 \seealso{
 \code{\link{es2gds}}, \code{\link{dasen}}, \code{\link{wateRmelon}},
-\code{\link{gdsfmt}}.,
-\code{\link[methylumi]{methylumi}}.
-
+\code{\link{gdsfmt}}.
 }
 
 

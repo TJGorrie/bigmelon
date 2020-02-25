@@ -29,7 +29,7 @@ Bigmelon Quantile Normalization methods.
 }
 
 \description{
-Functions used to perform quantile normalization on gds.class objects
+Set of functions that are used to perform quantile normalization methods on gds.class objects.
 }
 
 \usage{
@@ -43,15 +43,15 @@ dfsfit.gdsn(gds, targetnode, newnode, roco, onetwo)
 \arguments{
 \item{gds}{ A gds.class object
 }
-\item{node}{ "name" of desired output \code{\link[gdsfmt]{gdsn.class}} node
+\item{node}{ The "name" of desired output \code{\link[gdsfmt]{gdsn.class}} node
 }
-\item{mns}{ \code{gdsn.class} node that corresponds to "methylated"
+\item{mns}{ The \code{gdsn.class} node that corresponds to "methylated"
 intensities.
 }
-\item{uns}{ \code{gdsn.class} node that corresponds to "unmethylated"
+\item{uns}{ The \code{gdsn.class} node that corresponds to "unmethylated"
 intensities.
 }
-\item{onetwo}{ \code{gdsn.class} node that corresponds to probe designs
+\item{onetwo}{ The \code{gdsn.class} node that corresponds to probe designs
 (in reference to 450k and EPIC arrays)
 OR
 character string pointing to location of \code{gdsn.class} node. e.g.
@@ -65,12 +65,12 @@ disables model fitting (and speeds up processing), otherwise
 roco can be supplied as a character vector of strings like
 'R01C01' (only 3rd and 6th characters used).
 }
-\item{fudge}{ value added to total intensity to prevent denominactors close
+\item{fudge}{ The value added to total intensity to prevent denominactors close
 to zero when calculation betas. default = 100
 }
 \item{ret2}{ if TRUE, appends the newly calculated methylated and
 unmethylated intensities to original gds (as specified in gds arguement).
-Will overwrite raw intensities.
+Will overwrite the raw intensities.
 }
 \item{target}{ Target \code{gdsn.class} node to perform normalization on.
 If using "*****.gds" method you do not need to specify this.
@@ -91,19 +91,19 @@ package. Functions: \code{qn.gdsn}, \code{design.qn.gdsn}, \code{db.gdsn} and
 normalization methods. Otherwise calling \code{dasen} or \code{dasen.gds}
 e.t.c will perform the necessary operations for quantile normalization.
 
-Each 'named' normalization method will write a temporary gds object
-("temp.gds") in the current working directory and is remove it
+Each 'named' normalization method will write a temporary gds object called
+"temp.gds" into the current working directory and it is removed
 when normalization is complete. Current methods supplied by default arguments
 will replace the raw betas with normalized betas, but leave the methylated and unmethylated intensities unprocessed.
 }
 
 \value{
 Normalization methods return nothing but will affect the gds file and
-replace/add nodes if specified to.
+replace/add nodes given to the function.
 }
 
 \author{
-Tyler J Gorrie-Stone <tgorri@essex.ac.uk>
+Tyler J Gorrie-Stone <t.gorrie-stone@qmul.ac.uk>
 }
 \seealso{
 \code{\link{wateRmelon}}, \code{\link[wateRmelon]{dasen}}

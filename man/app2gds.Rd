@@ -1,12 +1,10 @@
 \name{app2gds}
 \alias{app2gds}
 \title{
-Append a MethyLumiSet object to a CoreArray Genomic Data Structure (GDS) data
-file
+Append a MethyLumiSet object to a preexisting gds file
 }
 \description{
-This function will append a MethyLumiSet data object to a CoreArray Genomic
-Data Structure(GDS) data file, and return as a gds.class object.
+This function will append a MethyLumiSet object to a gds file and return a gds.class object.
 }
 \usage{
 app2gds(m, bmln)
@@ -14,8 +12,7 @@ app2gds(m, bmln)
 
 \arguments{
 \item{m}{
-The MethyLumiSet object to be appended to the CoreArray Genomic Data Structure
-(GDS) data file
+The MethyLumiSet object to be appended to the gds file, with the same number of rows as the gds file.
 }
 \item{bmln}{
 
@@ -23,28 +20,28 @@ Either:
 A gds.class object
 
 Or:
-A character string specifying the name of an existing .gds file to write to.
+A character string specifying the filepath of an existing .gds file to write to.
 
 Or:
-A character string specifying the name of a new .gds file to write to
+A character string specifying the file path of a new .gds file to write to
 }
 }
 
 \details{
-Currently, the function only works with MethylumiSet objects and will produce unexpected results if the number of rows of the new objects does not match the existing .gds object. To prevent any errors from occuring it is recommended that raw .idat files are read in with \code{\link[wateRmelon]{readEPIC}} or appended \code{\link{iadd}} to ensure that all rows are the same length and have the same annotation.
+Currently this function only takes a MethyLumiSet object as the only type of eligible input. This function will also produce unexpected results if the number of rows of the new object does not match the existing .gds file. Hopefully the function will noisily fail if this is the case however to prevent any errors from occuring it is recommended that raw idat files are read in using \code{\link[wateRmelon{readEPIC}} or appended with \code{\link{iadd}} or \code{\link{iadd2} to ensure that all rows are of the same length and have the same annotation.
 }
 
 \value{
-A gds.class object, which points to the appended .gds file.
+A gds.class object pointed towards the newly appended .gds file.
 }
 
 \author{
 Leonard C Schalkwyk, Ayden Saffari, Tyler Gorrie-Stone
-Who to contact: <tgorri@essex.ac.uk>
+Who to contact: <t.gorrie-stone@qmul.ac.uk>
 }
 
 \seealso{
-\code{\link{es2gds}}, \code{\link{iadd}}.
+\code{\link{es2gds}}, \code{\link{iadd}, \code{\link{iadd2}}.
 }
 \examples{
 #load example dataset

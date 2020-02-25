@@ -15,10 +15,11 @@
 \alias{predictSex}
 
 \title{
-Functions ported from wateRmelon
+Functions imported from wateRmelon
 }
 \description{
-methods for extraenous functions from wateRmelon see respective manual pages.
+Manual page for methods for the extraenous functions from wateRmelon. For more details for specific functions see the respective manual pages 
+in wateRmelon.
 }
 \usage{
 \S4method{qual}{gdsn.class,gdsn.class}(norm, raw)
@@ -42,7 +43,7 @@ raw node (gdsn.class)
 }
 
 \details{
-Filler Text
+For the full usage and description of any functions that link to this manual page, please visit the respective manual pages from wateRmelon.
 }
 \value{
 Returns expected output of functions from wateRmelon

@@ -37,24 +37,24 @@ a value indicating the magnitude below which components
 should be omitted.
 }
 \item{rank.}{
-Old. (Still functional) Number of principal components to be returned
+(Still functional) Number of principal components to be returned
 }
 \item{retx}{
 a logical value indicating whether the rotated variables
 should be returned.
 }
 \item{perc}{
-Percentage of data to be used.
+The percentage of the number of rows that should be used to calculate principle components. Ranging from 0 to 1, a value of 1 would indicicate all rows will be used.
 }
 \item{npcs}{
 Number of principal components to be returned
 }
 \item{parallel}{
-Can supply either a cluster object (made from makeCluster) or a integer depicting number of cores to be used.
+Can supply either a cluster object (made from makeCluster) or a integer describing the number of cores to be used.
 This is only used if method="sorted".
 }
 \item{method}{
-Indicates what method to use out of "quick" and "sorted". "quick" stochastically selects number of rows according to perc. And the supplies them to svd.
+Indicates whhich method to use out of "quick" and "sorted". "quick" stochastically selects number of rows according to perc. And the supplies them to svd.
 "sorted" determines the interquartile range for each row then selects the top percentage (according to perc) of probes with the largest interquartile range and supplies selected rows to svd.
 }
 \item{verbose}{

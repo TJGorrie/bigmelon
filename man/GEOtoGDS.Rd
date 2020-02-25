@@ -2,11 +2,10 @@
 \alias{geotogds}
 \alias{getpheno}
 \title{
-Download GEO data and pipe into a gdsfmt object
+Download data from GEO and convert it into a gdsfmt object
 }
 \description{
-Uses GEOquery to download a GSE Accession into the current working directory,
-only works for GSE's with raw idat files.
+Uses the GEOquery R package to download a GSE Accession into the current working directory. This will only work for GSE's that have raw idat files associated with them.
 }
 \usage{
 geotogds(geo, gds, method = "wget", keepidat = F, keeptar = F, ...)
@@ -14,28 +13,26 @@ geotogds(geo, gds, method = "wget", keepidat = F, keeptar = F, ...)
 
 \arguments{
 \item{geo}{
-A GEO Accession number. "GSE########" or a tarball 'GSE######.tar.gz'
+Either a GEO accession number ('GSE########') or a previously downloaded tarball 'GSE######.tar.gz'
 }
 \item{gds}{
-A character string specifying the name of the .gds file to write to.
+A character string that specifies the path and name of the .gds file you want to write to.
 }
-
 \item{method}{
-String to indicate what method to download data from GEO off. Default is 'wget'
+Character value to indicate which method should be used to download data from GEO. Default is 'wget'
 }
-\item{keepidat}{Logical, indicates whether or not to keep the raw idat files in the working directory after downloading - if FALSE, removed}
-\item{keeptar}{Logical, indicates whether or not to keep the downloaded tarball in the working directory - if FALSE, removed.}
-\item{...}{Additional Arguments to pass to other functions (if any)}
-
+\item{keepidat}{Logical, indicate whether or not raw idat files in the working directon should be removed after parsing, if FALSE: idat files will be removed.}
+\item{keeptar}{Logical, indicate whether or not the downloaded tarball should be removed after parsing, if FALSE: the tarball will be removed.}
+\item{...}{
+Additional Arguments to pass to other functions (if any)}
 }
-
 \value{
-A gds.class object, which points to the newly created .gds file.
+geotogds will return a gds.class object that will point towards a the newly created .gds file with majority of downloaded contents inside.
 }
 
 \author{
 Tyler Gorrie-Stone
-Who to contact: <tgorri@essex.ac.uk>
+Who to contact: <t.gorrie-stone@qmul.ac.uk>
 }
 
 %\seealso{}
