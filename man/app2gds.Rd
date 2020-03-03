@@ -41,7 +41,7 @@ Who to contact: <t.gorrie-stone@qmul.ac.uk>
 }
 
 \seealso{
-\code{\link{es2gds}}, \code{\link{iadd}, \code{\link{iadd2}}.
+\code{\link{es2gds}}, \code{\link{iadd}}, \code{\link{iadd2}}.
 }
 
 \examples{
