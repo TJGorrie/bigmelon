@@ -27,7 +27,7 @@ Who to contact: <t.gorrie-stone@qmul.ac.uk>, <lschal@essex.ac.uk>
 }
 \references{
 [1]Tyler J Gorrie-Stone, Melissa C Smart, Ayden Saffari, Karim Malki, Eilis Hannon, Joe Burrage, Jonathan Mill, Meena Kumari, Leonard C Schalkwyk: 
-Bigmelon: tools for analysing large DNA methylation datasets, Bioinformatics, Volume 35, Issue 6, 15 March 2019, Pages 981–986.
+Bigmelon: tools for analysing large DNA methylation datasets, Bioinformatics, Volume 35, Issue 6, 15 March 2019, Pages 981-986.
 https://doi.org/10.1093/bioinformatics/bty713
 
 [2]Pidsley R, Wong CCY, Volta M, Lunnon K, Mill J, Schalkwyk LC:
