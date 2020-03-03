@@ -5,10 +5,6 @@ r:
 sudo: false
 cache: packages
 warnings_are_errors: false
-r_github_packages:
-  - jimhester/covr
-after_success:
-  - Rscript -e 'covr::codecov()'
 before_install:
   - tlmgr install index
   - tlmgr install bera
