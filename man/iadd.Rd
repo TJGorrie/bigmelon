@@ -47,6 +47,10 @@ a numeric value, iadd2 will read in that number of idat files in batches
 Logical, whether or not bead-counts are extracted from idat files.
 }
 
+\item{Force}{
+Logical, whether or not rownames from the first idat file are applied to all idat files. Useful in combining together idat files of differing lengths.
+}
+
 \item{...}{
 Additional Arguments passed to wateRmelons methylumIDATepic.
 }
