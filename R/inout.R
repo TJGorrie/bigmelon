@@ -159,15 +159,21 @@ app2gds <- function(m, bmln){
     # call es2gds to create new file
     bmln <- es2gds(m,bmln)
     }
-    bmln
+    # Close and open in write mode?
+    closefn.gds(bmln)
+    bmln <- openfn.gds(bmln[[1]], readonly=FALSE)
+
+    return(bmln)
 }
 
 iadd2 <- function(path, gds, chunksize = NULL, force=TRUE,...){
     rown <- TRUE
     if(force){
         thefile <- try(openfn.gds(gds, allow.duplicate=TRUE), silent=T)
-        if(!inherits('try-error', thefile)) rown <- rownames(thefile)
-        closefn.gds(thefile)
+        if(!inherits(thefile, 'try-error')){
+            rown <- read.gdsn(index.gdsn(thefile, 'fData/Probe_ID'))
+            closefn.gds(thefile)
+        }
     }
     gdsfile <- gds
     barcodes <- bfp(path)
@@ -197,8 +203,10 @@ iadd <- function (bar, gds, n = TRUE, force=TRUE, ...){
     rown <- TRUE
     if(force){
         thefile <- try(openfn.gds(gds, allow.duplicate=TRUE), silent=T)
-        if(!inherits('try-error', thefile)) rown <- rownames(thefile)
-        closefn.gds(thefile)
+        if(!inherits(thefile, 'try-error')){
+            rown <- read.gdsn(index.gdsn(thefile, 'fData/Probe_ID'))
+            closefn.gds(thefile)
+        }
     }
     ifile <- basename(bar)
     pieces <- strsplit(ifile, "[_.]")
