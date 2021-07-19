@@ -162,7 +162,13 @@ app2gds <- function(m, bmln){
     bmln
 }
 
-iadd2 <- function(path, gds, chunksize = NULL, ...){
+iadd2 <- function(path, gds, chunksize = NULL, force=TRUE,...){
+    rown <- TRUE
+    if(force){
+        thefile <- try(openfn.gds(gds, allow.duplicate=TRUE), silent=T)
+        if(!inherits('try-error', thefile)) rown <- rownames(thefile)
+        closefn.gds(thefile)
+    }
     gdsfile <- gds
     barcodes <- bfp(path)
     if(is.null(chunksize) & length(barcodes) > 500){
@@ -186,14 +192,20 @@ iadd2 <- function(path, gds, chunksize = NULL, ...){
     gdsfile
 }
 
-iadd <- function (bar, gds, n = TRUE, ...){
+iadd <- function (bar, gds, n = TRUE, force=TRUE, ...){
     # TODO add check to ensure the arguments match to wacky dimension problems.
+    rown <- TRUE
+    if(force){
+        thefile <- try(openfn.gds(gds, allow.duplicate=TRUE), silent=T)
+        if(!inherits('try-error', thefile)) rown <- rownames(thefile)
+        closefn.gds(thefile)
+    }
     ifile <- basename(bar)
     pieces <- strsplit(ifile, "[_.]")
     slide <- sapply(pieces, '[', 1)
     pos <- sapply(pieces, '[', 2)
     bar <- paste(slide, pos, sep = "_")
-    mlu <- methylumIDATepic(barcodes = bar, n=n, ...)
+    mlu <- methylumIDATepic(barcodes = bar, n=n, ...)[rown,]
     app2gds(mlu, gds)
 }
 
