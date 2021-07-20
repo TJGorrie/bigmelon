@@ -35,12 +35,12 @@ handle <- function(gds){
         #file saved in global env
         if(exists(gds) && inherits(g <- get(gds), 'gds.class')){
             g <- get(gds)
-            handle <- openfn.gds(g$filename, readonly=FALSE)
+            handle <- openfn.gds(g$filename, readonly=FALSE, allow.duplicate=TRUE, allow.fork=TRUE)
         } else if(file_test('-f', gds)){ # On Disk
             #file exists, try to open
             # if this fails, check if it is already linked by a gds object
             handle <- tryCatch({
-                openfn.gds(gds, readonly=FALSE)
+                openfn.gds(gds, readonly=FALSE, allow.duplicate=TRUE, allow.fork=TRUE)
                 }, error = function(e){
                     return(findgdsobj(gds))
                 }, finally = {
@@ -71,14 +71,17 @@ app2gds <- function(m, bmln){
     rehandle <- handle(bmln)
     bmln <- rehandle[[1]]
     newfile <- rehandle[[2]]
-
+    print(bmln)
+    print(m)
+    print(dim(m))
     if(!(newfile)){
-        if(! length(rownames(bmln)) == length(rownames(m))){
+        if(! length(rownames(bmln)) == dim(m)[1]){
             stop(paste(deparse(substitute(m)), "has a different length to bmln"))
         }
-        m <- m[rownames(bmln),]
+        #m <- m[rownames(bmln),] # Coerce rownames of bmln in idat step? Or fix here???
 
         message(paste('appending to', bmln$filename))
+        print(bmln)
         if(exists("betas", assayData(m))){
             message('betas... ' )
             append.gdsn(index.gdsn(bmln, "betas"), val = betas(m))
@@ -161,7 +164,7 @@ app2gds <- function(m, bmln){
     }
     # Close and open in write mode?
     closefn.gds(bmln)
-    bmln <- openfn.gds(bmln[[1]], readonly=FALSE)
+    bmln <- openfn.gds(bmln[[1]], readonly=FALSE, allow.duplicate=TRUE, allow.fork=TRUE)
 
     return(bmln)
 }
@@ -187,38 +190,94 @@ iadd2 <- function(path, gds, chunksize = NULL, force=TRUE,...){
         for(i in chunks){
             sets <- barcodes[i:(i+(chunksize-1))]
             ml <- methylumIDATepic(barcodes = sets[!is.na(sets)],
-                                    n = TRUE, oob = FALSE, idatPath = path)
+                                    n = TRUE, oob = FALSE, idatPath = path, force=force)[rown,]
             gdsfile <- app2gds(ml, gdsfile)
         }
     } else {
         ml <- methylumIDATepic(barcodes, n = TRUE,
-                                oob = FALSE, idatPath = path)
+                                oob = FALSE, idatPath = path, force=force)[rown,]
         gdsfile <- app2gds(ml, gdsfile)
     }
     gdsfile
 }
 
-iadd <- function (bar, gds, n = TRUE, force=TRUE, ...){
-    # TODO add check to ensure the arguments match to wacky dimension problems.
+iadd <- function (bar, gds, n = TRUE, force=TRUE, target_cpgs = NULL, ...){
     rown <- TRUE
-    if(force){
-        thefile <- try(openfn.gds(gds, allow.duplicate=TRUE), silent=T)
-        if(!inherits(thefile, 'try-error')){
-            rown <- read.gdsn(index.gdsn(thefile, 'fData/Probe_ID'))
-            closefn.gds(thefile)
+    if(is.null(target_cpgs)){
+        if(force){
+            thefile <- try(openfn.gds(gds, allow.duplicate=TRUE), silent=T)
+            if(!inherits(thefile, 'try-error')){
+                rown <- read.gdsn(index.gdsn(thefile, 'fData/Probe_ID'))
+                closefn.gds(thefile)
+            }
         }
+    } else {
+        rown <- target_cpgs
     }
+    # TODO add check to ensure the arguments match to wacky dimension problems.
     ifile <- basename(bar)
     pieces <- strsplit(ifile, "[_.]")
     slide <- sapply(pieces, '[', 1)
     pos <- sapply(pieces, '[', 2)
     bar <- paste(slide, pos, sep = "_")
-    mlu <- methylumIDATepic(barcodes = bar, n=n, ...)[rown,]
-    app2gds(mlu, gds)
+    # This breaks when target_cpgs are out of index?
+    mlu <- methylumIDATepic(barcodes = bar, n=n, force=force, ...)
+    if(force){
+
+        recon <- names(assayData(mlu))
+        results <- list()
+        for(tabl in recon){
+             results[[tabl]] <- t(t(assayDataElement(mlu, tabl)[,1][rown]))
+        }
+        assayData(mlu) <- results
+        fData(mlu) <- fData(mlu)[rown,]
+    }
+    output <- app2gds(mlu, gds)
+    return(output)
 }
 
 finalreport2gds <- function(finalreport, gds, ...){
     mset <- methylumiR(finalreport, ...)
     bmln <- es2gds(mset, gds)
     return(bmln)
+}
+
+idats2gds <- function(barcodes, gds, n=TRUE, force=FALSE, ...){
+
+    if(force){
+        # Get a list of Greens.
+        grns <- sprintf('%s_Grn.idat', barcodes)
+        message('Determining IDAT lengths and ChipType')
+        idx <- lapply(dir(pattern='Grn'),function(x){
+            f <- illuminaio::readIDAT(x)
+            r <- rownames(f$Quants)
+            return(list(chip=f$ChipType, rn=r))
+        })
+        chiptype <- unique(sapply(idx, '[[', 'chip'))
+        if(length(chiptype) > 1) stop('idats2gds cannot process arrays from two separate platforms')
+        manifest <- switch(chiptype,
+            'BeadChip 8x5' = 'IlluminaHumanMethylationEPIC',
+            'BeadChip 12x8' = 'IlluminaHumanMethylation450k',
+            'BeadChip 12x1' = 'IlluminaHumanMethylation27k',
+        )
+        manifest <- minfi:::getManifest("IlluminaHumanMethylationEPIC")
+        cpgs_a <- cpgs_b <- c(getProbeInfo(manifest, type = "I")$Name, getProbeInfo(manifest, type = "II")$Name)
+        names(cpgs_a) <- c(getProbeInfo(manifest, type = "I")$AddressA, getProbeInfo(manifest, type = "II")$AddressA)
+        names(cpgs_b) <- c(getProbeInfo(manifest, type = "I")$AddressB, getProbeInfo(manifest, type = "II")$AddressB)
+        message('Determining CpG intersection')
+        tot_cpgs <- lapply(idx, function(y, cpgs_a, cpgs_b){
+            unique(na.omit(c(cpgs_a[y[[2]]], cpgs_b[y[[2]]])))
+        }, cpgs_a=cpgs_a, cpgs_b=cpgs_b)
+
+        target_cpgs <- sort(Reduce(intersect, tot_cpgs))
+        names(target_cpgs) <- target_cpgs
+        message(sprintf('Expected Number of CpGs: %s (Number may be lower!)', length(target_cpgs)))
+    }
+
+    for(bar in barcodes){
+        message(sprintf('Processing: %s...', bar))
+        output <- iadd(bar, gds = gds, n = n, force = force, target_cpgs = target_cpgs, ...)
+    }
+
+    return(output)
 }

@@ -1,6 +1,7 @@
 \name{iadd}
 \alias{iadd}
 \alias{iadd2}
+\alias{idats2gds}
 
 \title{
 Add data from Illumina IDAT files to a gds file.
@@ -14,6 +15,7 @@ iadd2 will add data from all idat files that are stored within a single director
 \usage{
 iadd(bar, gds, n = TRUE, ...)
 iadd2(path, gds, chunksize = NULL, ...)
+idat2gds(barcodes, gds, n=TRUE, force = FALSE, ...)
 }
 
 \arguments{
@@ -62,7 +64,7 @@ returns a gds.class object, which points to the appended .gds file.
 
 \author{
 Tyler Gorrie-Stone, Leonard C Schalkwyk, Ayden Saffari.
-Who to contact: <t.gorrie-stone@qmul.ac.uk>
+Who to contact: <tyler.gorrie-stone@diamond.ac.uk>
 }
 
 \seealso{
