@@ -71,17 +71,12 @@ app2gds <- function(m, bmln){
     rehandle <- handle(bmln)
     bmln <- rehandle[[1]]
     newfile <- rehandle[[2]]
-    print(bmln)
-    print(m)
-    print(dim(m))
     if(!(newfile)){
         if(! length(rownames(bmln)) == dim(m)[1]){
             stop(paste(deparse(substitute(m)), "has a different length to bmln"))
         }
-        #m <- m[rownames(bmln),] # Coerce rownames of bmln in idat step? Or fix here???
-
+        # More rigid checks of rownames need to be down prior to importing
         message(paste('appending to', bmln$filename))
-        print(bmln)
         if(exists("betas", assayData(m))){
             message('betas... ' )
             append.gdsn(index.gdsn(bmln, "betas"), val = betas(m))
@@ -174,6 +169,7 @@ iadd2 <- function(path, gds, chunksize = NULL, force=TRUE,...){
     if(force){
         thefile <- try(openfn.gds(gds, allow.duplicate=TRUE), silent=T)
         if(!inherits(thefile, 'try-error')){
+            # TODO this needs fixing see iadd function
             rown <- read.gdsn(index.gdsn(thefile, 'fData/Probe_ID'))
             closefn.gds(thefile)
         }
@@ -189,6 +185,7 @@ iadd2 <- function(path, gds, chunksize = NULL, force=TRUE,...){
         chunks <- seq(1, length(barcodes), chunksize)
         for(i in chunks){
             sets <- barcodes[i:(i+(chunksize-1))]
+            # TODO this needs fixing see iadd function
             ml <- methylumIDATepic(barcodes = sets[!is.na(sets)],
                                     n = TRUE, oob = FALSE, idatPath = path, force=force)[rown,]
             gdsfile <- app2gds(ml, gdsfile)
@@ -214,7 +211,6 @@ iadd <- function (bar, gds, n = TRUE, force=TRUE, target_cpgs = NULL, ...){
     } else {
         rown <- target_cpgs
     }
-    # TODO add check to ensure the arguments match to wacky dimension problems.
     ifile <- basename(bar)
     pieces <- strsplit(ifile, "[_.]")
     slide <- sapply(pieces, '[', 1)
@@ -223,7 +219,8 @@ iadd <- function (bar, gds, n = TRUE, force=TRUE, target_cpgs = NULL, ...){
     # This breaks when target_cpgs are out of index?
     mlu <- methylumIDATepic(barcodes = bar, n=n, force=force, ...)
     if(force){
-
+        # TODO ensure that rows get forced to match original gds rownames
+        # This is too unstable...
         recon <- names(assayData(mlu))
         results <- list()
         for(tabl in recon){
