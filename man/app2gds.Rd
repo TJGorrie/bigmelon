@@ -58,7 +58,6 @@ e <- es2gds(melon_1,'1_half_melon.gds')
 #append second half to existing gds file
 f <- app2gds(melon_2,e)
 
-closefn.gds(e)
 unlink("1_half_melon.gds")
 }
 

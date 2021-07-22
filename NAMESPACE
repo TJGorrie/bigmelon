@@ -13,5 +13,6 @@ importFrom('utils', 'data', 'file_test', 'packageVersion','untar', 'download.fil
 importFrom('GEOquery', 'getGEO', 'gunzip')
 importFrom('graphics', 'legend', 'plot', 'par')
 importFrom('BiocGenerics', 'rownames')
+importFrom('illuminaio', 'readIDAT')
 
 import(wateRmelon, gdsfmt, methods, minfi, methylumi, Biobase)

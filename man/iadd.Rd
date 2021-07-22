@@ -11,11 +11,15 @@ iadd will add data from multiple, specified, idat files providing '/path/to/barc
 to a specified gds file. Barcode here implies the first part of the idat file name i.e without '_(Red|Grn).idat'
 
 iadd2 will add data from all idat files that are stored within a single directory to a gds file.
+
+idats2gds will add data from a set of barcodes into the same gds file, one by one, optionally will 
+handle idat files from different maps providing force=TRUE. However, will not combine from arrays 
+of differing types e.g. 450k vs EPIC.
 }
 \usage{
-iadd(bar, gds, n = TRUE, ...)
-iadd2(path, gds, chunksize = NULL, ...)
-idat2gds(barcodes, gds, n=TRUE, force = FALSE, ...)
+iadd(bar, gds, n = TRUE, force = FALSE, target_cpgs = NULL, ...)
+iadd2(path, gds, chunksize = NULL, force=FALSE, ...)
+idats2gds(barcodes, gds, n=TRUE, force = FALSE, ...)
 }
 
 \arguments{
@@ -51,6 +55,10 @@ Logical, whether or not bead-counts are extracted from idat files.
 
 \item{Force}{
 Logical, whether or not rownames from the first idat file are applied to all idat files. Useful in combining together idat files of differing lengths.
+}
+
+\item{target_cpgs}{
+    A vector of CpGs to specifically read in and set the dimensions of array to.
 }
 
 \item{...}{
