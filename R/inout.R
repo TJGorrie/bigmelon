@@ -245,7 +245,7 @@ idats2gds <- function(barcodes, gds, n=TRUE, force=FALSE, ...){
         # Get a list of Greens.
         grns <- sprintf('%s_Grn.idat', barcodes)
         message('Determining IDAT lengths and ChipType')
-        idx <- lapply(dir(pattern='Grn'),function(x){
+        idx <- lapply(grns,function(x){
             f <- illuminaio::readIDAT(x)
             r <- rownames(f$Quants)
             return(list(chip=f$ChipType, rn=r))
