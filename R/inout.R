@@ -257,7 +257,7 @@ idats2gds <- function(barcodes, gds, n=TRUE, force=FALSE, ...){
             'BeadChip 12x8' = 'IlluminaHumanMethylation450k',
             'BeadChip 12x1' = 'IlluminaHumanMethylation27k',
         )
-        manifest <- minfi::getManifest("IlluminaHumanMethylationEPIC")
+        manifest <- minfi::getManifest(manifest)
         cpgs_a <- cpgs_b <- c(getProbeInfo(manifest, type = "I")$Name, getProbeInfo(manifest, type = "II")$Name)
         names(cpgs_a) <- c(getProbeInfo(manifest, type = "I")$AddressA, getProbeInfo(manifest, type = "II")$AddressA)
         names(cpgs_b) <- c(getProbeInfo(manifest, type = "I")$AddressB, getProbeInfo(manifest, type = "II")$AddressB)
