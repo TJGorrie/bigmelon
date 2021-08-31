@@ -69,7 +69,7 @@ backup.gdsn <- function(gds = NULL, node){
     if(!missing(i) & missing(j)){ # {{{
         i1 <- i
         if(is.character(i1)) i <- match(i1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
-        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # Potential error here?
+        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[1])[i1] # Potential error here?
         nrow <- i
         if(length(i)==1){ # Calling a single row makes naming difficult this is a work-around.
             mat <- as.matrix(t(readex.gdsn(x, sel = list(nrow, NULL))))
@@ -87,7 +87,7 @@ backup.gdsn <- function(gds = NULL, node){
     if(!missing(i) & !missing(j)){ # {{{
         i1 <- i
         if(is.character(i1)) i <- match(i1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[1]))) # ok
-        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[2])[i1] # Potential error here?
+        if(is.logical(i1))   i <- (1:objdesp.gdsn(x)$dim[1])[i1] # Potential error here?
         j1 <- j
         if(is.character(j1)) j <- match(j1, read.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]))) # ok
         if(is.logical(j1))   j <- (1:objdesp.gdsn(x)$dim[2])[j1] # Potential error here?
