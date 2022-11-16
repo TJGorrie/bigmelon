@@ -33,7 +33,7 @@ pfilter.gds <- function(mn = NULL, un = NULL, bn = NULL, da = NULL, pn, bc,
         goodsamps <- apply.gdsn(node = pn,
                                 margin = 2,
                                 FUN = function(x, y, z){
-                                    (sum(x>y)) < ((length(x)*z)/100)
+                                    (sum(x>y, na.rm = TRUE)) < ((sum(!is.na(x))*z)/100)
                                 },
                                 as.is = "logical",
                                 y = pnthresh,
@@ -49,7 +49,15 @@ pfilter.gds <- function(mn = NULL, un = NULL, bn = NULL, da = NULL, pn, bc,
                             },
                             y = goodsamps
                             )
-        badbead_log <- bab > ((dim[2] * perCount)/100)
+        nsamples <- apply.gdsn(node = bc,
+                            margin = 1,
+                            as.is = "integer",
+                            FUN = function(x, y){
+                            sum(!is.na(x[y]))
+                            },
+                            y = goodsamps
+                            )
+        badbead_log <- bab > ((nsamples * perCount)/100)
         badbead <- which(badbead_log)
         bap <- apply.gdsn(node = pn,
                             margin = 1,
