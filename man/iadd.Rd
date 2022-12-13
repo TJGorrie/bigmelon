@@ -17,8 +17,8 @@ handle idat files from different maps providing force=TRUE. However, will not co
 of differing types e.g. 450k vs EPIC.
 }
 \usage{
-iadd(bar, gds, n = TRUE, force = FALSE, target_cpgs = NULL, ...)
-iadd2(path, gds, chunksize = NULL, force=FALSE, ...)
+iadd(bar, gds, n = TRUE, force = TRUE, target_cpgs = NULL, ...)
+iadd2(path, gds, chunksize = NULL, force=TRUE, ...)
 idats2gds(barcodes, gds, n=TRUE, force = FALSE, ...)
 }
 
@@ -53,12 +53,16 @@ a numeric value, iadd2 will read in that number of idat files in batches
 Logical, whether or not bead-counts are extracted from idat files.
 }
 
-\item{Force}{
+\item{force}{
 Logical, whether or not rownames from the first idat file are applied to all idat files. Useful in combining together idat files of differing lengths.
 }
 
 \item{target_cpgs}{
     A vector of CpGs to specifically read in and set the dimensions of array to.
+}
+
+\item{barcodes}{
+    A vector of barcodes to load into an existing gds file.
 }
 
 \item{...}{
