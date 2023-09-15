@@ -1,13 +1,13 @@
-# generate a gdsfile stub
+# newgds -- generate a gdsfile stub {{{
 newgds <- function(file){
     message('creating gdsfile...' )
     bmln <- createfn.gds(file)
     n <- add.gdsn(bmln, name = "description")
     put.attr.gdsn(n, "FileFormat", "DNA_Methylation")
     bmln
-} # AS - OK
+} # AS - OK }}}
 
-# function to check if file is already linked to by an existing gds object
+# findgdsobj -- function to check if file is already linked to by an existing gds object {{{
 # in the current workspace (global env)
 findgdsobj <- function(gds){
     fhandle <- gds
@@ -22,8 +22,9 @@ findgdsobj <- function(gds){
         }
     }
     fhandle
-} # AS - OK
-# take a gds.class object, the name of a gds.class object or a gds filename
+} # AS - OK }}}
+
+# handle -- take a gds.class object, the name of a gds.class object or a gds filename {{{
 # and return a writable gds.class object
 handle <- function(gds){
     newfile <- as.logical(0)
@@ -56,9 +57,9 @@ handle <- function(gds){
             "is not a valid gds.class object or filepath"))
     }
     list(handle,newfile)
-}
+} #}}}
 
-# append one or more arrays of data to gdsfile
+# app2gds -- append one or more arrays of data to gdsfile {{{
 # Not functioning for minfi objects!
 app2gds <- function(m, bmln){
     history.submitted <- as.character(Sys.time())
@@ -162,8 +163,9 @@ app2gds <- function(m, bmln){
     bmln <- openfn.gds(bmln[[1]], readonly=FALSE, allow.duplicate=TRUE, allow.fork=TRUE)
 
     return(bmln)
-}
+} #}}}
 
+# iadd2 -- add data from all idat files that are stored within a single directory to a gds file {{{
 iadd2 <- function(path, gds, chunksize = NULL, force=TRUE,...){
     rown <- TRUE
     if(force){
@@ -196,8 +198,9 @@ iadd2 <- function(path, gds, chunksize = NULL, force=TRUE,...){
         gdsfile <- app2gds(ml, gdsfile)
     }
     gdsfile
-}
+} #}}}
 
+# iadd -- add data from multiple, specified, idat files providing to a specified gds file. {{{
 iadd <- function (bar, gds, n = TRUE, force=TRUE, target_cpgs = NULL, ...){
     rown <- TRUE
     if(is.null(target_cpgs)){
@@ -237,8 +240,9 @@ finalreport2gds <- function(finalreport, gds, ...){
     mset <- methylumiR(finalreport, ...)
     bmln <- es2gds(mset, gds)
     return(bmln)
-}
+} #}}}
 
+# idats2gds -- idats2gds will add data from a set of barcodes into the same gds {{{
 idats2gds <- function(barcodes, gds, n=TRUE, force=FALSE, ...){
 
     if(force){
@@ -257,6 +261,9 @@ idats2gds <- function(barcodes, gds, n=TRUE, force=FALSE, ...){
             'BeadChip 12x8' = 'IlluminaHumanMethylation450k',
             'BeadChip 12x1' = 'IlluminaHumanMethylation27k',
         )
+        if (ChipType == "BeadChip 8x5" && length(idx$rn) > 1.1e+06) {
+            manifest = "IlluminaHumanMethylationEpicv2"
+        }
         manifest <- minfi::getManifest(manifest)
         cpgs_a <- cpgs_b <- c(getProbeInfo(manifest, type = "I")$Name, getProbeInfo(manifest, type = "II")$Name)
         names(cpgs_a) <- c(getProbeInfo(manifest, type = "I")$AddressA, getProbeInfo(manifest, type = "II")$AddressA)
@@ -277,4 +284,4 @@ idats2gds <- function(barcodes, gds, n=TRUE, force=FALSE, ...){
     }
 
     return(output)
-}
+} # }}}
