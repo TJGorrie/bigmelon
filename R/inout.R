@@ -215,10 +215,18 @@ iadd <- function (bar, gds, n = TRUE, force=TRUE, target_cpgs = NULL, ...){
         rown <- target_cpgs
     }
     ifile <- basename(bar)
-    pieces <- strsplit(ifile, "[_.]")
-    slide <- sapply(pieces, '[', 1)
-    pos <- sapply(pieces, '[', 2)
-    bar <- paste(slide, pos, sep = "_")
+
+    ### this assumes only 2 underscores, fails when names have _ in prefix, eg from GEO
+    ### need to count from end instead or just chop off [Red|Grn].idat
+    #pieces <- strsplit(ifile, "[_.]")
+    #slide <- sapply(pieces, '[', 1)
+    #pos <- sapply(pieces, '[', 2)
+    #bar <- paste(slide, pos, sep = "_")
+    
+
+    bar <- sub('_Red.idat','', sub('_Grn.idat','',ifile))
+
+
     # This breaks when target_cpgs are out of index?
     mlu <- methylumIDATepic(barcodes = bar, n=n, force=force, ...)
     if(force){
