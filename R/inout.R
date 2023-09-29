@@ -201,20 +201,21 @@ iadd2 <- function(path, gds, chunksize = NULL, force=TRUE,...){
 } #}}}
 
 # iadd -- add data from multiple, specified, idat files providing to a specified gds file. {{{
-iadd <- function (bar, gds, n = TRUE, force=TRUE, target_cpgs = NULL, ...){
+iadd <- function (bar, gds, n = TRUE, force=TRUE, target_cpgs = NULL, idatpath=NULL, ...){
     rown <- TRUE
     if(is.null(target_cpgs)){
-        if(force){
+      #  if(force){
             thefile <- try(openfn.gds(gds, allow.duplicate=TRUE), silent=T)
             if(!inherits(thefile, 'try-error')){
                 rown <- read.gdsn(index.gdsn(thefile, 'fData/Probe_ID'))
                 closefn.gds(thefile)
-            }
+       #     }
         }
     } else {
         rown <- target_cpgs
     }
     ifile <- basename(bar)
+    if(idatpath == NULL) idatpath <- dirname(bar[1])
 
     ### this assumes only 2 underscores, fails when names have _ in prefix, eg from GEO
     ### need to count from end instead or just chop off [Red|Grn].idat
@@ -223,23 +224,22 @@ iadd <- function (bar, gds, n = TRUE, force=TRUE, target_cpgs = NULL, ...){
     #pos <- sapply(pieces, '[', 2)
     #bar <- paste(slide, pos, sep = "_")
     
-
     bar <- sub('_Red.idat','', sub('_Grn.idat','',ifile))
-
-
-    # This breaks when target_cpgs are out of index?
-    mlu <- methylumIDATepic(barcodes = bar, n=n, force=force, ...)
-    if(force){
+    mlu <- methylumIDATepic(barcodes = bar, n=n, force=force, idatpath=idatpath, ...)
+    mlu <- mlu[rown,] 
+ #   if(force){
         # TODO ensure that rows get forced to match original gds rownames
         # This is too unstable...
-        recon <- names(assayData(mlu))
-        results <- list()
-        for(tabl in recon){
-             results[[tabl]] <- t(t(assayDataElement(mlu, tabl)[,1][rown]))
-        }
-        assayData(mlu) <- results
-        fData(mlu) <- fData(mlu)[rown,]
-    }
+    #    recon <- names(assayData(mlu))
+     #   results <- list()
+      #  for(tabl in recon){
+        #     christly christ
+        #     results[[tabl]] <- t(t(assayDataElement(mlu, tabl)[,1][rown]))
+     #        results[[tabl]] <- assayDataElement(mlu, tabl)[rown,]
+  #      }
+  #      assayData(mlu) <- results
+   #     fData(mlu) <- fData(mlu)[rown,]
+    #}
     output <- app2gds(mlu, gds)
     return(output)
 }

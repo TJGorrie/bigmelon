@@ -25,12 +25,12 @@
 #{{{ chainsaw
 #' Chainsaw -- modify gds file by subsetting all nodes
 
-# candidate replacement for `[.gds.class`
+#' candidate replacement for `[.gds.class`
 
 chainsaw <- function( gfile, i, j, v=TRUE ){
-   # is this a gds file handle
-   # is the file where it's supposed to be
-   # is it open RW
+   # is this a gds file handle?
+   # is the file where it's supposed to be?
+   # is it open RW?
 
    # any useful gds file in a bigmelon workflow will have a methylated and/or betas node 
    # take the dims from that and subset all similarly dimmed nodes accordingly using `[.gdsn.class`
@@ -43,11 +43,17 @@ chainsaw <- function( gfile, i, j, v=TRUE ){
 
    # handle i == ''  check
    # handle j == ''  check
-   # handle fData
-   # handle pData
-   # add history
+   # handle fData    check
+   # handle pData    check
+   # add history    
 
-   
+   # there is a choice here of either going through the expected nodes by name (a),
+   # or walking the tree and handling each node depending on what it is (b). 
+   # b is attractive because this is not a fully sealed object, and users might reasonably
+   # add nodes for transformed or normalised versions of the data. 
+
+   # current vers is a compromise that subsets top level matrices -- 
+   # and deals with fData, pData and history explicitly
    
    dimes <- sapply(ls.gdsn(gfile), function(x) dim(index.gdsn(gfile,x)))
    if (v) message(length(dimes), " nodes")
@@ -57,8 +63,8 @@ chainsaw <- function( gfile, i, j, v=TRUE ){
    if (is.null(d)) d <- dimes$betas
    if (is.null(d)) stop ('no methylated or betas node\n')
    
-   if (i=='') i <- d[1]
-   if (j=='') j <- d[2]
+   if (length(i) ==1 && i=='') i <- 1:d[1]
+   if (length(j) ==1 && j=='') j <- 1:d[2]
 
    vict <- dimes[mates] # 
    for (nod in names(vict)) {
@@ -73,7 +79,27 @@ chainsaw <- function( gfile, i, j, v=TRUE ){
          if (v) message('subsetting columns of ', nod)
       }
    assign.gdsn(index.gdsn(gfile,nod), seldim=list(eye, jay))
+   }  
+   #### handle fData here, subset i
+   for (col in ls.gdsn(index.gdsn(gfile,'fData/'))){
+      nod <- index.gdsn(gfile,paste0('fData/',col))
+      if (dim(nod) == d[1]){
+         if (v) message('subsetting fData ', col)
+         assign.gdsn(nod, seldim=list(i))
+      }
    }
+   #### handle pData here, subset j
+   for (row in ls.gdsn(index.gdsn(gfile,'pData/'))){
+      nod <- index.gdsn(gfile,paste0('pData/',row))
+      if (dim(nod) == d[2]){
+         if (v) message('subsetting pData ',row)
+         assign.gdsn(nod, seldim=list(j))
+      }
+   }
+   #### handle history here, add new dim
+   message( gfile$filename , " has been modified ")
+   #### return gfile (will print new structure)
+   gfile
 }
 
 #}}}
@@ -121,4 +147,18 @@ dim.gdsn.class <- function (obj){
 
 #}}}
 
+#{{{ epicv2clean S3 method for gds
 
+epicv2clean.gds.class <- function (x) 
+{
+    rn <- rownames(x)
+    rn <- gsub("_.*$", "", rn)
+    go <- !duplicated(rn)
+    
+   chainsaw(x,go,'',TRUE)
+
+   # x <- x[go, ]
+   # rownames(x) <- rn[go]
+   # x
+}
+# }}}

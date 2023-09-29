@@ -1,7 +1,7 @@
 Package: bigmelon
 Type: Package
 Title: Illumina methylation array analysis for large experiments
-Version: 1.27.1
+Version: 1.27.2
 Authors@R: c(
     person(c("Tyler", "J."), "Gorrie-Stone", role=c("cre", "aut"), email="tjgorrie@outlook.com"),
     person("Ayden", "Saffari", role="aut"),
@@ -17,7 +17,7 @@ LazyLoad: yes
 Collate: zzz.R es2gds.R dasenGds.R dbGdsn.R dfsfitGdsn.R gds2mlumi.R
         gdsnclass_methods.R inout.R pfilterGds.R prcompGdsn.R
         pwodGdsn.R qnGdsn.R comboGds.R ranknorm.R GEOtoGDS.R ecc.gdsn.R
-        bumphunterGdsn.R
+        bumphunterGdsn.R chainsaw.R
 biocViews: DNAMethylation, Microarray, TwoChannel, Preprocessing,
         QualityControl, MethylationArray, DataImport, CpGIsland
 NeedsCompilation: no
