@@ -21,3 +21,4 @@ Collate: zzz.R es2gds.R dasenGds.R dbGdsn.R dfsfitGdsn.R gds2mlumi.R
 biocViews: DNAMethylation, Microarray, TwoChannel, Preprocessing,
         QualityControl, MethylationArray, DataImport, CpGIsland
 NeedsCompilation: no
+RoxygenNote: 7.2.3
