@@ -27,17 +27,24 @@
 
 #' candidate replacement for `[.gds.class`
 
-chainsaw <- function( gfile, i, j, v=TRUE ){
+chainsaw <- function( gfile, i='', j='', v=FALSE, cleanup=TRUE ){
+
+   history.submitted <- as.character(Sys.time())
+
    # is this a gds file handle?
+   stopifnot(inherits(gfile, "gds.class"))
    # is the file where it's supposed to be?
+   stopifnot(file.exists(gfile$file))
    # is it open RW?
+   stopifnot(!gfile$readonly)
+
+
 
    # any useful gds file in a bigmelon workflow will have a methylated and/or betas node 
    # take the dims from that and subset all similarly dimmed nodes accordingly using `[.gdsn.class`
    # <<<< note the different approach in the S4 row and column names functions >>>>
    # paths node points to "fData/Probe_ID" "pData/barcode" as row and colnames.
 
-   # note: currently very simple, only handles numerical or logical i and j
 
    #### TOUTDOUX ###############
 
@@ -45,7 +52,8 @@ chainsaw <- function( gfile, i, j, v=TRUE ){
    # handle j == ''  check
    # handle fData    check
    # handle pData    check
-   # add history    
+   # use names       check
+   # add history     check
 
    # there is a choice here of either going through the expected nodes by name (a),
    # or walking the tree and handling each node depending on what it is (b). 
@@ -66,6 +74,20 @@ chainsaw <- function( gfile, i, j, v=TRUE ){
    if (length(i) ==1 && i=='') i <- 1:d[1]
    if (length(j) ==1 && j=='') j <- 1:d[2]
 
+   # char rownames
+   if (is.character(i)){
+     i <- match( i, rownames(gfile))
+     if(!any(!is.na(i))) stop("no rownames match, giving up")
+     if(any(is.na(i))) message("note some rownames don't match, filling with NAs")
+  }   
+   
+   # char coalnames
+   if (is.character(j)){
+     j <- match( j, colnames(gfile))
+     if(!any(!is.na(j))) stop("no samplenames match, giving up")
+     if(any(is.na(j))) message("note some samplenames don't match, filling with NAs")
+  }   
+
    vict <- dimes[mates] # 
    for (nod in names(vict)) {
       eye <- 1:vict[[nod]][1]
@@ -80,6 +102,7 @@ chainsaw <- function( gfile, i, j, v=TRUE ){
       }
    assign.gdsn(index.gdsn(gfile,nod), seldim=list(eye, jay))
    }  
+   
    #### handle fData here, subset i
    for (col in ls.gdsn(index.gdsn(gfile,'fData/'))){
       nod <- index.gdsn(gfile,paste0('fData/',col))
@@ -88,6 +111,7 @@ chainsaw <- function( gfile, i, j, v=TRUE ){
          assign.gdsn(nod, seldim=list(i))
       }
    }
+   
    #### handle pData here, subset j
    for (row in ls.gdsn(index.gdsn(gfile,'pData/'))){
       nod <- index.gdsn(gfile,paste0('pData/',row))
@@ -96,9 +120,24 @@ chainsaw <- function( gfile, i, j, v=TRUE ){
          assign.gdsn(nod, seldim=list(j))
       }
    }
+   
    #### handle history here, add new dim
+   history.finished <- as.character(Sys.time())
+   history.command <- as.character(paste( 'subset ', length(i), ' probes and ', length(j),' samples.' ))
+        h <- data.frame(submitted = history.submitted,
+                        finished = history.finished,
+                        command = history.command,
+                        stringsAsFactors = FALSE)
+        for(j in colnames(h)){
+            h_coln <- j
+            h_index_str <- paste("history/", j, sep = "")
+            h_child_n <- index.gdsn(gfile, h_index_str, silent = TRUE)
+            append.gdsn(h_child_n, val = h[ ,h_coln])
+        }
+
    message( gfile$filename , " has been modified ")
    #### return gfile (will print new structure)
+   if(cleanup) cleanup.gds(gfile$filename)
    gfile
 }
 
