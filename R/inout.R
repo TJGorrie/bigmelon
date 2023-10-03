@@ -215,7 +215,7 @@ iadd <- function (bar, gds, n = TRUE, force=TRUE, target_cpgs = NULL, idatpath=N
         rown <- target_cpgs
     }
     ifile <- basename(bar)
-    if(idatpath == NULL) idatpath <- dirname(bar[1])
+    if(is.null(idatpath)) idatpath <- dirname(bar[1])
 
     ### this assumes only 2 underscores, fails when names have _ in prefix, eg from GEO
     ### need to count from end instead or just chop off [Red|Grn].idat
