@@ -24,8 +24,25 @@
 
 #{{{ chainsaw
 #' Chainsaw -- modify gds file by subsetting all nodes
+#'
+#' Currently the `[` function for the gds.class objects used by bigmelon only subsets a 
+#' single node. This function does more like what you would normally expect a subsetting function 
+#' to do, it returns a subset of the entire object.  It may in future be a replacement for `[.gds.class`.
+#'
+#' This function is intended for use in the preprocessing and QC phase of a DNA methylation workflow.
+#' For efficiency, bigmelon stores data in a file, and the gds.class object is a file handle. 
+#' True to its name, chainsaw chops the underlying file, this is a side affect of the function and 
+#' is not affected by assignment of the return value.
+#'
+#' @param gfile A gds.class object.
+#' @param i Specifies rows (ie probes) in the desired subset, similar to behaviour of `[`
+#' @param j Specifies columns (ie sampless) in the desired subset, similar to behaviour of `[`
+#' @param v If true, spew many messages.
+#' @param cleanup If true, run a cleanup function that can substantially reduce the file size.
 
-#' candidate replacement for `[.gds.class`
+#' @return  a gds.class object.  This is a handle to the same file that the gfile argument 
+#' points to.  It's not generally useful to have two handles to the same file, but it may make code 
+#' more readable.  In interactive use, if not assigned, the returned object is usefully pretty-printed.
 
 chainsaw <- function( gfile, i='', j='', v=FALSE, cleanup=TRUE ){
 
@@ -62,6 +79,8 @@ chainsaw <- function( gfile, i='', j='', v=FALSE, cleanup=TRUE ){
 
    # current vers is a compromise that subsets top level matrices -- 
    # and deals with fData, pData and history explicitly
+   # nodes with 0 columns, 0 rows or names starting with 'tmp' are skipped.
+   # (there are sometimes tmp_* nodes introduced by gdsfmt, haven't found details)
    
    dimes <- sapply(ls.gdsn(gfile), function(x) dim(index.gdsn(gfile,x)))
    if (v) message(length(dimes), " nodes")
@@ -90,13 +109,15 @@ chainsaw <- function( gfile, i='', j='', v=FALSE, cleanup=TRUE ){
 
    vict <- dimes[mates] # 
    for (nod in names(vict)) {
+
+      if( any(vict[[nod]] ==0) || grepl('^tmp', nod) ) next
       eye <- 1:vict[[nod]][1]
       jay <- 1:vict[[nod]][2]
-      if (vict[[nod]][1] == d[1]) {
+      if (vict[[nod]][1] == d[1]  ) {
          eye <-i
          if (v) message('subsetting rows of ', nod)
       }
-      if (vict[[nod]][2] == d[2]) {
+      if (vict[[nod]][2] == d[2]  ) {
          jay <-j
          if (v) message('subsetting columns of ', nod)
       }
@@ -186,18 +207,3 @@ dim.gdsn.class <- function (obj){
 
 #}}}
 
-#{{{ epicv2clean S3 method for gds
-
-epicv2clean.gds.class <- function (x) 
-{
-    rn <- rownames(x)
-    rn <- gsub("_.*$", "", rn)
-    go <- !duplicated(rn)
-    
-   chainsaw(x,go,'',TRUE)
-
-   # x <- x[go, ]
-   # rownames(x) <- rn[go]
-   # x
-}
-# }}}

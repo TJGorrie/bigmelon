@@ -2,12 +2,34 @@
 % Please edit documentation in R/chainsaw.R
 \name{chainsaw}
 \alias{chainsaw}
-\title{Chainsaw -- modify gds file by subsetting all nodes
-candidate replacement for `[.gds.class`}
+\title{Chainsaw -- modify gds file by subsetting all nodes}
 \usage{
-chainsaw(gfile, i, j, v = TRUE)
+chainsaw(gfile, i = "", j = "", v = FALSE, cleanup = TRUE)
+}
+\arguments{
+\item{gfile}{A gds.class object.}
+
+\item{i}{Specifies rows (ie probes) in the desired subset, similar to behaviour of `[`}
+
+\item{j}{Specifies columns (ie sampless) in the desired subset, similar to behaviour of `[`}
+
+\item{v}{If true, spew many messages.}
+
+\item{cleanup}{If true, run a cleanup function that can substantially reduce the file size.}
+}
+\value{
+a gds.class object.  This is a handle to the same file that the gfile argument 
+points to.  It's not generally useful to have two handles to the same file, but it may make code 
+more readable.  In interactive use, if not assigned, the returned object is usefully pretty-printed.
 }
 \description{
-Chainsaw -- modify gds file by subsetting all nodes
-candidate replacement for `[.gds.class`
+Currently the `[` function for the gds.class objects used by bigmelon only subsets a 
+single node. This function does more like what you would normally expect a subsetting function 
+to do, it returns a subset of the entire object.  It may in future be a replacement for `[.gds.class`.
+}
+\details{
+This function is intended for use in the preprocessing and QC phase of a DNA methylation workflow.
+For efficiency, bigmelon stores data in a file, and the gds.class object is a file handle. 
+True to its name, chainsaw chops the underlying file, this is a side affect of the function and 
+is not affected by assignment of the return value.
 }
