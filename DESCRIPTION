@@ -1,7 +1,7 @@
 Package: bigmelon
 Type: Package
 Title: Illumina methylation array analysis for large experiments
-Version: 1.27.4
+Version: 1.28.0
 Authors@R: c(
     person(c("Tyler", "J."), "Gorrie-Stone", role="aut"),
     person("Ayden", "Saffari", role="aut"),
