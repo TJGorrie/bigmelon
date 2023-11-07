@@ -170,6 +170,26 @@ setMethod(
     }
 )
 
+setMethod(
+   f= 'dimnames',
+   signature( x= 'gds.class' ),
+   definition = function(x){
+      list(
+         probes=rownames(x),
+         samples=colnames(x)
+      )
+   }
+)
+
+setMethod(
+   f= 'dimnames',
+   signature( x= 'gdsn.class' ),
+   definition = function(x){
+      list(
+         probes=rownames(x),
+         samples=colnames(x)
+      )
+
 
 # Standard eset functions to grab matrices, including indexing:
 # Calling gdsn node but will allow direct subsetting with '['
