@@ -894,6 +894,17 @@ setMethod(
     }
 )
 
+setMethod(
+  f= "smokp",
+  signature(betas="gds.class"),
+  definition=function(betas, method='SSt', sst = NULL){
+    object <- betas(betas)
+    smokp(betas=object, method=method, sst=sst)
+  }
+)
+
+
+
 setGeneric(name= "qual")
 # qual (?) # Do col by col computation of metrics. Collapse output.
 setMethod(
