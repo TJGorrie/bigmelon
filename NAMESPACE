@@ -3,6 +3,9 @@ exportPattern("^[^\\.]")
 S3method('[', gds.class)
 S3method('[', gdsn.class)
 S3method('prcomp', gds.class)
+S3method('dimnames', gds.class)
+S3method('dimnames', gdsn.class)
+S3method('dim', gdsn.class)
 exportMethods(rownames, colnames, naten, betaqn, nanet, nanes, danes, danet, daten1, daten2,
 nasen, dasen, danen, tost, fuks, swan, dmrse, dmrse_row, dmrse_col, genki,
 seabi, pfilter, betas, methylated, unmethylated, pvals, fData, 

@@ -1,4 +1,4 @@
-redirect.gds<- function(gds, rownames, colnames){
+redirect.gds<- function(gds, rownames, colnames){ #{{{
     # Wrapper to change the gdsn node "paths" whererow and colnames are stored
     a <- try(index.gdsn(gds, rownames), silent = TRUE)
     if(inherits(a, "try-error")){
@@ -12,16 +12,19 @@ redirect.gds<- function(gds, rownames, colnames){
     cat("Changing 'rownames' path to:", rownames, ". \n")
     cat("Changing 'colnames' path to:", colnames, ". \n")
 }
+#}}}
 
-backup.gdsn <- function(gds = NULL, node){
+
+backup.gdsn <- function(gds = NULL, node){   #{{{
     # Quick function to quickly copy specific nodes into a new-folder
     # called "backup". not recommended for standard workflow. see copyto.gdsn
     if(is.null(gds)) gds <- getfolder.gdsn(node)
     if(!("backup" %in% ls.gdsn(gds))) addfolder.gdsn(gds, "backup")
     copyto.gdsn(index.gdsn(gds, "backup"), node)
 }
+#}}}
 
-'[.gds.class' <- function(x, i, j, node, name = TRUE, drop = TRUE){
+'[.gds.class' <- function(x, i, j, node, name = TRUE, drop = TRUE){ #{{{
     # Method of subsetting gds.class objects while specifying node.
     # Create gdsn.class for selected node
     dat <- index.gdsn(x, node)
@@ -108,7 +111,7 @@ backup.gdsn <- function(gds = NULL, node){
             colnames(mat) <- readex.gdsn(index.gdsn(base, read.gdsn(index.gdsn(base, "paths"))[2]), sel = ncol)
         }
     } # }}}
-    # It gets complicated here... ...
+    # It gets complicated here... ... {{{
     ranked <- get.attr.gdsn(x)[['ranked']]
     if(is.null(ranked)) ranked <- FALSE
     if(ranked){
@@ -129,19 +132,19 @@ backup.gdsn <- function(gds = NULL, node){
             }
             mat[, z] <- re
         }
-    }
+    }  #}}}
     # Enable dropping on 1 row or 1 column indicies
     if(any(dim(mat) == 1)) return(mat[,,drop=drop]) else return(mat)
-}
+} #}}}
 
-#colnames <- function (x, do.NULL = TRUE, prefix = "col")
+#colnames <- function (x, do.NULL = TRUE, prefix = "col") {{{
 setMethod(
     f = "colnames",
     signature(x = "gds.class"),
     definition = function(x, do.NULL = TRUE, prefix = NULL){
         read.gdsn(index.gdsn(x,read.gdsn(index.gdsn(x, "paths"))[2]))
     }
-) # OK
+) # OK 
 
 setMethod(
     f = "colnames",
@@ -150,9 +153,9 @@ setMethod(
         read.gdsn(index.gdsn(getfolder.gdsn(x),
            read.gdsn(index.gdsn(getfolder.gdsn(x), "paths"))[2]))
     }
-)
+) #}}}
 
-#rownames <- function (x, do.NULL = TRUE, prefix = "col")
+#rownames <- function (x, do.NULL = TRUE, prefix = "col") {{{
 setMethod(
     f = "rownames",
     signature(x = "gds.class"),
@@ -168,30 +171,44 @@ setMethod(
         read.gdsn(index.gdsn(getfolder.gdsn(x),
             read.gdsn(index.gdsn(getfolder.gdsn(x), "paths"))[1]))
     }
-)
+)  #}}}
 
-setMethod(
-   f= 'dimnames',
-   signature( x= 'gds.class' ),
-   definition = function(x){
+dim.gds.class <- function(x){ # parasitise dimnames {{{
+   sapply(dimnames(ep2.gds), length)
+
+}
+
+dim.gdsn.class <- function(x){ #{{{
+   sapply(dimnames(ep2.gds), length)
+
+}#}}}
+
+
+# setMethod(
+#    f= 'dimnames',
+#    signature( x= 'gds.class' ),
+#    definition = function(x){
+dimnames.gds.class <- function(x){   #{{{
       list(
          probes=rownames(x),
          samples=colnames(x)
       )
-   }
-)
+}
+# )  
 
-setMethod(
-   f= 'dimnames',
-   signature( x= 'gdsn.class' ),
-   definition = function(x){
+# setMethod(
+#    f= 'dimnames',
+#    signature( x= 'gds.class' ),
+#    definition = function(x){
+dimnames.gdsn.class <- function(x){
       list(
          probes=rownames(x),
          samples=colnames(x)
       )
+}
+# )  }}}
 
-
-# Standard eset functions to grab matrices, including indexing:
+# Standard eset functions to grab matrices, including indexing:   {{{
 # Calling gdsn node but will allow direct subsetting with '['
 # Alternative work around would be setGeneric("betas") function(object, ...)
 ## setGeneric("betas", function(object, ...) standardGeneric("betas"))
@@ -289,8 +306,8 @@ setMethod(
     definition = function(object){
         read.gdsn(index.gdsn(object, 'QCrownames'))
     }
-) # AS - OK
-
+) # AS - OK  }}}
+# normalisers {{{
 setMethod(
     f = "betaqn",
     signature(bn = "gds.class"),
@@ -649,6 +666,9 @@ setMethod(
     }
 )
 
+#}}}
+
+#{{{ exprs and pfilter
 setMethod(
     f = "exprs",
     signature(object = "gds.class"),
@@ -703,8 +723,11 @@ setMethod(
         lsam <- l$samples
         subSet(object,which(lpro),which(lsam))
     }
-)   # AS - OK # TGS - OK
+)   # AS - OK # TGS - OK  }}}
 
+
+
+# subset  -- compare with chainsaw  {{{
 #subsetting : i = features, j = samples
 # TODO: Test Logical Indexing and Character Subsetting also(?)
 setGeneric("subSet",function(x,i,j,...,drop=FALSE){standardGeneric("subSet")})
@@ -851,7 +874,7 @@ setMethod(
         closefn.gds(f)
         unlink("temp.gds")
     }
-) # AS - OK # TGS OKish
+) # AS - OK # TGS OKish  }}}
 
 #prcomp R/prcompGdsn.R contains S3 method!
 #setMethod(
@@ -863,7 +886,7 @@ setMethod(
 #  }
 #)
 
-# outlyx - instead of utilizing prcomp.gdsn (since pcout isn't bigmelon
+# outlyx - instead of utilizing prcomp.gdsn (since pcout isn't bigmelon {{{
 # friendly - we opt for generic use of prcomp)
 
 setMethod(
@@ -885,8 +908,9 @@ setMethod( # Automatically select betas
         outlyx(betas(x), iqr, iqrP, pc, mv, mvP, plot, perc,...)
     }
 )
+# }}}
 
-
+# agep and smokp-  gds and gdsn methods need to both work like wateRmelon agep {{{
 setMethod(
     f = "agep",
     signature(betas = "gds.class"),
@@ -923,9 +947,10 @@ setMethod(
   }
 )
 
+#}}}
 
 
-setGeneric(name= "qual")
+setGeneric(name= "qual")   #{{{
 # qual (?) # Do col by col computation of metrics. Collapse output.
 setMethod(
     f= "qual",
@@ -1119,8 +1144,9 @@ setMethod(
         return(fd[,ds[1]])
     }
     )
+# }}}
 
-setGeneric('predictSex', function(x, x.probes=NULL, pc=2, plot=T, irlba=T, center=F, scale.=F){standardGeneric('predictSex')})
+setGeneric('predictSex', function(x, x.probes=NULL, pc=2, plot=T, irlba=T, center=F, scale.=F){standardGeneric('predictSex')}) #{{{
 setMethod(
     f = 'predictSex',
     signature(x = 'gds.class'),
@@ -1140,4 +1166,4 @@ setMethod(
     predictSex(x=xdat, x.probes = NULL, pc, plot, irlba, center, scale.)
 }
 )
-
+#}}}

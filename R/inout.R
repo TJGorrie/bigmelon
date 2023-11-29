@@ -293,3 +293,41 @@ idats2gds <- function(barcodes, gds, n=TRUE, force=FALSE, ...){
 
     return(output)
 } # }}}
+
+# tea.gds  -  tell all aout a gds object {{{
+
+#' tea.gds - description and validation for gds objects
+#' 
+#' @description
+#' Checks the validity, file location and read/write status of a gds object
+#'
+#' @details
+#' For DNAm use
+#' with the bigmelon package.  For interactive use the default verbose option also prints
+#' further details. Returns a list.
+
+tea.gds <- function (gds){
+# trying to be more helpful than just 'not a gds obj'
+#if(
+# error - this is a filepath, open it first with openfn.gdsn
+# error - this is a node, give me the gds object it comes from
+# error - this is some other non-gds object
+# error - this is a gds handle but it is closed
+
+# info - filepath
+# info - file permissions on disk
+# info - opened readonly?
+# info - dimensions
+# info - has raw intensities M
+# info - has raw intensities U
+# info - has betas
+# info - pData
+# info - has design type, colname:
+# info - has Chr, colname
+
+
+}
+
+
+
+#}}}
