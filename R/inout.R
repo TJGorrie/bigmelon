@@ -294,7 +294,7 @@ idats2gds <- function(barcodes, gds, n=TRUE, force=FALSE, ...){
     return(output)
 } # }}}
 
-# tea.gds  -  tell all aout a gds object {{{
+# tea.gds  -  (stub) tell all about a gds object {{{
 
 #' tea.gds - description and validation for gds objects
 #' 
@@ -303,10 +303,11 @@ idats2gds <- function(barcodes, gds, n=TRUE, force=FALSE, ...){
 #'
 #' @details
 #' For DNAm use
-#' with the bigmelon package.  For interactive use the default verbose option also prints
+#' with the bigmelon package.  For interactive use the default verbose 
+#' option also prints
 #' further details. Returns a list.
 
-tea.gds <- function (gds){
+#tea.gds <- function (gds){
 # trying to be more helpful than just 'not a gds obj'
 #if(
 # error - this is a filepath, open it first with openfn.gdsn
@@ -326,8 +327,49 @@ tea.gds <- function (gds){
 # info - has Chr, colname
 
 
-}
+#}
 
 
 
 #}}}
+
+#{{{ bigpepo -- derived from iadd2: add data from all idat files that are 
+# in a single directory to a gds file with explicit manifest specification
+
+bigpepo <- function(path, gds, manifest, chunksize = NULL, force=TRUE,...){
+    rown <- TRUE # recycles, this is for the default case where row 
+                 #names aren't matched
+    if(force){
+        thefile <- try(openfn.gds(gds, allow.duplicate=TRUE), silent=T)
+        if(!inherits(thefile, 'try-error')){
+            # TODO this needs fixing see iadd function
+            rown <- read.gdsn(index.gdsn(thefile, 'fData/Probe_ID'))
+            closefn.gds(thefile)
+        }
+    }
+    gdsfile <- gds
+    barcodes <- bfp(path)
+    if(is.null(chunksize) & length(barcodes) > 500){
+    chunksize <- 500
+    message('More than 500 barcodes identified. Switching to chunk mode!')
+    }
+    if(!is.null(chunksize)){
+       if(!is.numeric(chunksize)) stop("chunksize must be numeric!")
+          chunks <- seq(1, length(barcodes), chunksize)
+          for(i in chunks){
+             sets <- barcodes[i:(i+(chunksize-1))]
+             # TODO this needs fixing see iadd function
+             ml <- methylumIDATepic(barcodes = sets[!is.na(sets)],
+                n = TRUE, oob = FALSE, idatPath = path, 
+                force=force)[rown,]
+            gdsfile <- app2gds(ml, gdsfile)
+        }
+    } else {
+        ml <-  readPepo(barcodelist=barcodes, manifest=manifest,
+           n = TRUE, oob = FALSE, idatdir = path)[rown,]
+        gdsfile <- app2gds(ml, gdsfile)
+    }
+    gdsfile
+} #}}}
+
+
