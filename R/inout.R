@@ -359,9 +359,8 @@ bigpepo <- function(path, gds, manifest, chunksize = NULL, force=TRUE,...){
           for(i in chunks){
              sets <- barcodes[i:(i+(chunksize-1))]
              # TODO this needs fixing see iadd function
-             ml <- methylumIDATepic(barcodes = sets[!is.na(sets)],
-                n = TRUE, oob = FALSE, idatPath = path, 
-                force=force)[rown,]
+             ml <- readPepo(barcodes = sets[!is.na(sets)], manifest=manifest,
+                n = TRUE, oob = FALSE, idatdir = path, )[rown,]
             gdsfile <- app2gds(ml, gdsfile)
         }
     } else {
